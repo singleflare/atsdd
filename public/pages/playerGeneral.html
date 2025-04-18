@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player</title>
+</head>
+
+<body>
+  <style>
+    body {
+      position: relative;
+      aspect-ratio: 16/9;
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+
+    #systemBallGridImg {
+      position: absolute;
+      width: 40%;
+      top: -0.2%;
+      height: 41.4%;
+    }
+
+    #systemBallGrid {
+      position: absolute;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      z-index: 1;
+      top: 4.4%;
+      left: 1.9%;
+      width: 36.7%;
+      height: 32.9%;
+    }
+
+    #systemBallGrid img {
+      width: 90%;
+    }
+
+    #qPane {
+      object-fit: fill;
+      position: absolute;
+      width: 40%;
+      height: 41%;
+      top: 0;
+      left: 40%;
+    }
+
+    * {
+      font-family: utm_impact;
+    }
+
+    @font-face {
+      font-family: utm_impact;
+      src: url('../UTM-Impact.ttf');
+    }
+
+    @font-face {
+      font-family: lexend;
+      src: url('../Lexend-Regular.ttf');
+    }
+
+    button,
+    #timer {
+      position: absolute;
+      right: 0;
+      width: 20%;
+      height: 41%;
+      font-size: 2.5vw;
+      border: none;
+    }
+
+    button {
+      background-color: #696969;
+    }
+
+    button:hover {}
+
+    button.idle {
+      border: none;
+    }
+
+    button.ready {
+      border: red 10px solid;
+    }
+
+    button.buzzed {
+      border: green 10px solid;
+    }
+
+    button.slowBuzzed {
+      border: yellow 10px solid;
+    }
+
+    #buzzerList {
+      position: absolute;
+      right: 0;
+      width: 20%;
+      font-size: 1vw;
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+      padding: 0.5%;
+      box-sizing: border-box;
+    }
+
+    #buzzerList span {
+      font-family: lexend;
+    }
+
+    #qno {
+      position: absolute;
+      color: white;
+      left: 41.1%;
+      width: 37.8%;
+      top: 3.6%;
+      font-size: 1.5vw;
+      text-align: center;
+      font-family: 'lexend';
+    }
+
+    #question {
+      position: absolute;
+      color: white;
+      left: 41.1%;
+      width: 37.8%;
+      height: 23%;
+      top: 9%;
+      font-size: 1.5vw;
+      text-align: center;
+      font-family: 'lexend';
+    }
+
+    .pArea {
+      position: absolute;
+      width: 33.33%;
+      height: 42.4%;
+      top: 41%;
+    }
+
+    .name {
+      position: absolute;
+      font-size: 1.6vw;
+      left: 4%;
+      top: 6%;
+      width: 100%;
+      font-family: 'lexend';
+    }
+
+    .jackpot {
+      position: absolute;
+      font-size: 1.8vw;
+      top: 17.2%;
+      width: 60%;
+      left: 20%;
+      height: 13.5%;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      justify-items: center;
+    }
+
+    .jackpot img {
+      width: 70%;
+    }
+
+    .score {
+      position: absolute;
+      font-size: 1.6vw;
+      right: 4%;
+      top: 6%;
+      width: 25%;
+      text-align: right;
+    }
+
+    .pBallsGrid {
+      position: absolute;
+      font-size: 1.8vw;
+      top: 30.4%;
+      left: 3%;
+      width: 93.5%;
+      height: 45.3%;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      align-items: center;
+      justify-items: center;
+    }
+
+    #p1Area {}
+
+
+    #p2Area {
+      left: 33.33%;
+    }
+
+    #p3Area {
+      left: 66.67%;
+    }
+
+    .pBallsGrid img {
+      width: 90%;
+    }
+  </style>
+  <img src='../media/systemBallGrid.png' id='systemBallGridImg'>
+  <div id='systemBallGrid'>
+    <img src='../media/1.png'>
+    <img src='../media/2.png'>
+    <img src='../media/3.png'>
+    <img src='../media/4.png'>
+    <img src='../media/5.png'>
+    <img src='../media/6.png'>
+    <img src='../media/7.png'>
+    <img src='../media/8.png'>
+    <img src='../media/9.png'>
+    <img src='../media/10.png'>
+    <img src='../media/11.png'>
+    <img src='../media/12.png'>
+    <img src='../media/13.png'>
+    <img src='../media/14.png'>
+    <img src='../media/15.png'>
+    <img src='../media/16.png'>
+    <img src='../media/17.png'>
+    <img src='../media/18.png'>
+    <img src='../media/19.png'>
+    <img src='../media/20.png'>
+    <img src='../media/21.png'>
+    <img src='../media/22.png'>
+    <img src='../media/23.png'>
+    <img src='../media/24.png'>
+    <img src='../media/25.png'>
+    <img src='../media/26.png'>
+    <img src='../media/27.png'>
+    <img src='../media/28.png'>
+    <img src='../media/29.png'>
+    <img src='../media/30.png'>
+    <img src='../media/31.png'>
+    <img src='../media/32.png'>
+    <img src='../media/33.png'>
+    <img src='../media/34.png'>
+    <img src='../media/35.png'>
+    <img src='../media/36.png'>
+    <img src='../media/37.png'>
+    <img src='../media/38.png'>
+    <img src='../media/39.png'>
+    <img src='../media/40.png'>
+    <img src='../media/41.png'>
+    <img src='../media/42.png'>
+    <img src='../media/43.png'>
+    <img src='../media/44.png'>
+    <img src='../media/45.png'>
+    <img src='../media/46.png'>
+    <img src='../media/47.png'>
+    <img src='../media/48.png'>
+    <img src='../media/49.png'>
+    <img src='../media/50.png'>
+  </div>
+  <button class='idle'>Buzzer</button>
+  <img src='../media/qPanePlayer.png' id='qPane'>
+  <div id='qno'>Vòng Câu</div>
+  <div id='question'>Câu hỏi</div>
+  <div id='p1Area' class='pArea'>
+    <div id='p1Name' class='name'></div>
+    <div id='p1Jackpot' class='jackpot'></div>
+    <div id='p1Score' class='score'></div>
+    <img src='../media/playerBallsPodium.png' style='width: 100%;'>
+    <div id='p1Balls' class='pBallsGrid'> </div>
+  </div>
+  <div id='p2Area' class='pArea'>
+    <div id='p2Name' class='name'></div>
+    <div id='p2Jackpot' class='jackpot'></div>
+    <div id='p2Score' class='score'></div>
+    <img src='../media/playerBallsPodium.png' style='width: 100%;'>
+    <div id='p2Balls' class='pBallsGrid'></div>
+  </div>
+  <div id='p3Area' class='pArea'>
+    <div id='p3Name' class='name'></div>
+    <div id='p3Jackpot' class='jackpot'></div>
+    <div id='p3Score' class='score'></div>
+    <img src='../media/playerBallsPodium.png' style='width: 100%;'>
+    <div id='p3Balls' class='pBallsGrid'></div>
+  </div>
+
+  <!-- <script src='../scripts/disableDevTools.js'></script> -->
+  <script src='../scripts/jquery-3.7.1.min.js'></script>
+  <script src='/socket.io/socket.io.js'></script>
+</body>
+
+</html>

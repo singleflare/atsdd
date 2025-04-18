@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OBS Graphics</title>
+</head>
+
+<body>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    @font-face {
+      font-family: utm_impact;
+      src: url('../UTM-Impact.ttf');
+    }
+
+    img,
+    div {
+      position: absolute;
+    }
+
+    #podiumFrames {
+      z-index: 1;
+      width: 1920px;
+      height: 1080px;
+    }
+
+    .ball {
+      transition: all 0.25s ease-out;
+    }
+
+    @keyframes zoomin {
+      0% {
+        transform: scale(0);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .ball.zoomin {
+      animation: zoomin 0.15s forwards ease-out;
+    }
+
+    #podium1InnerNoWhite,
+    #podium1InnerBuzzedNoWhite,
+    #podium1InnerWhite,
+    #podium1InnerStop {
+      top: 369px;
+      left: 203px;
+      width: 351px;
+    }
+
+    #podium2InnerNoWhite,
+    #podium2InnerBuzzedNoWhite,
+    #podium2InnerWhite,
+    #podium2InnerStop {
+      top: 369px;
+      left: 781px;
+      width: 358px;
+    }
+
+    #podium3InnerNoWhite,
+    #podium3InnerBuzzedNoWhite,
+    #podium3InnerWhite,
+    #podium3InnerStop {
+      top: 369px;
+      left: 1366px;
+      width: 351px;
+    }
+
+    .podiumInnerWhite,
+    .podiumInnerBuzzedNoWhite,
+    .podiumInnerStop {
+      opacity: 0;
+    }
+
+    .ballsContainer img {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ballsContainer {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      grid-auto-flow: row;
+      align-items: center;
+      justify-items: center;
+      top: 517px;
+      height: 509px;
+      width: 327px;
+    }
+
+    #p1BallsContainer,
+    #p1JackpotContainer,
+    #p1Score {
+      left: 215px;
+    }
+
+    #p2BallsContainer,
+    #p2JackpotContainer,
+    #p2Score {
+      left: 793px;
+    }
+
+    #p3BallsContainer,
+    #p3JackpotContainer,
+    #p3Score {
+      left: 1378px;
+    }
+
+    .jackpotContainer {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+      grid-auto-flow: row;
+      align-items: center;
+      justify-items: center;
+      top: 445px;
+      width: 327px;
+      height: 60px;
+    }
+
+    .score {
+      font-family: utm_impact;
+      font-size: 40pt;
+      top: 370px;
+      width: 327px;
+      text-align: center;
+    }
+  </style>
+  <img src='../media/playerPodiumFrames.png' id='podiumFrames'>
+
+  <img src='../media/playerPodiumInnerWhite.png' id='podium1InnerWhite' class='podiumInnerWhite'>
+  <img src='../media/playerPodiumInnerNoWhite.png' id='podium1InnerNoWhite' class='podiumInnerNoWhite'>
+  <img src='../media/playerPodiumInnerNoWhiteBuzzed.png' id='podium1InnerBuzzedNoWhite'
+    class='podiumInnerBuzzedNoWhite'>
+  <img src='../media/playerPodiumInnerStop.png' id='podium1InnerStop' class='podiumInnerStop'>
+
+  <img src='../media/playerPodiumInnerWhite.png' id='podium2InnerWhite' class='podiumInnerWhite'>
+  <img src='../media/playerPodiumInnerNoWhite.png' id='podium2InnerNoWhite' class='podiumInnerNoWhite'>
+  <img src='../media/playerPodiumInnerNoWhiteBuzzed.png' id='podium2InnerBuzzedNoWhite'
+    class='podiumInnerBuzzedNoWhite'>
+  <img src='../media/playerPodiumInnerStop.png' id='podium2InnerStop' class='podiumInnerStop'>
+
+  <img src='../media/playerPodiumInnerWhite.png' id='podium3InnerWhite' class='podiumInnerWhite'>
+  <img src='../media/playerPodiumInnerNoWhite.png' id='podium3InnerNoWhite' class='podiumInnerNoWhite'>
+  <img src='../media/playerPodiumInnerNoWhiteBuzzed.png' id='podium3InnerBuzzedNoWhite'
+    class='podiumInnerBuzzedNoWhite'>
+  <img src='../media/playerPodiumInnerStop.png' id='podium3InnerStop' class='podiumInnerStop'>
+
+  <div id='p1Score' class='score'>0 CG</div>
+  <div id='p2Score' class='score'>0 CG</div>
+  <div id='p3Score' class='score'>0 CG</div>
+
+  <script src='../scripts/jquery-3.7.1.min.js'></script>
+  <script src='/socket.io/socket.io.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
+    integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const socket = io('/gpx')
+
+    function digitGroup(dInput) {
+      var output = "";
+      var totalSize = dInput.length;
+      for (var i = totalSize - 1; i > -1; i--) {
+        output = dInput.charAt(i) + output;
+        var cnt = totalSize - i;
+        if (cnt % 3 === 0 && i !== 0) {
+          output = "." + output;
+        }
+      }
+      return output;
+    }
+
+    //PODIUMS
+    function changePlayerPodium(p, state) {
+      console.log(p, state)
+      if (p == 1) {
+        if (state == 'normal') {
+          $('#podium1InnerWhite').css('opacity', '0')
+          $('#podium1InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium1InnerNoWhite').css('opacity', '1')
+          $('#podium1InnerStop').css('opacity', '0')
+        }
+        else if (state == 'buzzed') {
+          $('#podium1InnerWhite').css('opacity', '0')
+          $('#podium1InnerNoWhite').css('opacity', '0')
+          $('#podium1InnerBuzzedNoWhite').css('opacity', '1')
+          $('#podium1InnerStop').css('opacity', '0')
+        }
+        else if (state == 'jackpotRnd') {
+          $('#podium1InnerWhite').css('opacity', '1')
+          $('#podium1InnerNoWhite').css('opacity', '0')
+          $('#podium1InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium1InnerStop').css('opacity', '0')
+        }
+        else if (state == 'stop') {
+          $('#podium1InnerWhite').css('opacity', '0')
+          $('#podium1InnerNoWhite').css('opacity', '0')
+          $('#podium1InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium1InnerStop').css('opacity', '1')
+        }
+      }
+      else if (p == 2) {
+        if (state == 'normal') {
+          $('#podium2InnerWhite').css('opacity', '0')
+          $('#podium2InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium2InnerNoWhite').css('opacity', '1')
+          $('#podium2InnerStop').css('opacity', '0')
+        }
+        else if (state == 'buzzed') {
+          $('#podium2InnerWhite').css('opacity', '0')
+          $('#podium2InnerNoWhite').css('opacity', '0')
+          $('#podium2InnerBuzzedNoWhite').css('opacity', '1')
+          $('#podium2InnerStop').css('opacity', '0')
+        }
+        else if (state == 'jackpotRnd') {
+          $('#podium2InnerWhite').css('opacity', '1')
+          $('#podium2InnerNoWhite').css('opacity', '0')
+          $('#podium2InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium2InnerStop').css('opacity', '0')
+        }
+        else if (state == 'stop') {
+          $('#podium2InnerWhite').css('opacity', '0')
+          $('#podium2InnerNoWhite').css('opacity', '0')
+          $('#podium2InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium2InnerStop').css('opacity', '1')
+        }
+      }
+      else if (p == 3) {
+        if (state == 'normal') {
+          $('#podium3InnerWhite').css('opacity', '0')
+          $('#podium3InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium3InnerNoWhite').css('opacity', '1')
+          $('#podium3InnerStop').css('opacity', '0')
+        }
+        else if (state == 'buzzed') {
+          $('#podium3InnerWhite').css('opacity', '0')
+          $('#podium3InnerNoWhite').css('opacity', '0')
+          $('#podium3InnerBuzzedNoWhite').css('opacity', '1')
+          $('#podium3InnerStop').css('opacity', '0')
+        }
+        else if (state == 'jackpotRnd') {
+          $('#podium3InnerWhite').css('opacity', '1')
+          $('#podium3InnerNoWhite').css('opacity', '0')
+          $('#podium3InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium3InnerStop').css('opacity', '0')
+        }
+        else if (state == 'stop') {
+          $('#podium3InnerWhite').css('opacity', '0')
+          $('#podium3InnerNoWhite').css('opacity', '0')
+          $('#podium3InnerBuzzedNoWhite').css('opacity', '0')
+          $('#podium3InnerStop').css('opacity', '1')
+        }
+      }
+    }
+
+    socket.on('changePlayerPodium', (p, state) => {
+      changePlayerPodium(p, state)
+    })
+    socket.on('p1BuzzEarly', () => {
+      changePlayerPodium(1, 'buzzed')
+    })
+    socket.on('p2BuzzEarly', () => {
+      changePlayerPodium(2, 'buzzed')
+    })
+    socket.on('p3BuzzEarly', () => {
+      changePlayerPodium(3, 'buzzed')
+    })
+
+    // BALLS ANIMATION
+    let podium1StartingBallXY = { x: 215, y: 517 }
+    let podium2StartingBallXY = { x: 793, y: 517 }
+    let podium3StartingBallXY = { x: 1378, y: 517 }
+    let podium1StartingJackpotXY = { x: 215, y: 445 }
+    let podium2StartingJackpotXY = { x: 793, y: 445 }
+    let podium3StartingJackpotXY = { x: 1378, y: 445 }
+    let ballSize = 61
+    let ballGap = 7
+    let p1Balls = []
+    let p2Balls = []
+    let p3Balls = []
+    let p1Jackpots = []
+    let p2Jackpots = []
+    let p3Jackpots = []
+    let p1Coords = []
+    let p1JackpotCoords = []
+    let p2Coords = []
+    let p2JackpotCoords = []
+    let p3Coords = []
+    let p3JackpotCoords = []
+
+    //generate coords
+    for (let i = 0; i < 40; i++) {
+      p1Coords.push({ x: (podium1StartingBallXY.x + i % 5 * (ballSize + ballGap)), y: (podium1StartingBallXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
+      p2Coords.push({ x: (podium2StartingBallXY.x + i % 5 * (ballSize + ballGap)), y: (podium2StartingBallXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
+      p3Coords.push({ x: (podium3StartingBallXY.x + i % 5 * (ballSize + ballGap)), y: (podium3StartingBallXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
+    }
+    for (let i = 0; i < 5; i++) {
+      p1JackpotCoords.push({ x: (podium1StartingJackpotXY.x + i % 5 * (ballSize + ballGap)), y: (podium1StartingJackpotXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
+      p2JackpotCoords.push({ x: (podium2StartingJackpotXY.x + i % 5 * (ballSize + ballGap)), y: (podium2StartingJackpotXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
+      p3JackpotCoords.push({ x: (podium3StartingJackpotXY.x + i % 5 * (ballSize + ballGap)), y: (podium3StartingJackpotXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
+    }
+
+    function updateCoordinates(player) {
+      if (player == 1) {
+        p1Balls.forEach((ball, index) => {
+          $(`#ball${ball}`).css('left', p1Coords[index].x + 'px')
+          $(`#ball${ball}`).css('top', p1Coords[index].y + 'px')
+        })
+      }
+      else if (player == 2) {
+        p2Balls.forEach((ball, index) => {
+          $(`#ball${ball}`).css('left', p2Coords[index].x + 'px')
+          $(`#ball${ball}`).css('top', p2Coords[index].y + 'px')
+        })
+      }
+      else if (player == 3) {
+        p3Balls.forEach((ball, index) => {
+          $(`#ball${ball}`).css('left', p3Coords[index].x + 'px')
+          $(`#ball${ball}`).css('top', p3Coords[index].y + 'px')
+        })
+      }
+    }
+
+    function updateJackpotCoordinates(player) {
+      if (player == 1) {
+        p1Jackpots.forEach((ball, index) => {
+          $(`#ball${ball}`).css('left', p1JackpotCoords[index].x + 'px')
+          $(`#ball${ball}`).css('top', p1JackpotCoords[index].y + 'px')
+        })
+      }
+      else if (player == 2) {
+        p2Jackpots.forEach((ball, index) => {
+          $(`#ball${ball}`).css('left', p2JackpotCoords[index].x + 'px')
+          $(`#ball${ball}`).css('top', p2JackpotCoords[index].y + 'px')
+        })
+      }
+      else if (player == 3) {
+        p3Jackpots.forEach((ball, index) => {
+          $(`#ball${ball}`).css('left', p3JackpotCoords[index].x + 'px')
+          $(`#ball${ball}`).css('top', p3JackpotCoords[index].y + 'px')
+        })
+      }
+    }
+
+    //initialize balls position
+    p1Balls.forEach((ball, index) => {
+      $('body').append(
+        `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
+    style='
+    position:absolute;
+    left:${podium1StartingBallXY.x + index % 5 * (ballSize + ballGap)}px;
+    top:${podium1StartingBallXY.y + Math.floor(index / 5) * (ballSize + ballGap)}px;
+    width:${ballSize}px';>
+  `)
+    })
+    p2Balls.forEach((ball, index) => {
+      $('body').append(
+        `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
+    style='
+    position:absolute;
+    left:${podium2StartingBallXY.x + index % 5 * (ballSize + ballGap)}px;
+    top:${podium2StartingBallXY.y + Math.floor(index / 5) * (ballSize + ballGap)}px;
+    width:${ballSize}px';>
+  `)
+    })
+    p3Balls.forEach((ball, index) => {
+      $('body').append(
+        `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
+    style='
+    position:absolute;
+    left:${podium3StartingBallXY.x + index % 5 * (ballSize + ballGap)}px;
+    top:${podium3StartingBallXY.y + Math.floor(index / 5) * (ballSize + ballGap)}px;
+    width:${ballSize}px';>
+  `)
+    })
+
+    //zoomin ball, then push behind balls
+    function updateBall(status, player, ball) {
+      if (status == 'add') {
+        if (player == 1) {
+          if (!p2Balls.includes(ball) && !p3Balls.includes(ball)) {
+            setTimeout(() => {
+              p1Balls.push(ball)
+              console.log(p1Balls)
+              p1Balls.sort((a, b) => a - b)
+              console.log(p1Balls)
+              updateCoordinates(1)
+              $('body').append(
+                `<img src='../media/${ball}.png' class='ball zoomin' id='ball${ball}'
+                  style='
+                  position:absolute;
+                  left:${podium1StartingBallXY.x + (p1Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+                  top:${podium1StartingBallXY.y + Math.floor((p1Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+                  width:${ballSize}px';>
+                  `)
+            }, 2000)
+          }
+          else if (p2Balls.includes(ball)) {
+            p2Balls = p2Balls.filter(b => b != ball)
+            updateCoordinates(2)
+            p1Balls.push(ball)
+            p1Balls.sort((a, b) => a - b)
+            updateCoordinates(1)
+          }
+          else if (p3Balls.includes(ball)) {
+            p3Balls = p3Balls.filter(b => b != ball)
+            updateCoordinates(3)
+            p1Balls.push(ball)
+            p1Balls.sort((a, b) => a - b)
+            updateCoordinates(1)
+          }
+        }
+        else if (player == 2) {
+          if (!p1Balls.includes(ball) && !p3Balls.includes(ball)) {
+            setTimeout(() => {
+              p2Balls.push(ball)
+              console.log(p2Balls)
+              p2Balls.sort((a, b) => a - b)
+              console.log(p2Balls)
+              updateCoordinates(2)
+              $('body').append(
+                `<img src='../media/${ball}.png' class='ball zoomin' id='ball${ball}'
+                style='
+                position:absolute;
+                left:${podium2StartingBallXY.x + (p2Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+                top:${podium2StartingBallXY.y + Math.floor((p2Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+                width:${ballSize}px';>
+                `)
+            }, 2000)
+          }
+          else if (p1Balls.includes(ball)) {
+            p1Balls = p1Balls.filter(b => b != ball)
+            updateCoordinates(1)
+            p2Balls.push(ball)
+            p2Balls.sort((a, b) => a - b)
+            updateCoordinates(2)
+          }
+          else if (p3Balls.includes(ball)) {
+            p3Balls = p3Balls.filter(b => b != ball)
+            updateCoordinates(3)
+            p2Balls.push(ball)
+            p2Balls.sort((a, b) => a - b)
+            updateCoordinates(2)
+          }
+        }
+        else if (player == 3) {
+          if (!p1Balls.includes(ball) && !p2Balls.includes(ball)) {
+            setTimeout(()=>{
+              p3Balls.push(ball)
+              p3Balls.sort((a, b) => a - b)
+              updateCoordinates(3)
+              $('body').append(
+                `<img src='../media/${ball}.png' class='ball zoomin' id='ball${ball}'
+                  style='
+                  position:absolute;
+                  left:${podium3StartingBallXY.x + (p3Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+                  top:${podium3StartingBallXY.y + Math.floor((p3Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+                  width:${ballSize}px';>
+                  `)
+            },2000)
+          }
+          else if (p1Balls.includes(ball)) {
+            p1Balls = p1Balls.filter(b => b != ball)
+            updateCoordinates(1)
+            p3Balls.push(ball)
+            p3Balls.sort((a, b) => a - b)
+            updateCoordinates(3)
+          }
+          else if (p2Balls.includes(ball)) {
+            p2Balls = p2Balls.filter(b => b != ball)
+            updateCoordinates(2)
+            p3Balls.push(ball)
+            p3Balls.sort((a, b) => a - b)
+            updateCoordinates(3)
+          }
+        }
+      }
+      else if (status == 'del') {
+        if (player == 1) {
+          p1Balls = p1Balls.filter(b => b != ball)
+          p1Balls.sort((a, b) => a - b)
+          $(`#ball${ball}`).remove()
+          console.log(p1Balls)
+          updateCoordinates(1)
+        }
+        else if (player == 2) {
+          p2Balls = p2Balls.filter(b => b != ball)
+          p2Balls.sort((a, b) => a - b)
+          $(`#ball${ball}`).remove()
+          updateCoordinates(2)
+        }
+        else if (player == 3) {
+          p3Balls = p3Balls.filter(b => b != ball)
+          p3Balls.sort((a, b) => a - b)
+          $(`#ball${ball}`).remove()
+          updateCoordinates(3)
+        }
+      }
+      else if (status == 'jackpotAdd') {
+        if (player == 1) {
+          p1Jackpots.push(ball)
+          p1Balls = p1Balls.filter(b => b != ball)
+          //updateCoordinates(1)
+          updateJackpotCoordinates(1)
+        }
+        else if (player == 2) {
+          p2Jackpots.push(ball)
+          p2Balls = p2Balls.filter(b => b != ball)
+          //updateCoordinates(2)
+          updateJackpotCoordinates(2)
+        }
+        else if (player == 3) {
+          p3Jackpots.push(ball)
+          p3Balls = p3Balls.filter(b => b != ball)
+          //updateCoordinates(3)
+          updateJackpotCoordinates(3)
+        }
+      }
+      else if (status == 'jackpotDel') {
+        if (player == 1) {
+          p1Jackpots = p1Jackpots.filter(b => b != ball)
+          p1Balls.push(ball)
+          p1Balls.sort((a, b) => a - b)
+          updateJackpotCoordinates(1)
+          updateCoordinates(1)
+        }
+        else if (player == 2) {
+          p2Jackpots = p2Jackpots.filter(b => b != ball)
+          p2Balls.push(ball)
+          p2Balls.sort((a, b) => a - b)
+          updateJackpotCoordinates(2)
+          updateCoordinates(2)
+          console.log(p2Balls)
+        }
+        else if (player == 3) {
+          p3Jackpots = p3Jackpots.filter(b => b != ball)
+          p3Balls.push(ball)
+          p3Balls.sort((a, b) => a - b)
+          updateJackpotCoordinates(3)
+          updateCoordinates(3)
+        }
+      }
+    }
+
+    //SCORE
+    function updateScore(player, score) {
+      if (player == 1) {
+        $('#p1Score').text(`${score} CG`)
+      }
+      else if (player == 2) {
+        $('#p2Score').text(`${score} CG`)
+      }
+      else if (player == 3) {
+        $('#p3Score').text(`${score} CG`)
+      }
+    }
+
+    //COLOR
+    socket.on('color', (color) => {
+      if (color == 'all') {
+        document.querySelectorAll('.ball').forEach(ball => {
+          ball.style.filter = 'grayscale(0)'
+        })
+      }
+      else if (color == 'none') {
+        document.querySelectorAll('.ball').forEach(ball => {
+          ball.style.filter = 'grayscale(1)'
+        })
+      }
+      else if (color == 'red') {
+        for (let i = 1; i <= 50; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 1; i <= 10; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'blue') {
+        for (let i = 1; i <= 50; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 11; i <= 20; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'green') {
+        for (let i = 1; i <= 50; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 21; i <= 30; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'pink') {
+        for (let i = 1; i <= 50; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 31; i <= 40; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'yellow') {
+        for (let i = 1; i <= 50; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 41; i <= 50; i++) {
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+    })
+
+    socket.on('updateBall', (status, player, ball) => {
+      updateBall(status, player, ball)
+    })
+    socket.on('updateScore', (player, score) => {
+      updateScore(player, score)
+    })
+    // socket.on('playMusic', (url) => {
+    //   var sound = new Howl({
+    //     src: [url]
+    //   })
+    //   sound.play()
+    // })
+    // socket.on('stopMusic', () => {
+    //   Howler.stop()
+    // })
+    // socket.on('pauseMusic', () => {
+    //   Howler.pause()
+    // })
+  </script>
+</body>
+
+</html>

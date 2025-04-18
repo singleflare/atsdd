@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Host</title>
+</head>
+
+<body>
+
+  <style>
+    body {
+      position: relative;
+      aspect-ratio: 16/9;
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+
+    #systemBallGridImg {
+      position: absolute;
+      width: 40%;
+      top: -0.2%;
+      height: 41.4%;
+    }
+
+    #systemBallGrid {
+      position: absolute;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      z-index: 1;
+      top: 4.4%;
+      left: 1.9%;
+      width: 36.7%;
+      height: 32.9%;
+    }
+
+    #systemBallGrid img {
+      width: 90%;
+    }
+
+    #qPane {
+      object-fit: fill;
+      position: absolute;
+      width: 60%;
+      height: 41%;
+      top: 0;
+      left: 40%;
+    }
+
+    * {
+      font-family: utm_impact;
+    }
+
+    @font-face {
+      font-family: utm_impact;
+      src: url('../UTM-Impact.ttf');
+    }
+
+    @font-face {
+      font-family: lexend;
+      src: url('../Lexend-Regular.ttf');
+    }
+
+    #qno {
+      position: absolute;
+      color: white;
+      left: 42%;
+      width: 14.8%;
+      top: 3.6%;
+      font-size: 1.3vw;
+      font-family: 'lexend';
+    }
+
+    #question {
+      position: absolute;
+      color: white;
+      left: 41.7%;
+      width: 56.6%;
+      height: 23%;
+      top: 9%;
+      font-size: 1.3vw;
+      text-align: center;
+      font-family: 'lexend';
+    }
+
+    #answer {
+      position: absolute;
+      color: white;
+      left: 41.7%;
+      width: 56.6%;
+      top: 25%;
+      text-align: center;
+      font-family: 'lexend';
+      font-size: 1.3vw;
+    }
+
+    #explain {
+      position: absolute;
+      color: white;
+      left: 41.7%;
+      width: 56.6%;
+      top: 28%;
+      text-align: center;
+      font-family: 'lexend';
+      font-size: 1.3vw;
+    }
+
+    .pArea {
+      position: absolute;
+      width: 33.33%;
+      height: 42.4%;
+      top: 41%;
+    }
+
+    .name {
+      position: absolute;
+      font-size: 2vw;
+      left: 4%;
+      top: 6%;
+      width: 100%;
+      font-family: 'lexend';
+    }
+
+    .jackpot {
+      position: absolute;
+      font-size: 1.8vw;
+      top: 17.2%;
+      width: 60%;
+      left: 20%;
+      height: 13.5%;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      justify-items: center;
+    }
+
+    .jackpot img {
+      width: 70%;
+    }
+
+    .score {
+      position: absolute;
+      font-size: 2.2vw;
+      right: 4%;
+      top: 4.6%;
+      width: 25%;
+      text-align: right;
+    }
+
+    .pBallsGrid {
+      position: absolute;
+      font-size: 1.8vw;
+      top: 30.4%;
+      left: 3%;
+      width: 93.5%;
+      height: 45.3%;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      align-items: center;
+      justify-items: center;
+    }
+
+    #p1Area {}
+
+
+    #p2Area {
+      left: 33.33%;
+    }
+
+    #p3Area {
+      left: 66.67%;
+    }
+
+    .pBallsGrid img {
+      width: 90%;
+    }
+
+    #buzzerList {
+      position: absolute;
+      left: 57.1%;
+      width: 41.2%;
+      top: 1.9%;
+      height: 6.4%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    #buzzerList span {
+      font-size: 1.5vw;
+      color: white;
+      font-family: lexend;
+      margin: auto 0;
+    }
+
+    #glows {
+      position: absolute;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      top: 4%;
+      left: 1.7%;
+      width: 36.7%;
+      height: 33%;
+    }
+
+    #glows img {
+      width: 100%;
+      opacity: 0;
+    }
+  </style>
+  <img src='../media/systemBallGrid.png' id='systemBallGridImg'>
+  <div id='systemBallGrid'>
+    <img src='../media/1.png' id='ball1' class='ball'>
+    <img src='../media/2.png' id='ball2' class='ball'>
+    <img src='../media/3.png' id='ball3' class='ball'>
+    <img src='../media/4.png' id='ball4' class='ball'>
+    <img src='../media/5.png' id='ball5' class='ball'>
+    <img src='../media/6.png' id='ball6' class='ball'>
+    <img src='../media/7.png' id='ball7' class='ball'>
+    <img src='../media/8.png' id='ball8' class='ball'>
+    <img src='../media/9.png' id='ball9' class='ball'>
+    <img src='../media/10.png' id='ball10' class='ball'>
+    <img src='../media/11.png' id='ball11' class='ball'>
+    <img src='../media/12.png' id='ball12' class='ball'>
+    <img src='../media/13.png' id='ball13' class='ball'>
+    <img src='../media/14.png' id='ball14' class='ball'>
+    <img src='../media/15.png' id='ball15' class='ball'>
+    <img src='../media/16.png' id='ball16' class='ball'>
+    <img src='../media/17.png' id='ball17' class='ball'>
+    <img src='../media/18.png' id='ball18' class='ball'>
+    <img src='../media/19.png' id='ball19' class='ball'>
+    <img src='../media/20.png' id='ball20' class='ball'>
+    <img src='../media/21.png' id='ball21' class='ball'>
+    <img src='../media/22.png' id='ball22' class='ball'>
+    <img src='../media/23.png' id='ball23' class='ball'>
+    <img src='../media/24.png' id='ball24' class='ball'>
+    <img src='../media/25.png' id='ball25' class='ball'>
+    <img src='../media/26.png' id='ball26' class='ball'>
+    <img src='../media/27.png' id='ball27' class='ball'>
+    <img src='../media/28.png' id='ball28' class='ball'>
+    <img src='../media/29.png' id='ball29' class='ball'>
+    <img src='../media/30.png' id='ball30' class='ball'>
+    <img src='../media/31.png' id='ball31' class='ball'>
+    <img src='../media/32.png' id='ball32' class='ball'>
+    <img src='../media/33.png' id='ball33' class='ball'>
+    <img src='../media/34.png' id='ball34' class='ball'>
+    <img src='../media/35.png' id='ball35' class='ball'>
+    <img src='../media/36.png' id='ball36' class='ball'>
+    <img src='../media/37.png' id='ball37' class='ball'>
+    <img src='../media/38.png' id='ball38' class='ball'>
+    <img src='../media/39.png' id='ball39' class='ball'>
+    <img src='../media/40.png' id='ball40' class='ball'>
+    <img src='../media/41.png' id='ball41' class='ball'>
+    <img src='../media/42.png' id='ball42' class='ball'>
+    <img src='../media/43.png' id='ball43' class='ball'>
+    <img src='../media/44.png' id='ball44' class='ball'>
+    <img src='../media/45.png' id='ball45' class='ball'>
+    <img src='../media/46.png' id='ball46' class='ball'>
+    <img src='../media/47.png' id='ball47' class='ball'>
+    <img src='../media/48.png' id='ball48' class='ball'>
+    <img src='../media/49.png' id='ball49' class='ball'>
+    <img src='../media/50.png' id='ball50' class='ball'>
+  </div>
+  <div id='glows'>
+    <img src='../media/glow2.png' id='glow1'>
+    <img src='../media/glow2.png' id='glow2'>
+    <img src='../media/glow2.png' id='glow3'>
+    <img src='../media/glow2.png' id='glow4'>
+    <img src='../media/glow2.png' id='glow5'>
+    <img src='../media/glow2.png' id='glow6'>
+    <img src='../media/glow2.png' id='glow7'>
+    <img src='../media/glow2.png' id='glow8'>
+    <img src='../media/glow2.png' id='glow9'>
+    <img src='../media/glow2.png' id='glow10'>
+    <img src='../media/glow2.png' id='glow11'>
+    <img src='../media/glow2.png' id='glow12'>
+    <img src='../media/glow2.png' id='glow13'>
+    <img src='../media/glow2.png' id='glow14'>
+    <img src='../media/glow2.png' id='glow15'>
+    <img src='../media/glow2.png' id='glow16'>
+    <img src='../media/glow2.png' id='glow17'>
+    <img src='../media/glow2.png' id='glow18'>
+    <img src='../media/glow2.png' id='glow19'>
+    <img src='../media/glow2.png' id='glow20'>
+    <img src='../media/glow2.png' id='glow21'>
+    <img src='../media/glow2.png' id='glow22'>
+    <img src='../media/glow2.png' id='glow23'>
+    <img src='../media/glow2.png' id='glow24'>
+    <img src='../media/glow2.png' id='glow25'>
+    <img src='../media/glow2.png' id='glow26'>
+    <img src='../media/glow2.png' id='glow27'>
+    <img src='../media/glow2.png' id='glow28'>
+    <img src='../media/glow2.png' id='glow29'>
+    <img src='../media/glow2.png' id='glow30'>
+    <img src='../media/glow2.png' id='glow31'>
+    <img src='../media/glow2.png' id='glow32'>
+    <img src='../media/glow2.png' id='glow33'>
+    <img src='../media/glow2.png' id='glow34'>
+    <img src='../media/glow2.png' id='glow35'>
+    <img src='../media/glow2.png' id='glow36'>
+    <img src='../media/glow2.png' id='glow37'>
+    <img src='../media/glow2.png' id='glow38'>
+    <img src='../media/glow2.png' id='glow39'>
+    <img src='../media/glow2.png' id='glow40'>
+    <img src='../media/glow2.png' id='glow41'>
+    <img src='../media/glow2.png' id='glow42'>
+    <img src='../media/glow2.png' id='glow43'>
+    <img src='../media/glow2.png' id='glow44'>
+    <img src='../media/glow2.png' id='glow45'>
+    <img src='../media/glow2.png' id='glow46'>
+    <img src='../media/glow2.png' id='glow47'>
+    <img src='../media/glow2.png' id='glow48'>
+    <img src='../media/glow2.png' id='glow49'>
+    <img src='../media/glow2.png' id='glow50'>
+  </div>
+  <img src='../media/qPaneHost.png' id='qPane'>
+  <div id='qno'></div>
+  <div id='buzzerList'>
+    <span id='first'>1.</span>
+    <span id='second'>2.</span>
+    <span id='third'>3.</span>
+  </div>
+  <div id='question'></div>
+  <div id='answer'></div>
+  <div id='explain'></div>
+  <div id='p1Area' class='pArea'>
+    <div id='p1Name' class='name'></div>
+    <div id='p1Jackpots' class='jackpot'></div>
+    <div id='p1Score' class='score'></div>
+    <img src='../media/playerBallsPodium.png' style='width: 100%;'>
+    <div id='p1Balls' class='pBallsGrid'></div>
+  </div>
+  <div id='p2Area' class='pArea'>
+    <div id='p2Name' class='name'></div>
+    <div id='p2Jackpots' class='jackpot'></div>
+    <div id='p2Score' class='score'></div>
+    <img src='../media/playerBallsPodium.png' style='width: 100%;'>
+    <div id='p2Balls' class='pBallsGrid'></div>
+  </div>
+  <div id='p3Area' class='pArea'>
+    <div id='p3Name' class='name'></div>
+    <div id='p3Jackpots' class='jackpot'></div>
+    <div id='p3Score' class='score'></div>
+    <img src='../media/playerBallsPodium.png' style='width: 100%;'>
+    <div id='p3Balls' class='pBallsGrid'></div>
+  </div>
+  <!-- <script src='../scripts/disableDevTools.js'></script> -->
+  <script src='../scripts/jquery-3.7.1.min.js'></script>
+  <script src='/socket.io/socket.io.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
+    integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const socket = io('/host');
+
+    socket.on('qna', (qnas, qno) => {
+      $('#question').text(qnas.q);
+      $('#answer').text(`Đáp án: ${qnas.a}`);
+      $('#explain').text(`Giải thích: ${qnas.exp}`);
+      qno++;
+      if (qno >= 1 && qno <= 10) {
+        $('#qno').text('Vòng 1 Câu ' + qno)
+      }
+      else if (qno >= 11 && qno <= 20) {
+        $('#qno').text('Vòng 2 Luợt 1 Câu ' + (qno - 10))
+      }
+      else if (qno >= 21 && qno <= 30) {
+        $('#qno').text('Vòng 2 Luợt 2 Câu ' + (qno - 20))
+      }
+      else if (qno >= 31 && qno <= 40) {
+        $('#qno').text('Vòng 2 Luợt 3 Câu ' + (qno - 30))
+      }
+      else if (qno >= 41 && qno <= 50) {
+        $('#qno').text('Vòng 3 Câu ' + (qno - 40))
+      }
+      else if (qno >= 51 && qno <= 60) {
+        $('#qno').text('Vòng 4 Câu ' + (qno - 50))
+      }
+    });
+
+    socket.on('hideQ', () => {
+      $('#question').css('display', 'none');
+      $('#answer').css('display', 'none');
+      $('#qno').css('display', 'none');
+    })
+    socket.on('showQ', () => {
+      $('#question').css('display', 'initial');
+      $('#answer').css('display', 'initial');
+      $('#qno').css('display', 'initial');
+    })
+
+    socket.on('updateBalls', (p, balls) => {
+      if (p == 'system') {
+        $('#systemBallGrid').empty()
+        for (let i = 1; i <= 50; i++) {
+          $('#systemBallGrid').append(`<img src='../media/${i}.png' class='ball' id='ball${i}'>`)
+          if (!balls.includes(i)) $(`#ball${i}`).css('opacity', '0')
+        }
+      }
+      else if (p == 1) {
+        $('#p1Balls').empty()
+        balls.forEach((ball) => {
+          $('#p1Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+        })
+      }
+      else if (p == 2) {
+        $('#p2Balls').empty()
+        balls.forEach((ball) => {
+          $('#p2Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+        })
+      }
+      else if (p == 3) {
+        $('#p3Balls').empty()
+        balls.forEach((ball) => {
+          $('#p3Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+        })
+      }
+    })
+
+    socket.on('updateJackpots', (p, balls) => {
+      if (p == 1) {
+        $('#p1Jackpots').empty()
+        balls.forEach((ball) => {
+          $('#p1Jackpots').append(`<img src='../media/${ball}.png' id='${ball}'>`)
+        })
+      }
+      else if (p == 2) {
+        $('#p2Jackpots').empty()
+        balls.forEach((ball) => {
+          $('#p2Jackpots').append(`<img src='../media/${ball}.png' id='${ball}'>`)
+        })
+      }
+      else if (p == 3) {
+        $('#p3Jackpots').empty()
+        balls.forEach((ball) => {
+          $('#p3Jackpots').append(`<img src='../media/${ball}.png' id='${ball}'>`)
+        })
+      }
+    })
+
+    socket.on('updateScore', (p, score) => {
+      if (p == 1) {
+        $('#p1Score').text(score)
+      }
+      else if (p == 2) {
+        $('#p2Score').text(score)
+      }
+      else if (p == 3) {
+        $('#p3Score').text(score)
+      }
+    })
+
+    socket.on('updateName', (p, name) => {
+      if (p == 1) {
+        $('#p1Name').text(name)
+      }
+      else if (p == 2) {
+        $('#p2Name').text(name)
+      }
+      else if (p == 3) {
+        $('#p3Name').text(name)
+      }
+    })
+
+    socket.on('updateBuzzPositionToHost', buzzed => {
+      if (buzzed == 0) {
+        $('#first').text('1.')
+        $('#second').text('2.')
+        $('#third').text('3.')
+        return
+      }
+      else {
+        $('#first').text(`1. ${buzzed[0]}`)
+        $('#second').text(`2. ${buzzed[1]}`)
+        $('#third').text(`3. ${buzzed[2]}`)
+      }
+    })
+
+    socket.on('playMusic', (url) => {
+      var sound = new Howl({
+        src: [url]
+      })
+      sound.play()
+    })
+    socket.on('stopMusic', () => {
+      Howler.stop()
+    })
+    socket.on('pauseMusic', () => {
+      Howler.pause()
+    })
+
+    socket.on('glowBall', (ball) => {
+      $(`#glow` + ball).css('opacity', '1')
+    })
+    socket.on('delGlowBall', (ball) => {
+      $(`#glow` + ball).css('opacity', '0')
+    })
+    socket.on('delAllGlowBall', () => {
+      $(`#glows img`).css('opacity', '0')
+    })
+
+    socket.on('color', (color) => {
+      console.log(color)
+      if (color == 'all') {
+        document.querySelectorAll('.ball').forEach(ball => {
+          ball.style.filter = 'grayscale(0)'
+        })
+      }
+      else if (color == 'none') {
+        document.querySelectorAll('.ball').forEach(ball => {
+          ball.style.filter = 'grayscale(1)'
+        })
+      }
+      else if (color == 'red') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 1; i <= 10; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'blue') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 11; i <= 20; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'green') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 21; i <= 30; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'pink') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 31; i <= 40; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+      else if (color == 'yellow') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(1)' }
+          catch (e) { }
+        }
+        for (let i = 41; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+          try { document.querySelector(`.pBallsGrid #ball${i}`).style.filter = 'grayscale(0)' }
+          catch (e) { }
+        }
+      }
+    })
+
+    socket.on('showPInfo', (playerName) => {
+      $('#first').text(`Đang trả lời: ${playerName}`)
+      $('#second').text('Thời gian: ')
+      $('#third').html(`<span style='color:green'>Đúng</span>/<span style='color:red'>Sai</span>/<span style='color:yellow'>Bỏ qua</span>:<br>
+                      1 2 3 4 5 6 7 8 9 10`)
+    })
+
+    socket.on('updateTime', (time) => {
+      $('#second').text(`Thời gian: ${time}`)
+    })
+
+    let ans1Color = '<span style="color:white">1 <span> </span></span>'
+    let ans2Color = '<span style="color:white">2 <span> </span></span>'
+    let ans3Color = '<span style="color:white">3 <span> </span></span>'
+    let ans4Color = '<span style="color:white">4 <span> </span></span>'
+    let ans5Color = '<span style="color:white">5 <span> </span></span>'
+    let ans6Color = '<span style="color:white">6 <span> </span></span>'
+    let ans7Color = '<span style="color:white">7 <span> </span></span>'
+    let ans8Color = '<span style="color:white">8 <span> </span></span>'
+    let ans9Color = '<span style="color:white">9 <span> </span></span>'
+    let ans10Color = '<span style="color:white">10 <span> </span></span>'
+    socket.on('updateAnsStatus', (stat, index) => {
+      index++
+      console.log(stat, index)
+      if (stat == 'correct') {
+        if (index == 1) ans1Color = '<span style="color:green">1 <span> </span></span>'
+        else if (index == 2) ans2Color = '<span style="color:green">2 <span> </span></span>'
+        else if (index == 3) ans3Color = '<span style="color:green">3 <span> </span></span>'
+        else if (index == 4) ans4Color = '<span style="color:green">4 <span> </span></span>'
+        else if (index == 5) ans5Color = '<span style="color:green">5 <span> </span></span>'
+        else if (index == 6) ans6Color = '<span style="color:green">6 <span> </span></span>'
+        else if (index == 7) ans7Color = '<span style="color:green">7 <span> </span></span>'
+        else if (index == 8) ans8Color = '<span style="color:green">8 <span> </span></span>'
+        else if (index == 9) ans9Color = '<span style="color:green">9 <span> </span></span>'
+        else if (index == 10) ans10Color = '<span style="color:green">10 <span> </span></span>'
+      }
+      else if (stat == 'wrong') {
+        if (index == 1) ans1Color = '<span style="color:red">1 <span> </span></span>'
+        else if (index == 2) ans2Color = '<span style="color:red">2 <span> </span></span>'
+        else if (index == 3) ans3Color = '<span style="color:red">3 <span> </span></span>'
+        else if (index == 4) ans4Color = '<span style="color:red">4 <span> </span></span>'
+        else if (index == 5) ans5Color = '<span style="color:red">5 <span> </span></span>'
+        else if (index == 6) ans6Color = '<span style="color:red">6 <span> </span></span>'
+        else if (index == 7) ans7Color = '<span style="color:red">7 <span> </span></span>'
+        else if (index == 8) ans8Color = '<span style="color:red">8 <span> </span></span>'
+        else if (index == 9) ans9Color = '<span style="color:red">9 <span> </span></span>'
+        else if (index == 10) ans10Color = '<span style="color:red">10 <span> </span></span>'
+      }
+      else if (stat == 'pass') {
+        if (index == 1) ans1Color = '<span style="color:yellow">1 <span> </span></span>'
+        else if (index == 2) ans2Color = '<span style="color:yellow">2 <span> </span></span>'
+        else if (index == 3) ans3Color = '<span style="color:yellow">3 <span> </span></span>'
+        else if (index == 4) ans4Color = '<span style="color:yellow">4 <span> </span></span>'
+        else if (index == 5) ans5Color = '<span style="color:yellow">5 <span> </span></span>'
+        else if (index == 6) ans6Color = '<span style="color:yellow">6 <span> </span></span>'
+        else if (index == 7) ans7Color = '<span style="color:yellow">7 <span> </span></span>'
+        else if (index == 8) ans8Color = '<span style="color:yellow">8 <span> </span></span>'
+        else if (index == 9) ans9Color = '<span style="color:yellow">9 <span> </span></span>'
+        else if (index == 10) ans10Color = '<span style="color:yellow">10 <span> </span></span>'
+      }
+      $('#third').html(`<span style='color:green'>Đúng</span>/<span style='color:red'>Sai</span>/<span style='color:yellow'>Bỏ qua</span>:<br>`).append(ans1Color + ans2Color + ans3Color + ans4Color + ans5Color + ans6Color + ans7Color + ans8Color + ans9Color + ans10Color)
+    })
+  </script>
+</body>
+
+</html>

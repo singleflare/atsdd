@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overlay</title>
+</head>
+
+<body>
+  <style>
+    @font-face {
+      font-family: 'MyriadPro-SemiCondBold';
+      src: url('../media/MYRIADPRO-BOLDSEMICN.OTF');
+    }
+
+    @font-face {
+      font-family: 'Geomanist-Black';
+      src: url('../media/Geomanist-Black.otf');
+    }
+
+    @font-face {
+      font-family: 'Geomanist-Medium';
+      src: url('../media/Geomanist-Medium.otf');
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0);
+    }
+
+    #round13 .qInfo,
+    #round4 .qInfo {
+      font-family: 'Geomanist-Black';
+      font-size: 35px;
+      color: white;
+      width: 350px;
+      top: 744px;
+      left: 295px;
+      text-align: center;
+    }
+
+    .question {
+      font-family: 'MyriadPro-SemiCondBold';
+      font-size: 36px;
+      color: white;
+      text-shadow: 4px 4px 2px #000000
+    }
+
+    #round13 .question,
+    #round4 .question {
+      width: 1300px;
+      top: 805px;
+      left: 309px;
+    }
+
+
+    #round2 .question {
+      width: 1309px;
+      top: 772px;
+      left: 306px;
+    }
+
+    #jackpotBallsContainer {
+      position: absolute;
+      width: 786px;
+      top: 824px;
+      left: 568px;
+      height: 125px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    #jackpotBallsContainer>div {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+
+    #jackpotBallsContainer>div>* {
+      position: absolute;
+    }
+
+    #jackpotBallsContainer>div>img {
+      width: 100px;
+      height: 100px;
+    }
+
+    #jackpotBallsContainer>div .orbit {
+      left: -25px;
+      top: -25px;
+      width: 150px;
+    }
+
+    #jackpotBallsContainer>div .wipe {
+      left: -18px;
+      top: -20px;
+      width: 140px;
+    }
+
+    .ball {
+      opacity: 0;
+      z-index: 1;
+    }
+
+    @keyframes orbit-exit {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(2);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(0);
+      }
+    }
+
+    @keyframes orbit-entrance {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes ball-entrance-for-orbit {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes wipe-entrance {
+      0% {
+        opacity: 1;
+        clip-path: inset(0 0 100% 0);
+      }
+
+      100% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    @keyframes wipe-exit {
+      0% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+      }
+
+      100% {
+        opacity: 1;
+        clip-path: inset(0 0 100% 0);
+      }
+    }
+
+    @keyframes ball-entrance-for-wipe {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .anim {
+      opacity: 0;
+      z-index: 2;
+    }
+
+    #round2>*,
+    #round13>*,
+    #round4>*,
+    #jackpotRulesContainer>* {
+      position: absolute;
+    }
+
+    #jackpotRulesContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .category {
+      font-family: 'MyriadPro-SemiCondBold';
+      font-size: 35px;
+      color: white;
+      width: 945px;
+      top: 736px;
+      left: 679px;
+      text-align: center;
+    }
+
+    #round13 .qInfo,
+    #round13 .question,
+    #round13 video,
+    #round2 .question,
+    #round2 video,
+    #round4 .qInfo,
+    #round4 .question,
+    #round4 .category,
+    #round4 video,
+    #jackpotRolling,
+    #jackpotRules,
+    #threeBallsPrizeText,
+    #threeBallsPrizeNum,
+    #fiveBallsPrizeText,
+    #fiveBallsPrizeNum,
+    #qbvPrizeText,
+    #qbvPrizeNum {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .ballsSequence {
+      display: grid;
+      grid-template-columns: repeat(10, 60px);
+      top: 924px;
+      left: 770px;
+      transition: opacity 0.5s;
+    }
+
+    .ballsSequence img {
+      width: 45px;
+      transition: opacity 0.5s;
+      opacity: 0;
+    }
+
+    .time {
+      top: 926px;
+      left: 622px;
+      font-family: 'Geomanist-Black';
+      font-size: 53px;
+      color: white;
+
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    #jackpotRules {
+      position: absolute;
+      top: 0;
+    }
+
+    .ballsPrizeText {
+      font-family: 'Geomanist-Medium';
+      font-size: 50px;
+    }
+
+    .ballsPrizeNum {
+      font-family: 'Geomanist-Medium';
+      font-size: 80px;
+    }
+
+    #threeBallsPrizeText {
+      top: 876px;
+      left: 590px;
+      width: 360px;
+      color: #D7C6F6;
+    }
+
+    #fiveBallsPrizeText {
+      top: 876px;
+      left: 580px;
+      width: 360px;
+      color: white;
+    }
+
+    #threeBallsPrizeNum {
+      top: 854px;
+      left: 966px;
+      width: 400px;
+      color: white;
+    }
+
+    #fiveBallsPrizeNum {
+      top: 854px;
+      left: 936px;
+      width: 410px;
+      color: #FFFF00;
+      text-shadow: 0px 2px 15px #FFFF00;
+    }
+
+    #qbvPrizeText {
+      top: 830px;
+      left: 670px;
+      width: 420px;
+      color: #51360F;
+      font-family: 'Geomanist-Black';
+      font-size: 50px;
+    }
+
+    #qbvPrizeNum {
+      top: 889px;
+      left: 668px;
+      width: 590px;
+      color: #0D0D0D;
+      font-family: 'Geomanist-Black';
+      font-size: 80px;
+    }
+  </style>
+  <div id='round13'>
+    <video src='../media/r13_appear_anim.webm' muted></video>
+    <div class='qInfo'></div>
+    <div class='question'></div>
+  </div>
+  <div id='round2'>
+    <video src='../media/r2_appear_anim.webm' muted id='qBar2'></video>
+    <div class='question'></div>
+    <div class='ballsSequence'>
+      <img src='../media/unanswered.png' class='slot1'>
+      <img src='../media/unanswered.png' class='slot2'>
+      <img src='../media/unanswered.png' class='slot3'>
+      <img src='../media/unanswered.png' class='slot4'>
+      <img src='../media/unanswered.png' class='slot5'>
+      <img src='../media/unanswered.png' class='slot6'>
+      <img src='../media/unanswered.png' class='slot7'>
+      <img src='../media/unanswered.png' class='slot8'>
+      <img src='../media/unanswered.png' class='slot9'>
+      <img src='../media/unanswered.png' class='slot10'>
+    </div>
+    <div class='time'>60</div>
+  </div>
+  <div id='round4'>
+    <video src='../media/r4_appear_anim.webm' muted></video>
+    <div class='qInfo'></div>
+    <div class='category'></div>
+    <div class='question'></div>
+  </div>
+
+  <video src='../media/jackpot_5_balls.webm' id='jackpotRolling'></video>
+  <div id='jackpotBallsContainer'>
+    <div id='jackpotBall1Container'>
+    </div>
+    <div id='jackpotBall2Container'>
+    </div>
+    <div id='jackpotBall3Container'>
+    </div>
+    <div id='jackpotBall4Container'>
+    </div>
+    <div id='jackpotBall5Container'>
+    </div>
+  </div>
+
+  <div id='jackpotRulesContainer'>
+    <video src='../media/jackpot_rules.webm' muted id='jackpotRules'></video>
+    <span class='ballsPrizeText' id='threeBallsPrizeText'>GIẢI TRÚNG SỐ</span>
+    <span class='ballsPrizeNum' id='threeBallsPrizeNum'>30.000 CG</span>
+    <span class='ballsPrizeText' id='fiveBallsPrizeText'>GIẢI ĐỘC ĐẮC</span>
+    <span class='ballsPrizeNum' id='fiveBallsPrizeNum'>100.000 CG</span>
+    <span id='qbvPrizeText'>QUẢ BÓNG VÀNG</span>
+    <span id='qbvPrizeNum'>5.000 CG / QUẢ</span>
+  </div>
+
+  <script src='../scripts/jquery-3.7.1.min.js'></script>
+  <script src='/socket.io/socket.io.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
+    integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const socket = io('/overlay');
+
+    let cat = 'Viễn thông'
+    socket.on('qna', (qnas, qno) => {
+      qno++
+      console.log(qnas, qno);
+      showQuestionAndGpx(qno, qnas.q, cat);
+    })
+    socket.on('hideQGpx', () => {
+      hideAllGpx();
+    })
+    socket.on('showR2Gpx', () => {
+      showR2Gpx();
+    })
+    // socket.on('hideR2Gpx', () => {
+    //   hideAllGpx();
+    // })
+    socket.on('showR2Question', (question) => {
+      showR2Question(question);
+    })
+    socket.on('hideR2Question', () => {
+      $('#round2 .question').css('opacity', 0);
+    })
+    socket.on('updateAnsStatus', (stat, i, ball) => {
+      i++
+      if (stat == 'correct') {
+        $(`.slot${i}`).prop('src', `../media/${ball}.png`)
+      }
+      else if (stat == 'wrong') {
+        $(`.slot${i}`).prop('src', `../media/wrongBall r2.png`)
+      }
+      else if (stat == 'pass') {
+        $(`.slot${i}`).prop('src', `../media/passed.png`)
+      }
+    })
+    socket.on('setWaitAnim', anim => {
+      setWaitAnim(anim)
+    })
+    socket.on('showAnim', pos => {
+      showAnim(pos)
+    })
+    socket.on('showBalls', (ball, pos) => {
+      showBalls(ball, pos)
+    })
+
+    function showQuestionAndGpx(qno, question, category) {
+      if (qno >= 1 && qno <= 10) {
+        document.querySelector('#round13 video').play();
+        $('#round13 video').css('opacity', 1);
+        setTimeout(() => {
+          $('#round13 .qInfo').css('opacity', 1);
+          $('#round13 .question').css('opacity', 1);
+          $('#round13 .qInfo').text(`VÒNG 1 - CÂU ${qno}`);
+          $('#round13 .question').text(question);
+        }, 850)
+      }
+      else if (qno >= 41 && qno <= 50) {
+        document.querySelector('#round13 video').play();
+        $('#round13 video').css('opacity', 1);
+        setTimeout(() => {
+          $('#round13 .qInfo').css('opacity', 1);
+          $('#round13 .question').css('opacity', 1);
+          $('#round13 .qInfo').text(`VÒNG 3 - CÂU ${qno - 40}`);
+          $('#round13 .question').text(question);
+        }, 850)
+      }
+      else if (qno >= 51 && qno <= 60) {
+        document.querySelector('#round4 video').play();
+        $('#round4 video').css('opacity', 1);
+        setTimeout(() => {
+          $('#round4 .qInfo').css('opacity', 1);
+          $('#round4 .category').css('opacity', 1);
+          $('#round4 .question').css('opacity', 1);
+          $('#round4 .qInfo').text(`VÒNG 4 - CÂU ${qno - 50}`);
+          $('#round4 .category').text(`Chủ đề: ${category}`);
+          $('#round4 .question').text(question);
+        }, 850)
+      }
+    }
+
+    function showR2Gpx() {
+      $('.ballsSequence').html(`
+      <img src='../media/unanswered.png' class='slot1'>
+      <img src='../media/unanswered.png' class='slot2'>
+      <img src='../media/unanswered.png' class='slot3'>
+      <img src='../media/unanswered.png' class='slot4'>
+      <img src='../media/unanswered.png' class='slot5'>
+      <img src='../media/unanswered.png' class='slot6'>
+      <img src='../media/unanswered.png' class='slot7'>
+      <img src='../media/unanswered.png' class='slot8'>
+      <img src='../media/unanswered.png' class='slot9'>
+      <img src='../media/unanswered.png' class='slot10'>
+      `)
+      document.querySelector('#round2 video').play();
+      $('#round2 video').css('opacity', 1);
+      $('.ballsSequence').css('opacity', 1);
+      setTimeout(() => {
+        $('.time').css('opacity', 1);
+        $('.ballsSequence img').each((i, el) => {
+          setTimeout(() => {
+            $(el).css('opacity', 1);
+          }, i * 50);
+        })
+      }, 900)
+    }
+
+    function showR2Question(question) {
+      $('#round2 .question').text(question.q);
+      $('#round2 .question').css('opacity', 1);
+    }
+
+    function updateTime(time) {
+      $('.time').text(time);
+    }
+
+    function hideAllGpx() {
+      $('#round13 video').css('opacity', 0);
+      $('#round13 .qInfo').css('opacity', 0);
+      $('#round13 .question').css('opacity', 0);
+      $('#round2 video').css('opacity', 0);
+      $('#round2 .question').css('opacity', 0);
+      $('.time').css('opacity', 0);
+      $('.ballsSequence').css('opacity', 0);
+      $('#round4 video').css('opacity', 0);
+      $('#round4 .qInfo').css('opacity', 0);
+      $('#round4 .category').css('opacity', 0);
+      $('#round4 .question').css('opacity', 0);
+      $('.ballsSequence img').css('opacity', 0);
+    }
+
+    //jackpot round
+    let animation = 'orbit';
+    setWaitAnim('orbit');
+    function setWaitAnim(anim) {
+      if (anim == 'orbit') {
+        animation = 'orbit';
+        $('#jackpotBallsContainer div').find('video').remove();
+        $('#jackpotBall1Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
+        $('#jackpotBall2Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
+        $('#jackpotBall3Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
+        $('#jackpotBall4Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
+        $('#jackpotBall5Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
+      }
+      else if (anim == 'wipe') {
+        animation = 'wipe';
+        $('#jackpotBallsContainer div').find('video').remove();
+        $('#jackpotBall1Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
+        $('#jackpotBall2Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
+        $('#jackpotBall3Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
+        $('#jackpotBall4Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
+        $('#jackpotBall5Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
+      }
+    }
+    function startJackpotRoundGpx() {
+      $('#jackpotBallsContainer').css('opacity', 1);
+      $('#jackpotRolling').css('opacity', 1);
+      document.querySelector('#jackpotRolling').play();
+    }
+    function fadeOutJackpotRoundGpx() {
+      $('#jackpotBallsContainer').css('opacity', 0);
+      $('#jackpotRolling').css('opacity', 0);
+    }
+    function fadeInJackpotRoundGpx() {
+      $('#jackpotBallsContainer').css('opacity', 1);
+      $('#jackpotRolling').css('opacity', 1);
+    }
+    function resetJackpotRoundGpx() {
+      $('#jackpotBallsContainer').css('opacity', 0);
+      $('#jackpotRolling').css('opacity', 0);
+      $('#jackpotBallsContainer div').find('video').remove();
+      $('#jackpotBall1Container').find('img').remove();
+      $('#jackpotBall2Container').find('img').remove();
+      $('#jackpotBall3Container').find('img').remove();
+      $('#jackpotBall4Container').find('img').remove();
+      $('#jackpotBall5Container').find('img').remove();
+    }
+
+    //anim
+    function showAnim(pos) {
+      console.log('showAnim');
+      if (animation == 'orbit') {
+        $(`#jackpotBall${pos}Container .orbit`).css('animation', 'orbit-entrance 0.5s forwards linear');
+      }
+      else if (animation == 'wipe') {
+        $(`#jackpotBall${pos}Container .wipe`).css('animation', 'wipe-entrance 0.2s forwards linear');
+      }
+    }
+    function showBalls(ball, pos) {
+      if (animation == 'orbit') {
+        $(`#jackpotBall${pos}Container .orbit`).css('animation', 'orbit-exit 1s forwards linear');
+        $(`#jackpotBall${pos}Container`).append(`<img class='ball' src="../media/${ball}.png" style="animation: ball-entrance-for-orbit 0.3s 1s forwards linear" />`);
+      }
+      if (animation == 'wipe') {
+        $(`#jackpotBall${pos}Container .wipe`).css('animation', 'wipe-exit 0.2s forwards linear');
+        $(`#jackpotBall${pos}Container`).append(`<img class='ball' src="../media/${ball}.png" style="animation: ball-entrance-for-wipe 0s forwards linear 0s" />`);
+      }
+    }
+
+    let jackpotRulesVid = document.querySelector('#jackpotRules')
+    function playFromTo(from, to) {
+      jackpotRulesVid.currentTime = from;
+      jackpotRulesVid.play();
+      $('#jackpotRules').css('opacity', 1);
+      const stopVideo = () => {
+        if (jackpotRulesVid.currentTime >= to) {
+          jackpotRulesVid.pause();
+          jackpotRulesVid.removeEventListener('timeupdate', stopVideo);
+        }
+      };
+      jackpotRulesVid.addEventListener('timeupdate', stopVideo);
+    }
+
+    socket.on('playJackpotGpx', () => {
+      startJackpotRoundGpx();
+    })
+    socket.on('showJackpotGpx', () => {
+      fadeInJackpotRoundGpx();
+    })
+    socket.on('hideJackpotGpx', () => {
+      fadeOutJackpotRoundGpx();
+    })
+    socket.on('resetJackpotGpx', () => {
+      resetJackpotRoundGpx();
+    })
+    socket.on('anim_3BallsJackpotted', () => {
+      anim_show3BallsJackpotted();
+    })
+    socket.on('anim_3BallsPrize', () => {
+      anim_show3BallsPrize();
+    })
+    socket.on('anim_5BallsJackpotted', () => {
+      anim_show5BallsJackpotted();
+    })
+    socket.on('anim_5BallsPrize', () => {
+      anim_show5BallsPrize();
+    })
+    socket.on('anim_QbvPrize', () => {
+      anim_showQbvPrize();
+    })
+    socket.on('anim_fadeOutJackpotRules', () => {
+      anim_fadeOutJackpotRules();
+    })
+    function anim_show3BallsJackpotted() {
+      jackpotRulesVid.style.opacity = 1;
+      playFromTo(0, 0.7);
+    }
+    function anim_show3BallsPrize() {
+      playFromTo(1.1, 1.7);
+      setTimeout(() => {
+        $('#threeBallsPrizeText').css('opacity', 1);
+        $('#threeBallsPrizeNum').css('opacity', 1);
+      }, 600)
+    }
+    function anim_show5BallsJackpotted() {
+      $('#threeBallsPrizeText').css('opacity', 0);
+      $('#threeBallsPrizeNum').css('opacity', 0);
+      playFromTo(2.1, 2.7);
+    }
+    function anim_show5BallsPrize() {
+      playFromTo(3, 3.6);
+      setTimeout(() => {
+        $('#fiveBallsPrizeText').css('opacity', 1);
+        $('#fiveBallsPrizeNum').css('opacity', 1);
+      }, 1000)
+    }
+    function anim_showQbvPrize() {
+      $('#fiveBallsPrizeText').css('opacity', 0);
+      $('#fiveBallsPrizeNum').css('opacity', 0);
+      playFromTo(4, 5);
+      setTimeout(() => {
+        $('#qbvPrizeText').css('opacity', 1);
+        $('#qbvPrizeNum').css('opacity', 1);
+      }, 1200)
+    }
+    function anim_fadeOutJackpotRules() {
+      jackpotRulesVid.style.opacity = 0;
+      $('#qbvPrizeText').css('opacity', 0);
+      $('#qbvPrizeNum').css('opacity', 0);
+    }
+
+    let sound;
+    let blockedSounds = ['../media/60s vòng 2.mp3', '../media/nhạc giao lưu trong vòng 2.mp3', '../media/nhạc nền quay bóng.MP3']
+    socket.on('playMusic', (url) => {
+      if (blockedSounds.includes(url)) return
+      sound = new Howl({
+        src: [url]
+      })
+      sound.play()
+    })
+    socket.on('stopMusic', () => {
+      sound.fade(1, 0, 1000)
+      setTimeout(() => {
+        Howler.stop()
+      }, 1000)
+    })
+    socket.on('pauseMusic', () => {
+      Howler.pause()
+    })
+
+    socket.on('updateTime', (time) => {
+      $('.time').text(time);
+    })
+  </script>
+</body>
+
+</html>

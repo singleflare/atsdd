@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #balls {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      position: absolute;
+      top: 88px;
+      left: 48px;
+      width: 1850px;
+      height: 930px;
+      z-index: 1;
+    }
+
+    #balls img {
+      width: 160px;
+      opacity: 0;
+    }
+
+    #glows {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      position: absolute;
+      top: 75px;
+      left: 37px;
+      height: 930px;
+    }
+
+    #glows img {
+      width: 185px;
+      opacity: 0;
+    }
+
+    #balls img.appear {
+      animation: appear 0.06s forwards linear;
+    }
+
+    #balls img.disappear {
+      animation: disappear 1s forwards linear;
+    }
+
+    @keyframes appear {
+      0% {
+        opacity: 0;
+        scale: 0;
+      }
+
+      100% {
+        opacity: 1;
+        scale: 1;
+      }
+    }
+
+    @keyframes disappear {
+      0% {
+        opacity: 1;
+        scale: 1;
+      }
+
+      25% {
+        opacity: 1;
+        scale: 1.25;
+      }
+
+      100% {
+        opacity: 1;
+        scale: 0;
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    #logo.fadeIn {
+      animation: fadeIn 0.5s forwards linear;
+    }
+
+    #logo.fadeOut {
+      animation: fadeOut 0.5s forwards linear;
+    }
+
+    #glows img.appear {
+      opacity: 1;
+      animation: fadeIn 0.5s forwards linear;
+    }
+
+    #ballCol {
+      position: absolute;
+      top: 73px;
+      left: 34px;
+      width: 185px;
+      height: 935px;
+      z-index: 0;
+      opacity: 0;
+    }
+
+    @keyframes row5FlyDown {
+      0% {
+        transform: translateY(0px);
+      }
+
+      100% {
+        transform: translateY(300px);
+      }
+    }
+
+    @keyframes row4FlyDown {
+      0% {
+        transform: translateY(0px);
+      }
+
+      100% {
+        transform: translateY(500px);
+      }
+    }
+
+    @keyframes row3FlyDown {
+      0% {
+        transform: translateY(0px);
+      }
+
+      100% {
+        transform: translateY(700px);
+      }
+    }
+
+    @keyframes row2FlyDown {
+      0% {
+        transform: translateY(0px);
+      }
+
+      100% {
+        transform: translateY(900px);
+      }
+    }
+
+    @keyframes row1FlyDown {
+      0% {
+        transform: translateY(0px);
+      }
+
+      100% {
+        transform: translateY(1100px);
+      }
+    }
+  </style>
+  <img id='logo' src='../media/logoBg.png' style='position:absolute;z-index: 2'>
+  <img src='../media/ballBoard.png' style='width:1920px;'>
+  <div id='balls'>
+    <img src='../media/1.png' id='ball1'>
+    <img src='../media/2.png' id='ball2'>
+    <img src='../media/3.png' id='ball3'>
+    <img src='../media/4.png' id='ball4'>
+    <img src='../media/5.png' id='ball5'>
+    <img src='../media/6.png' id='ball6'>
+    <img src='../media/7.png' id='ball7'>
+    <img src='../media/8.png' id='ball8'>
+    <img src='../media/9.png' id='ball9'>
+    <img src='../media/10.png' id='ball10'>
+    <img src='../media/11.png' id='ball11'>
+    <img src='../media/12.png' id='ball12'>
+    <img src='../media/13.png' id='ball13'>
+    <img src='../media/14.png' id='ball14'>
+    <img src='../media/15.png' id='ball15'>
+    <img src='../media/16.png' id='ball16'>
+    <img src='../media/17.png' id='ball17'>
+    <img src='../media/18.png' id='ball18'>
+    <img src='../media/19.png' id='ball19'>
+    <img src='../media/20.png' id='ball20'>
+    <img src='../media/21.png' id='ball21'>
+    <img src='../media/22.png' id='ball22'>
+    <img src='../media/23.png' id='ball23'>
+    <img src='../media/24.png' id='ball24'>
+    <img src='../media/25.png' id='ball25'>
+    <img src='../media/26.png' id='ball26'>
+    <img src='../media/27.png' id='ball27'>
+    <img src='../media/28.png' id='ball28'>
+    <img src='../media/29.png' id='ball29'>
+    <img src='../media/30.png' id='ball30'>
+    <img src='../media/31.png' id='ball31'>
+    <img src='../media/32.png' id='ball32'>
+    <img src='../media/33.png' id='ball33'>
+    <img src='../media/34.png' id='ball34'>
+    <img src='../media/35.png' id='ball35'>
+    <img src='../media/36.png' id='ball36'>
+    <img src='../media/37.png' id='ball37'>
+    <img src='../media/38.png' id='ball38'>
+    <img src='../media/39.png' id='ball39'>
+    <img src='../media/40.png' id='ball40'>
+    <img src='../media/41.png' id='ball41'>
+    <img src='../media/42.png' id='ball42'>
+    <img src='../media/43.png' id='ball43'>
+    <img src='../media/44.png' id='ball44'>
+    <img src='../media/45.png' id='ball45'>
+    <img src='../media/46.png' id='ball46'>
+    <img src='../media/47.png' id='ball47'>
+    <img src='../media/48.png' id='ball48'>
+    <img src='../media/49.png' id='ball49'>
+    <img src='../media/50.png' id='ball50'>
+  </div>
+  <div id='glows'>
+    <img src='../media/glow2.png' id='glow1'>
+    <img src='../media/glow2.png' id='glow2'>
+    <img src='../media/glow2.png' id='glow3'>
+    <img src='../media/glow2.png' id='glow4'>
+    <img src='../media/glow2.png' id='glow5'>
+    <img src='../media/glow2.png' id='glow6'>
+    <img src='../media/glow2.png' id='glow7'>
+    <img src='../media/glow2.png' id='glow8'>
+    <img src='../media/glow2.png' id='glow9'>
+    <img src='../media/glow2.png' id='glow10'>
+    <img src='../media/glow2.png' id='glow11'>
+    <img src='../media/glow2.png' id='glow12'>
+    <img src='../media/glow2.png' id='glow13'>
+    <img src='../media/glow2.png' id='glow14'>
+    <img src='../media/glow2.png' id='glow15'>
+    <img src='../media/glow2.png' id='glow16'>
+    <img src='../media/glow2.png' id='glow17'>
+    <img src='../media/glow2.png' id='glow18'>
+    <img src='../media/glow2.png' id='glow19'>
+    <img src='../media/glow2.png' id='glow20'>
+    <img src='../media/glow2.png' id='glow21'>
+    <img src='../media/glow2.png' id='glow22'>
+    <img src='../media/glow2.png' id='glow23'>
+    <img src='../media/glow2.png' id='glow24'>
+    <img src='../media/glow2.png' id='glow25'>
+    <img src='../media/glow2.png' id='glow26'>
+    <img src='../media/glow2.png' id='glow27'>
+    <img src='../media/glow2.png' id='glow28'>
+    <img src='../media/glow2.png' id='glow29'>
+    <img src='../media/glow2.png' id='glow30'>
+    <img src='../media/glow2.png' id='glow31'>
+    <img src='../media/glow2.png' id='glow32'>
+    <img src='../media/glow2.png' id='glow33'>
+    <img src='../media/glow2.png' id='glow34'>
+    <img src='../media/glow2.png' id='glow35'>
+    <img src='../media/glow2.png' id='glow36'>
+    <img src='../media/glow2.png' id='glow37'>
+    <img src='../media/glow2.png' id='glow38'>
+    <img src='../media/glow2.png' id='glow39'>
+    <img src='../media/glow2.png' id='glow40'>
+    <img src='../media/glow2.png' id='glow41'>
+    <img src='../media/glow2.png' id='glow42'>
+    <img src='../media/glow2.png' id='glow43'>
+    <img src='../media/glow2.png' id='glow44'>
+    <img src='../media/glow2.png' id='glow45'>
+    <img src='../media/glow2.png' id='glow46'>
+    <img src='../media/glow2.png' id='glow47'>
+    <img src='../media/glow2.png' id='glow48'>
+    <img src='../media/glow2.png' id='glow49'>
+    <img src='../media/glow2.png' id='glow50'>
+  </div>
+  <img src='../media/ballCol.png' id='ballCol'>
+  <script src='../scripts/jquery-3.7.1.min.js'></script>
+  <script src='/socket.io/socket.io.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
+    integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const socket = io('/ballBoard')
+    function playSound(url) {
+      var sound = new Howl({
+        src: [url]
+      })
+      sound.play()
+    }
+    socket.on('showLogo', () => {
+      $('#logo').removeClass('fadeOut')
+      $('#logo').addClass('fadeIn')
+      $('#logo').css('opacity', 1)
+    })
+    socket.on('hideLogo', () => {
+      $('#logo').removeClass('fadeIn')
+      $('#logo').addClass('fadeOut')
+      $('#logo').css('opacity', 0)
+    })
+    socket.on('introduceBalls', () => {
+      $('#logo').addClass('fadeOut')
+      playSound('../media/GT luật chơi.MP3')
+      let i = 1;
+      setTimeout(() => {
+        setInterval(() => {
+          $('#ball' + i).addClass('appear');
+          i++;
+        }, 60)
+      }, 1000)
+      setTimeout(() => {
+        $('#balls img').removeClass('appear')
+        $('#balls img').css('opacity', 1)
+      }, 1000 + 60 * 50)
+    })
+    socket.on('removeBall', (ball) => {
+      $('#ball' + ball).removeClass('appear')
+      $('#ball' + ball).addClass('disappear')
+      setTimeout(() => {
+        $('#ball' + ball).removeClass('disappear')
+        $('#ball' + ball).css('opacity', 0)
+      }, 1000)
+    })
+    socket.on('glowBall', ball => {
+      $('#glow' + ball).addClass('appear')
+    })
+    socket.on('delGlowBall', (ball) => {
+      $('#glow' + ball).removeClass('appear')
+    })
+    socket.on('delAllGlowBall', () => {
+      $('#glows img').removeClass('appear')
+    })
+
+    socket.on('color', color => {
+      if (color == 'all') {
+        document.querySelectorAll('#balls img').forEach(ball => {
+          ball.style.filter = 'grayscale(0)'
+        })
+      }
+      else if (color == 'none') {
+        document.querySelectorAll('#balls img').forEach(ball => {
+          ball.style.filter = 'grayscale(1)'
+        })
+      }
+      else if (color == 'red') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+        }
+        for (let i = 1; i <= 10; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+        }
+      }
+      else if (color == 'blue') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+        }
+        for (let i = 11; i <= 20; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+        }
+      }
+      else if (color == 'green') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+        }
+        for (let i = 21; i <= 30; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+        }
+      }
+      else if (color == 'pink') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+        }
+        for (let i = 31; i <= 40; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+        }
+      }
+      else if (color == 'yellow') {
+        for (let i = 1; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(1)'
+        }
+        for (let i = 41; i <= 50; i++) {
+          document.querySelector(`#ball${i}`).style.filter = 'grayscale(0)'
+        }
+      }
+    })
+
+    socket.on('ballCol', col => {
+      $('#ballCol').css('opacity', 1)
+      $('#ballCol').css('left', `${34 + (col - 1) * 185}px`)
+    })
+    socket.on('flyDownBalls', col => {
+      setInterval(() => {
+        $(`#ball4${col}`).css('animation', 'row5FlyDown 0.25s forwards linear')
+      }, 0)
+      setInterval(() => {
+        $(`#ball3${col}`).css('animation', 'row4FlyDown 0.25s forwards linear')
+      }, 200)
+      setInterval(() => {
+        $(`#ball2${col}`).css('animation', 'row3FlyDown 0.25s forwards linear')
+      }, 400)
+      setInterval(() => {
+        $(`#ball1${col}`).css('animation', 'row2FlyDown 0.25s forwards linear')
+      }, 600)
+      setInterval(() => {
+        $(`#ball${col}`).css('animation', 'row1FlyDown  0.25s forwards linear')
+      }, 800)
+    })
+    socket.on('hideColGpx', () => {
+      $('#ballCol').css('opacity', 0)
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,195 @@
+body {
+  position: relative;
+  aspect-ratio: 16/9;
+  margin: 0;
+  background: black;
+  overflow: hidden;
+}
+
+#systemBallGridImg {
+  position: absolute;
+  width: 40%;
+  top: -0.2%;
+  height: 41.4%;
+}
+
+#systemBallGrid {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  z-index: 1;
+  top: 4.4%;
+  left: 1.9%;
+  width: 36.7%;
+  height: 32.9%;
+}
+
+#systemBallGrid img {
+  width: 90%;
+}
+
+#qPane {
+  object-fit: fill;
+  position: absolute;
+  width: 40%;
+  height: 41%;
+  top: 0;
+  left: 40%;
+}
+
+* {
+  font-family: utm_impact;
+}
+
+@font-face {
+  font-family: utm_impact;
+  src: url('../UTM-Impact.ttf');
+}
+
+@font-face {
+  font-family: lexend;
+  src: url('../Lexend-Regular.ttf');
+}
+
+button,
+#timer {
+  position: absolute;
+  right: 0;
+  width: 20%;
+  height: 41%;
+  font-size: 2.5vw;
+  border: none;
+}
+
+button {
+  background-color: #c4c4c4;
+}
+
+button:hover {}
+
+button.idle {
+  border: none;
+}
+
+button.ready {
+  border: red 10px solid;
+}
+
+button.buzzed {
+  border: green 10px solid;
+}
+
+button.slowBuzzed {
+  border: yellow 10px solid;
+}
+
+#qno {
+  position: absolute;
+  color: white;
+  left: 41.1%;
+  width: 37.8%;
+  top: 3.6%;
+  font-size: 1.8vw;
+  text-align: center;
+  font-family: 'lexend';
+}
+
+#question {
+  position: absolute;
+  color: white;
+  left: 41.1%;
+  width: 37.8%;
+  height: 23%;
+  top: 9%;
+  font-size: 1.8vw;
+  text-align: center;
+  font-family: 'lexend';
+}
+
+.pArea {
+  position: absolute;
+  width: 33.33%;
+  height: 42.4%;
+  top: 41%;
+}
+
+.name {
+  position: absolute;
+  font-size: 1.6vw;
+  left: 4%;
+  top: 6%;
+  width: 100%;
+  font-family: 'lexend';
+}
+
+.jackpot {
+  position: absolute;
+  font-size: 1.8vw;
+  top: 17.2%;
+  width: 60%;
+  left: 20%;
+  height: 13.5%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+.jackpot img {
+  width: 70%;
+}
+
+.score {
+  position: absolute;
+  font-size: 1.6vw;
+  right: 4%;
+  top: 6%;
+  width: 25%;
+  text-align: right;
+}
+
+.pBallsGrid {
+  position: absolute;
+  font-size: 1.8vw;
+  top: 30.4%;
+  left: 3%;
+  width: 93.5%;
+  height: 45.3%;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+
+#p1Area {}
+
+
+#p2Area {
+  left: 33.33%;
+}
+
+#p3Area {
+  left: 66.67%;
+}
+
+.pBallsGrid img {
+  width: 90%;
+}
+
+#glows {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  top: 4%;
+  left: 1.7%;
+  width: 36.7%;
+  height: 33%;
+}
+
+#glows img {
+  width: 100%;
+  opacity: 0;
+}

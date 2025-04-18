@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controller</title>
+</head>
+
+<body>
+  <style>
+    * {
+      font-family: lexend;
+    }
+
+    @font-face {
+      font-family: utm_impact;
+      src: url('../UTM-Impact.ttf');
+    }
+
+    @font-face {
+      font-family: lexend;
+      src: url('../Lexend-Regular.ttf');
+    }
+
+    button {
+      font-size: 20px;
+      background-color: black;
+      color: white;
+      border: 1px solid white;
+      padding: 2px;
+    }
+
+    button:hover {
+      background-color: white;
+      color: black;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+    }
+
+    button:disabled:hover {
+      background-color: black;
+      color: white;
+    }
+
+    input {
+      border: 1px solid white;
+    }
+
+    input:disabled {
+      opacity: 0.5;
+    }
+
+    body {
+      background-color: black;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    span {
+      color: white;
+      font-size: 20px;
+    }
+
+    input {
+      font-size: 20px;
+      color: white;
+      background-color: black;
+    }
+
+    #wholePage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 1920px;
+      height: 1080px;
+      margin: auto;
+      overflow: hidden;
+    }
+
+    #buzzerList {
+      display: inline-grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    #buzzerList span {
+      display: inline;
+    }
+
+    #controlBalls {
+      position: absolute;
+      top: 330px;
+      width: 960px;
+    }
+
+    #controlBalls div {
+      border: 1px solid white;
+    }
+
+    #webView {
+      position: absolute;
+      top: 0;
+      left: 960px;
+      height: 540px;
+    }
+
+    #qnaMenu {
+      overflow-y: auto;
+      width: 100%;
+      height: 82%;
+    }
+
+    #qnaMenu button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-stretch: semi-condensed;
+    }
+
+    .controlContainer {
+      text-align: center;
+    }
+
+    .controlContainer div {}
+
+    .controlLabel {
+      display: block;
+      color: black;
+      font-size: 20px;
+      position: relative;
+      text-align: center;
+      top: 0;
+      background-color: white;
+      width: 100%;
+    }
+
+    button.controlLabel {
+      background-color: lightgray;
+    }
+
+    button.controlLabel:hover {
+      background-color: black;
+      color: white;
+    }
+
+    #musicControl {
+      position: absolute;
+      width: 960px;
+      left: 960px;
+      top: 540px;
+      box-sizing: border-box;
+    }
+
+    #buzzerControl {
+      position: relative;
+      width: 960px;
+      left: 0;
+      box-sizing: border-box;
+    }
+
+    #systemBallsControl {
+      position: relative;
+      width: 960px;
+      box-sizing: border-box;
+      border: 1px white solid;
+    }
+
+    #questionControl {
+      position: absolute;
+      height: 370px;
+      top: 680px;
+      width: 960px;
+      left: 960px;
+      box-sizing: border-box;
+    }
+
+    #p1BallsControl,
+    #p2BallsControl,
+    #p3BallsControl,
+    #webPreview,
+    #gpxWebControl,
+    #hostWebControl,
+    #ballBoardWebControl,
+    #round2Control,
+    #overlayWebControl {
+      width: 960px;
+      position: relative;
+    }
+
+    #gpxIframe,
+    #hostIframe,
+    #ballBoardIframe,
+    #overlayIframe {
+      position: absolute;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: top left;
+      scale: 0.5;
+      border: 2px solid white;
+    }
+
+    .flex-container {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .flex-container span {
+      width: 100%;
+      text-align: center;
+      color: black;
+      background-color: gray;
+      border-right: 1px solid black;
+    }
+
+    .flex-container.two button {
+      width: 100%;
+    }
+  </style>
+  <div id='wholePage'>
+    <div id='musicControl' class='controlContainer'>
+      <div class='controlLabel'>SFX</div>
+      <button id='playIntro'>Intro CT</button>
+      <button id='playHostEntrance'>Host entrance</button>
+      <button id='playRules'>GT luật</button>
+      <button id='playShowQuestion'>Hiện câu hỏi</button>
+      <button id='playTimeUp'>Hết giờ</button>
+      <button id='playChooseBall'>Chọn bóng</button>
+      <button id='playR2Bed'>Giao lưu vòng 2</button>
+      <button id='playRollingBed'>Nền quay bóng</button>
+      <button id='play60s'>60s/Nền công bố bóng</button>
+      <button id='stopMusic'>Dừng tất cả âm thanh</button>
+      <br>
+    </div>
+    <div id='questionControl' class='controlContainer'>
+      <div class='controlLabel'>Câu hỏi</div>
+      <input type='file' accept='.xlsx' id='fileInput' style='width:300px'>
+      <button id='prevQBtn'>Trước</button>
+      <button id='nextQBtn'>Sau</button>
+      <button id='showQBtn'>Hiện</button>
+      <button id='hideQBtn'>Ẩn</button>
+      <span id='currentQCounter'>Câu h.tại: </span>
+      <br>
+      <div id='qnaMenu'></div>
+    </div>
+    <div id='webView'>
+      <iframe src='http://localhost:3000/host' id='hostIframe'></iframe>
+      <iframe src='http://localhost:3000/gpx' id='gpxIframe' style='opacity:0;'></iframe>
+      <iframe src='http://localhost:3000/ballBoard' id='ballBoardIframe' style='opacity:0'></iframe>
+      <iframe src='http://localhost:3000/overlay' id='overlayIframe' style='opacity:0'></iframe>
+    </div>
+    <div id='systemBallsControl'>
+      <div class='controlLabel'>Hệ thống</div>
+      <span>Bật màu bóng</span>
+      <button id='coloredAll'>All</button>
+      <button id='coloredNone'>None</button>
+      <button id='coloredRed'>Đ</button>
+      <button id='coloredBlue'>XD</button>
+      <button id='coloredGreen'>XL</button>
+      <button id='coloredPink'>H</button>
+      <button id='coloredYellow'>V</button>
+      <span>Reset</span>
+      <button>Bóng</button>
+      <button>Độc đắc</button>
+      <button>Tên</button>
+      <button>Điểm</button>
+      <button>All</button>
+      <br>
+      <span>Chuông</span>
+      <button id='openBuzzer'>Mở</button>
+      <button id='resetBuzzer'>Reset</button>
+      <span id='buzzedFirst'>1.</span>
+      <span id='buzzedSecond'>2.</span>
+      <span id='buzzedThird'>3.</span>
+      <br>
+      <span>Glow</span>
+      <input type='text' id='ballForGlow' placeholder='Bóng'>
+      <button id='glowBallBtn'>Glow</button>
+      <button id='delGlowBallBtn'>Xóa glow</button>
+      <button id='delAllGlowBallBtn'>Xóa tất cả glow</button>
+    </div>
+    <div id='p1BallsControl'>
+      <div class='controlLabel'>NC1</div>
+      <input type="text" id="ballForP1" style='width: 10%;' placeholder='Bóng'>
+      <button class='addBall'>Thêm</button>
+      <button class='delBall'>Xóa</button>
+      <input type="text" id="jackpotForP1" disabled style='width: 10%;' placeholder='Đ.đắc'>
+      <button class='addJackpotBall' disabled>Thêm</button>
+      <button class='delJackpotBall' disabled>Xóa</button>
+      <input type="text" id="nameForP1" style='width: 20%;' placeholder='Tên'>
+      <input type="text" id="scoreForP1" style='width: 10%;' placeholder='Điểm'>
+      <button class='setNameAndScore'>Set</button>
+    </div>
+    <div id='p2BallsControl'>
+      <div class='controlLabel'>NC2</div>
+      <input type="text" id="ballForP2" style='width: 10%;' placeholder='Bóng'>
+      <button class='addBall'>Thêm</button>
+      <button class='delBall'>Xóa</button>
+      <input type="text" id="jackpotForP2" disabled style='width: 10%;' placeholder='Đ.đắc'>
+      <button class='addJackpotBall' disabled>Thêm</button>
+      <button class='delJackpotBall' disabled>Xóa</button>
+      <input type="text" id="nameForP2" style='width: 20%;' placeholder='Tên'>
+      <input type="text" id="scoreForP2" style='width: 10%;' placeholder='Điểm'>
+      <button class='setNameAndScore'>Set</button>
+    </div>
+    <div id='p3BallsControl'>
+      <div class='controlLabel'>NC3</div>
+      <input type="text" id="ballForP3" style='width: 10%;' placeholder='Bóng'>
+      <button class='addBall'>Thêm</button>
+      <button class='delBall'>Xóa</button>
+      <input type="text" id="jackpotForP3" disabled style='width: 10%;' placeholder='Đ.đắc'>
+      <button class='addJackpotBall' disabled>Thêm</button>
+      <button class='delJackpotBall' disabled>Xóa</button>
+      <input type="text" id="nameForP3" style='width: 20%;' placeholder='Tên'>
+      <input type="text" id="scoreForP3" style='width: 10%;' placeholder='Điểm'>
+      <button class='setNameAndScore'>Set</button>
+    </div>
+    <div id='round2Control'>
+      <div class='controlLabel'>Vòng 2</div>
+      <span>H.thị t.tin NC</span>
+      <button id='showP1Info'>NC1</button>
+      <button id='showP2Info'>NC2</button>
+      <button id='showP3Info'>NC3</button>
+      <span>Tải bộ CH & hiện đồ họa V2</span>
+      <button id='loadPack1'>Bộ 1 (11-20)</button>
+      <button id='loadPack2'>Bộ 2 (21-30)</button>
+      <button id='loadPack3'>Bộ 3 (31-40)</button>
+      <br>
+      <span>60s</span>
+      <button id='start60s'>Bắt đầu</button>
+      <button id='pause60s'>Tạm dừng</button>
+      <button id='reset60s'>Reset</button>
+      <input id='ballToAddWhenCorrect' style='width:25%' placeholder='Bóng sẽ được thêm'>
+      <button id='addBallWhenCorrect'>Đúng</button>
+      <button id='wrongAns'>Sai</button>
+      <button id='pass'>Bỏ qua</button>
+      <button id='addBallR2'>Thêm bóng</button>
+    </div>
+    <div id='gpxWebControl'>
+      <button class='controlLabel' id='swapToGpx'>Web gpx</button>
+      <span>Bục (chung)</span>
+      <button id='podiumsToNormal'>Thường</button>
+      <button id='podiumsToBuzzed'>Chuông</button>
+      <button id='podiumsToJackpotRnd'>Quay bóng</button>
+      <button id='podiumsToStop'>Dừng</button>
+      <div class='flex-container'>
+        <span>Bục NC1</span>
+        <span>Bục NC2</span>
+        <span>Bục NC3</span>
+      </div>
+      <div class='flex-container two'>
+        <button id='podium1ToNormal'>Thường</button>
+        <button id='podium1ToBuzzed'>Chuông</button>
+        <button id='podium1ToStop'>Dừng</button>
+        <button id='podium2ToNormal'>Thường</button>
+        <button id='podium2ToBuzzed'>Chuông</button>
+        <button id='podium2ToStop'>Dừng</button>
+        <button id='podium3ToNormal'>Thường</button>
+        <button id='podium3ToBuzzed'>Chuông</button>
+        <button id='podium3ToStop'>Dừng</button>
+      </div>
+    </div>
+    <div id='hostWebControl'>
+      <button class='controlLabel' id='swapToHost'>Web host</button>
+    </div>
+    <div id='ballBoardWebControl'>
+      <button class='controlLabel' id='swapToBallBoard'>Web bảng bóng</button>
+      <button id='showLogo'>Hiện logo</button>
+      <button id='hideLogo'>Ẩn logo</button>
+      <button id='introduceBalls'>Giới thiệu bóng</button>
+      <button id='hideColGpx'>Ẩn gpx cột</button>
+      <button id='flyDownCol1'>Cột 1</button>
+      <button id='flyDownCol2'>Cột 2</button>
+      <button id='flyDownCol3'>Cột 3</button>
+      <button id='flyDownCol4'>Cột 4</button>
+      <button id='flyDownCol5'>Cột 5</button>
+      <button id='flyDownCol6'>Cột 6</button>
+      <button id='flyDownCol7'>Cột 7</button>
+      <button id='flyDownCol8'>Cột 8</button>
+      <button id='flyDownCol9'>Cột 9</button>
+      <button id='flyDownCol10'>Cột 10</button>
+    </div>
+    <div id='overlayWebControl'>
+      <button class='controlLabel' id='swapToOverlay'>Web overlay</button>
+      <button id='showQGpx'>Hiện gpx V1,3,4 và câu hỏi</button>
+      <button id='showR2Gpx'>Hiện gpx V2 trống</button>
+      <button id='hideQGpx'>Ẩn gpx câu hỏi</button>
+      <br>
+      <button id='playJackpotGpx'>Phát gpx đ.đắc</button>
+      <button id='showJackpotGpx'>Hiện gpx đ.đắc</button>
+      <button id='hideJackpotGpx'>Ẩn gpx đ.đắc</button>
+      <button id='resetJackpotGpx'>Reset gpx đ.đắc</button>
+      <span>Chỉnh animation</span>
+      <button id='setWaitAnimToOrbit'>Orbit</button>
+      <button id='setWaitAnimToWipe'>Wipe</button>
+      <br>
+      <span>Animation luật vòng quay bóng</span>
+      <button id='anim_3BallsJackpotted'>3 quả</button>
+      <button id='anim_3BallsPrize'>Giải thưởng</button>
+      <button id='anim_5BallsJackpotted'>5 quả</button>
+      <button id='anim_5BallsPrize'>Giải thưởng</button>
+      <button id='anim_qbv'>QBV</button>
+      <button id='anim_fadeOut'>Fade out</button>
+      <div class='flex-container'>
+        <span>Bóng đ.đắc 1</span>
+        <span>Bóng đ.đắc 2</span>
+        <span>Bóng đ.đắc 3</span>
+        <span>Bóng đ.đắc 4</span>
+        <span>Bóng đ.đắc 5</span>
+      </div>
+      <div class='flex-container'>
+        <button id='showAnim1' style='width:100%'>Hiện animation</button>
+        <button id='showAnim2' style='width:100%'>Hiện animation</button>
+        <button id='showAnim3' style='width:100%'>Hiện animation</button>
+        <button id='showAnim4' style='width:100%'>Hiện animation</button>
+        <button id='showAnim5' style='width:100%'>Hiện animation</button>
+      </div>
+      <div class='flex-container'>
+        <input id='jackpotInput1' type='text' style='width:100%;text-align: center;'>
+        <input id='jackpotInput2' type='text' style='width:100%;text-align: center;'>
+        <input id='jackpotInput3' type='text' style='width:100%;text-align: center;'>
+        <input id='jackpotInput4' type='text' style='width:100%;text-align: center;'>
+        <input id='jackpotInput5' type='text' style='width:100%;text-align: center;'>
+      </div>
+      <div class='flex-container'>
+        <button id='showJackpotBall1' style='width:100%'>Set</button>
+        <button id='showJackpotBall2' style='width:100%'>Set</button>
+        <button id='showJackpotBall3' style='width:100%'>Set</button>
+        <button id='showJackpotBall4' style='width:100%'>Set</button>
+        <button id='showJackpotBall5' style='width:100%'>Set</button>
+      </div>
+    </div>
+  </div>
+
+  <script src='../scripts/jquery-3.7.1.min.js'></script>
+  <script src='../scripts/xlsx.full.min.js'></script>
+  <script src='/socket.io/socket.io.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
+    integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const socket = io('/controller')
+    let qnas = []
+    for (let i = 1; i <= 60; i++) qnas.push({ q: '', a: '', exp: '' })
+    let qno = -1
+
+    $(() => {
+      for (let i = 0; i < 60; i++) {
+        $('#qnaMenu').append(`<button id='q${i + 1}'> ${i + 1}. </button>`)
+      }
+      for (let i = 0; i < 10; i++) {
+        $('#musicControl').append(`<button id='sfx${i + 1}' style='width:90px'> ${i + 1}</button>`)
+      }
+    })
+
+    $('#fileInput').on('change', async function (e) {
+      const file = e.target.files[0]
+      const data = await file.arrayBuffer()
+      const workbook = XLSX.read(data)
+      const sheet = workbook.Sheets[workbook.SheetNames[0]]
+
+      const r1Range = XLSX.utils.decode_range('B3:D12');
+      const r2p1Range = XLSX.utils.decode_range('B15:D24');
+      const r2p2Range = XLSX.utils.decode_range('B26:D35');
+      const r2p3Range = XLSX.utils.decode_range('B37:D46');
+      const r3Range = XLSX.utils.decode_range('B48:D57');
+      const r4Range = XLSX.utils.decode_range('B59:D68');
+
+      let ranges = [r1Range, r2p1Range, r2p2Range, r2p3Range, r3Range, r4Range]
+      let index = 0;
+      ranges.forEach(range => {
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+          const qCellAddress = { c: 1, r: R };
+          const aCellAddress = { c: 2, r: R };
+          const expCellAddress = { c: 3, r: R };
+          const qCellRef = XLSX.utils.encode_cell(qCellAddress);
+          const aCellRef = XLSX.utils.encode_cell(aCellAddress);
+          const expCellRef = XLSX.utils.encode_cell(expCellAddress);
+          const qCell = sheet[qCellRef];
+          const aCell = sheet[aCellRef];
+          const expCell = sheet[expCellRef];
+          qnas[index].q = qCell ? qCell.v : '?';
+          qnas[index].a = aCell ? aCell.v : '?';
+          qnas[index].exp = expCell ? expCell.v : '?';
+          index++;
+        }
+      })
+      console.log(qnas)
+      $('#qnaMenu').empty()
+      for (let i = 0; i < 60; i++) {
+        $('#qnaMenu').append(`<button id='q${i + 1}'> ${i + 1}. ${qnas[i].q} (${qnas[i].a}) </button>`)
+        $(`#q${i + 1}`).on('click', () => {
+          chooseQ(i)
+        })
+      }
+    })
+
+    //music control
+    $('#playIntro').on('click', () => {
+      socket.emit('playMusic', '../media/intro.mp3')
+    })
+    $('#playHostEntrance').on('click', () => {
+      socket.emit('playMusic', '../media/host entrance.MP3')
+    })
+    $('#playRules').on('click', () => {
+      socket.emit('playMusic', '../media/GT luật chơi.mp3')
+    })
+    $('#playShowQuestion').on('click', () => {
+      socket.emit('playMusic', '../media/Hiện câu hỏi.MP3')
+    })
+    $('#playTimeUp').on('click', () => {
+      socket.emit('playMusic', '../media/hết giờ.mp3')
+    })
+    $('#playChooseBall').on('click', () => {
+      socket.emit('playMusic', '../media/chọn bóng.mp3')
+    })
+    $('#playR2Bed').on('click', () => {
+      socket.emit('playMusic', '../media/nhạc giao lưu trong vòng 2.mp3')
+    })
+    $('#playRollingBed').on('click', () => {
+      socket.emit('playMusic', '../media/nhạc nền quay bóng.MP3')
+    })
+    $('#play60s').on('click', () => {
+      socket.emit('playMusic', '../media/60s vòng 2.mp3')
+    })
+    $('#stopMusic').on('click', () => {
+      socket.emit('stopMusic')
+    })
+
+    //questions cycling
+    $('#nextQBtn').on('click', () => {
+      if (qno <= 59) qno++
+      $('#currentQCounter').text('Câu h.tại: ' + (qno + 1))
+      console.log(qnas[qno])
+      socket.emit('qna', qnas[qno], qno)
+    })
+    $('#prevQBtn').on('click', () => {
+      if (qno >= -1) qno--
+      $('#currentQCounter').text('Câu h.tại: ' + (qno + 1))
+      console.log(qnas[qno])
+      socket.emit('qna', qnas[qno], qno)
+    })
+    $('#hideQBtn').on('click', () => {
+      socket.emit('hideQ')
+    })
+    $('#showQBtn').on('click', () => {
+      socket.emit('showQ')
+    })
+
+    let ballCol = 0
+    function emitFlyDownBalls(col) {
+      socket.emit('flyDownBalls', col)
+    }
+    function chooseQ(n) {
+      qno = n
+      $('.addBall').off('click', () => emitFlyDownBalls(ballCol))
+      $('#currentQCounter').text('Câu h.tại: ' + (qno + 1))
+      console.log(qnas[qno])
+      socket.emit('qna', qnas[qno], qno)
+      if (qno >= 40 && qno <= 49) {
+        ballCol = qno - 40 + 1
+        $('.addBall').on('click', () => emitFlyDownBalls(ballCol))
+      }
+    }
+
+    //change player podium
+    $('#podiumsToNormal').on('click', () => {
+      socket.emit('changePlayerPodium', 1, 'normal')
+      socket.emit('changePlayerPodium', 2, 'normal')
+      socket.emit('changePlayerPodium', 3, 'normal')
+      $('#jackpotForP1').prop('disabled', true)
+      $('#jackpotForP2').prop('disabled', true)
+      $('#jackpotForP3').prop('disabled', true)
+      $('#p1BallsControl .addJackpotBall').prop('disabled', true)
+      $('#p2BallsControl .addJackpotBall').prop('disabled', true)
+      $('#p3BallsControl .addJackpotBall').prop('disabled', true)
+      $('#p1BallsControl .delJackpotBall').prop('disabled', true)
+      $('#p2BallsControl .delJackpotBall').prop('disabled', true)
+      $('#p3BallsControl .delJackpotBall').prop('disabled', true)
+      $('#ballForP1').prop('disabled', false)
+      $('#ballForP2').prop('disabled', false)
+      $('#ballForP3').prop('disabled', false)
+      $('#p1BallsControl .addBall').prop('disabled', false)
+      $('#p2BallsControl .addBall').prop('disabled', false)
+      $('#p3BallsControl .addBall').prop('disabled', false)
+      $('#p1BallsControl .delBall').prop('disabled', false)
+      $('#p2BallsControl .delBall').prop('disabled', false)
+      $('#p3BallsControl .delBall').prop('disabled', false)
+    })
+    $('#podiumsToBuzzed').on('click', () => {
+      console.log('buzzed')
+      socket.emit('changePlayerPodium', 1, 'buzzed')
+      socket.emit('changePlayerPodium', 2, 'buzzed')
+      socket.emit('changePlayerPodium', 3, 'buzzed')
+    })
+    $('#podiumsToJackpotRnd').on('click', () => {
+      socket.emit('changePlayerPodium', 1, 'jackpotRnd')
+      socket.emit('changePlayerPodium', 2, 'jackpotRnd')
+      socket.emit('changePlayerPodium', 3, 'jackpotRnd')
+      $('#jackpotForP1').prop('disabled', false)
+      $('#jackpotForP2').prop('disabled', false)
+      $('#jackpotForP3').prop('disabled', false)
+      $('#p1BallsControl .addJackpotBall').prop('disabled', false)
+      $('#p2BallsControl .addJackpotBall').prop('disabled', false)
+      $('#p3BallsControl .addJackpotBall').prop('disabled', false)
+      $('#p1BallsControl .delJackpotBall').prop('disabled', false)
+      $('#p2BallsControl .delJackpotBall').prop('disabled', false)
+      $('#p3BallsControl .delJackpotBall').prop('disabled', false)
+      $('#ballForP1').prop('disabled', true)
+      $('#ballForP2').prop('disabled', true)
+      $('#ballForP3').prop('disabled', true)
+      $('#p1BallsControl .addBall').prop('disabled', true)
+      $('#p2BallsControl .addBall').prop('disabled', true)
+      $('#p3BallsControl .addBall').prop('disabled', true)
+      $('#p1BallsControl .delBall').prop('disabled', true)
+      $('#p2BallsControl .delBall').prop('disabled', true)
+      $('#p3BallsControl .delBall').prop('disabled', true)
+    })
+    $('#podiumsToStop').on('click', () => {
+      socket.emit('changePlayerPodium', 1, 'stop')
+      socket.emit('changePlayerPodium', 2, 'stop')
+      socket.emit('changePlayerPodium', 3, 'stop')
+    })
+    $('#podium1ToNormal').on('click', () => {
+      socket.emit('changePlayerPodium', 1, 'normal')
+    })
+    $('#podium1ToBuzzed').on('click', () => {
+      socket.emit('changePlayerPodium', 1, 'buzzed')
+    })
+    $('#podium1ToStop').on('click', () => {
+      socket.emit('changePlayerPodium', 1, 'stop')
+    })
+    $('#podium2ToNormal').on('click', () => {
+      socket.emit('changePlayerPodium', 2, 'normal')
+    })
+    $('#podium2ToBuzzed').on('click', () => {
+      socket.emit('changePlayerPodium', 2, 'buzzed')
+    })
+    $('#podium2ToStop').on('click', () => {
+      socket.emit('changePlayerPodium', 2, 'stop')
+    })
+    $('#podium3ToNormal').on('click', () => {
+      socket.emit('changePlayerPodium', 3, 'normal')
+    })
+    $('#podium3ToBuzzed').on('click', () => {
+      socket.emit('changePlayerPodium', 3, 'buzzed')
+    })
+    $('#podium3ToStop').on('click', () => {
+      socket.emit('changePlayerPodium', 3, 'stop')
+    })
+
+    //balls control
+    $('#p1BallsControl .addBall').on('click', () => {
+      const balls = $('#ballForP1').val().split(',')
+      $('#ballForP1').val('')
+      for (let ball of balls) {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) continue
+        else socket.emit('updateBall', 'add', 1, ball);
+      }
+      socket.emit('playMusic', '../media/chọn bóng.mp3')
+    })
+    $('#p2BallsControl .addBall').on('click', () => {
+      const balls = $('#ballForP2').val().split(',')
+      $('#ballForP2').val('')
+      for (let ball of balls) {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) continue
+        else socket.emit('updateBall', 'add', 2, ball);
+      }
+      socket.emit('playMusic', '../media/chọn bóng.mp3')
+    })
+    $('#p3BallsControl .addBall').on('click', () => {
+      const balls = $('#ballForP3').val().split(',')
+      $('#ballForP3').val('')
+      for (let ball of balls) {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) continue
+        else socket.emit('updateBall', 'add', 3, ball);
+      }
+      socket.emit('playMusic', '../media/chọn bóng.mp3')
+    })
+
+    $('#p1BallsControl .delBall').on('click', () => {
+      const balls = $('#ballForP1').val().split(',')
+      $('#ballForP1').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        else socket.emit('updateBall', 'del', 1, ball)
+      })
+    })
+    $('#p2BallsControl .delBall').on('click', () => {
+      const balls = $('#ballForP2').val().split(',')
+      $('#ballForP2').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        else socket.emit('updateBall', 'del', 2, ball)
+      })
+    })
+    $('#p3BallsControl .delBall').on('click', () => {
+      const balls = $('#ballForP3').val().split(',')
+      $('#ballForP3').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        else socket.emit('updateBall', 'del', 3, ball)
+      })
+    })
+
+    $('#p1BallsControl .addJackpotBall').on('click', () => {
+      socket.emit('color', 'all')
+      const balls = $('#jackpotForP1').val().split(',')
+      $('#jackpotForP1').val('')
+      balls.forEach(ball => {
+        console.log(ball)
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        else socket.emit('updateBall', 'jackpotAdd', 1, ball)
+      })
+    })
+    $('#p2BallsControl .addJackpotBall').on('click', () => {
+      socket.emit('color', 'all')
+      const balls = $('#jackpotForP2').val().split(',')
+      $('#jackpotForP2').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        else socket.emit('updateBall', 'jackpotAdd', 2, ball)
+      })
+    })
+    $('#p3BallsControl .addJackpotBall').on('click', () => {
+      socket.emit('color', 'all')
+      const balls = $('#jackpotForP3').val().split(',')
+      $('#jackpotForP3').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        else socket.emit('updateBall', 'jackpotAdd', 3, ball)
+      })
+    })
+    $('#p1BallsControl .delJackpotBall').on('click', () => {
+      const balls = $('#jackpotForP1').val().split(',')
+      $('#jackpotForP1').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        socket.emit('updateBall', 'jackpotDel', 1, ball)
+      })
+    })
+    $('#p2BallsControl .delJackpotBall').on('click', () => {
+      const balls = $('#jackpotForP2').val().split(',')
+      $('#jackpotForP2').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        socket.emit('updateBall', 'jackpotDel', 2, ball)
+      })
+    })
+    $('#p3BallsControl .delJackpotBall').on('click', () => {
+      const balls = $('#jackpotForP3').val().split(',')
+      $('#jackpotForP3').val('')
+      balls.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        socket.emit('updateBall', 'jackpotDel', 3, ball)
+      })
+    })
+
+    //score and name control
+    $('#p1BallsControl .setNameAndScore').on('click', () => {
+      const score = $('#scoreForP1').val()
+      const name = $('#nameForP1').val()
+      if (name === '') return
+      socket.emit('updateName', 1, name)
+      if (score === '' || isNaN(score)) return
+      socket.emit('updateScore', 'set', 1, score)
+    })
+    $('#p2BallsControl .setNameAndScore').on('click', () => {
+      const score = $('#scoreForP2').val()
+      const name = $('#nameForP2').val()
+      if (name === '') return
+      socket.emit('updateName', 2, name)
+      if (score === '' || isNaN(score)) return
+      socket.emit('updateScore', 'set', 2, score)
+    })
+    $('#p3BallsControl .setNameAndScore').on('click', () => {
+      const score = $('#scoreForP3').val()
+      const name = $('#nameForP3').val()
+      if (name === '') return
+      socket.emit('updateName', 3, name)
+      if (score === '' || isNaN(score)) return
+      socket.emit('updateScore', 'set', 3, score)
+    })
+
+    //swap web preview
+    $('#swapToGpx').on('click', () => {
+      $('#gpxIframe').css('opacity', '1')
+      $('#hostIframe').css('opacity', '0')
+      $('#ballBoardIframe').css('opacity', '0')
+      $('#overlayIframe').css('opacity', '0')
+    })
+    $('#swapToHost').on('click', () => {
+      $('#gpxIframe').css('opacity', '0')
+      $('#hostIframe').css('opacity', '1')
+      $('#ballBoardIframe').css('opacity', '0')
+      $('#overlayIframe').css('opacity', '0')
+    })
+    $('#swapToBallBoard').on('click', () => {
+      $('#gpxIframe').css('opacity', '0')
+      $('#hostIframe').css('opacity', '0')
+      $('#ballBoardIframe').css('opacity', '1')
+      $('#overlayIframe').css('opacity', '0')
+    })
+    $('#swapToOverlay').on('click', () => {
+      $('#gpxIframe').css('opacity', '0')
+      $('#hostIframe').css('opacity', '0')
+      $('#ballBoardIframe').css('opacity', '0')
+      $('#overlayIframe').css('opacity', '1')
+    })
+
+    //buzz
+    let buzzed = []
+    let p1Name = ''
+    let p2Name = ''
+    let p3Name = ''
+
+    function updateBuzzPosition() {
+      console.log(buzzed)
+      $('#buzzedFirst').text(`1. ${buzzed[0]}`)
+      $('#buzzedSecond').text(`2. ${buzzed[1]}`)
+      $('#buzzedThird').text(`3. ${buzzed[2]}`)
+      socket.emit('updateBuzzPositionToHost', buzzed)
+    }
+    socket.on('p1Buzzed', () => {
+      buzzed.push($('#nameForP1').val())
+      updateBuzzPosition()
+      console.log(buzzed.length)
+      if (buzzed.length == 1) socket.emit('p1BuzzEarly')
+      else socket.emit('p1BuzzLate')
+    })
+    socket.on('p2Buzzed', () => {
+      buzzed.push($('#nameForP2').val())
+      updateBuzzPosition()
+      console.log(buzzed.length)
+      if (buzzed.length == 1) socket.emit('p2BuzzEarly')
+      else socket.emit('p2BuzzLate')
+    })
+    socket.on('p3Buzzed', () => {
+      buzzed.push($('#nameForP3').val())
+      updateBuzzPosition()
+      console.log(buzzed.length)
+      if (buzzed.length == 1) socket.emit('p3BuzzEarly')
+      else socket.emit('p3BuzzLate')
+    })
+
+    $('#openBuzzer').on('click', () => {
+      console.log('openBuzzer')
+      socket.emit('buzzer', 'open')
+    })
+    $('#resetBuzzer').on('click', () => {
+      socket.emit('buzzer', 'reset')
+      buzzed = []
+      $('#buzzedFirst').text('1. ')
+      $('#buzzedSecond').text('2. ')
+      $('#buzzedThird').text('3. ')
+    })
+
+    //webs control
+    $('#showLogo').on('click', () => {
+      socket.emit('showLogo')
+    })
+    $('#hideLogo').on('click', () => {
+      socket.emit('hideLogo')
+    })
+    $('#introduceBalls').on('click', () => {
+      socket.emit('introduceBalls')
+    })
+    $('#flyDownCol1').on('click', () => {
+      socket.emit('flyDownBalls', 1)
+    })
+    $('#flyDownCol2').on('click', () => {
+      socket.emit('flyDownBalls', 2)
+    })
+    $('#flyDownCol3').on('click', () => {
+      socket.emit('flyDownBalls', 3)
+    })
+    $('#flyDownCol4').on('click', () => {
+      socket.emit('flyDownBalls', 4)
+    })
+    $('#flyDownCol5').on('click', () => {
+      socket.emit('flyDownBalls', 5)
+    })
+    $('#flyDownCol6').on('click', () => {
+      socket.emit('flyDownBalls', 6)
+    })
+    $('#flyDownCol7').on('click', () => {
+      socket.emit('flyDownBalls', 7)
+    })
+    $('#flyDownCol8').on('click', () => {
+      socket.emit('flyDownBalls', 8)
+    })
+    $('#flyDownCol9').on('click', () => {
+      socket.emit('flyDownBalls', 9)
+    })
+    $('#flyDownCol10').on('click', () => {
+      socket.emit('flyDownBalls', 10)
+    })
+    $('#hideColGpx').on('click', () => {
+      socket.emit('hideColGpx')
+    })
+
+    $('#glowBallBtn').on('click', () => {
+      socket.emit('glowBall', $('#ballForGlow').val())
+    })
+    $('#delGlowBallBtn').on('click', () => {
+      socket.emit('delGlowBall', $('#ballForGlow').val())
+    })
+    $('#delAllGlowBallBtn').on('click', () => {
+      socket.emit('delAllGlowBall')
+    })
+
+    //coloring balls
+    $('#coloredAll').on('click', () => {
+      socket.emit('color', 'all')
+    })
+    $('#coloredNone').on('click', () => {
+      socket.emit('color', 'none')
+    })
+    $('#coloredRed').on('click', () => {
+      socket.emit('color', 'red')
+    })
+    $('#coloredGreen').on('click', () => {
+      socket.emit('color', 'green')
+    })
+    $('#coloredBlue').on('click', () => {
+      socket.emit('color', 'blue')
+    })
+    $('#coloredPink').on('click', () => {
+      socket.emit('color', 'pink')
+    })
+    $('#coloredYellow').on('click', () => {
+      socket.emit('color', 'yellow')
+    })
+
+    //round 2 & overlay
+    let questionsInThisPack = []
+    let thisPackIndex = 0
+    let passed = []
+    let playerToAddBall = 0
+    let ansStatus = []
+    let ballsToAdd = []
+
+    let sixtySecInterval;
+    let time = 60;
+    $('#start60s').on('click', () => {
+      ballsToAdd = []
+      console.log(thisPackIndex)
+      chooseQ(questionsInThisPack[thisPackIndex])
+      socket.emit('showQ')
+      socket.emit('playMusic', '../media/60s vòng 2.mp3')
+      socket.emit('updateTime', time)
+      console.log(time)
+      sixtySecInterval = setInterval(() => {
+        time--
+        console.log(time)
+        socket.emit('updateTime', time)
+        if (time == 0) clearInterval(sixtySecInterval)
+      }, 1000)
+    })
+    $('#reset60s').on('click', () => {
+      socket.emit('stopMusic')
+      clearInterval(sixtySecInterval)
+      time = 60
+      socket.emit('updateTime', time)
+    })
+    // $('#pause60s').on('click', () => {
+    //   socket.emit('pauseMusic')
+    //   clearInterval(sixtySecInterval)
+    // })
+    $('#addBallWhenCorrect').on('click', () => {
+      socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10, $('#ballToAddWhenCorrect').val())
+      ballsToAdd.push($('#ballToAddWhenCorrect').val())
+      $('#ballToAddWhenCorrect').val('')
+      console.log(ballsToAdd)
+      if (thisPackIndex >= questionsInThisPack.length - 1) { //if all questions are used
+        if (passed.length == 0) { //if no question is passed
+          console.log('no more questions')
+          socket.emit('hideQ')
+          socket.emit('hideR2Question')
+          return
+        }
+        else { //if there are passed questions
+          questionsInThisPack = passed
+          console.log('questionsInThisPack ' + questionsInThisPack)
+          passed = []
+          thisPackIndex = 0
+          chooseQ(questionsInThisPack[thisPackIndex])
+        }
+      }
+      else { //if there are questions left
+        thisPackIndex++
+        console.log('thisPackIndex ' + thisPackIndex)
+        chooseQ(questionsInThisPack[thisPackIndex])
+      }
+    })
+    $('#wrongAns').on('click', () => {
+      socket.emit('updateAnsStatus', 'wrong', questionsInThisPack[thisPackIndex] % 10)
+      if (thisPackIndex >= questionsInThisPack.length - 1) {
+        if (passed.length == 0) {
+          console.log('no more questions')
+          socket.emit('hideQ')
+          socket.emit('hideR2Question')
+          return
+        }
+        else {
+          thisPackIndex++
+          console.log(thisPackIndex)
+          questionsInThisPack = passed
+          console.log(questionsInThisPack)
+          passed = []
+          thisPackIndex = 0
+          chooseQ(questionsInThisPack[thisPackIndex])
+        }
+      }
+      else {
+        thisPackIndex++
+        console.log(thisPackIndex)
+        chooseQ(questionsInThisPack[thisPackIndex])
+      }
+      socket.emit('wrongAns')
+    })
+    $('#pass').on('click', () => {
+      socket.emit('updateAnsStatus', 'pass', questionsInThisPack[thisPackIndex] % 10)
+      passed.push(questionsInThisPack[thisPackIndex])
+      if (thisPackIndex >= questionsInThisPack.length - 1) {//if all questions are used
+        thisPackIndex = 0
+        questionsInThisPack = passed
+        passed = []
+        console.log(questionsInThisPack, passed)
+        chooseQ(questionsInThisPack[thisPackIndex])
+      }
+      else {//if there are questions left
+        console.log(passed)
+        thisPackIndex++
+        console.log(thisPackIndex)
+        chooseQ(questionsInThisPack[thisPackIndex])
+      }
+    })
+    $('#addBallR2').on('click', () => {
+      if (ballsToAdd.length == 0) return
+      ballsToAdd.forEach(ball => {
+        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
+        else socket.emit('updateBall', 'add', playerToAddBall, ball)
+      })
+    })
+    $('#loadPack1').on('click', () => {
+      questionsInThisPack = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+      thisPackIndex = 0
+      passed = []
+      socket.emit('hideQ')
+      socket.emit('showR2Gpx')
+    })
+    $('#loadPack2').on('click', () => {
+      questionsInThisPack = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+      thisPackIndex = 0
+      passed = []
+      socket.emit('hideQ')
+      socket.emit('showR2Gpx')
+    })
+    $('#loadPack3').on('click', () => {
+      questionsInThisPack = [30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+      thisPackIndex = 0
+      passed = []
+      socket.emit('hideQ')
+      socket.emit('showR2Gpx')
+    })
+
+    $('#showQGpx').on('click', () => {
+      socket.emit('showQGpx', qnas[qno], qno)
+    })
+    $('#hideQGpx').on('click', () => {
+      socket.emit('hideQGpx')
+    })
+    $('#showR2Gpx').on('click', () => {
+      socket.emit('showR2Gpx')
+    })
+    // $('#hideR2Gpx').on('click', () => {
+    //   socket.emit('hideR2Gpx')
+    // })
+
+    $('#setWaitAnimToOrbit').on('click', () => {
+      socket.emit('setWaitAnim', 'orbit')
+    })
+    $('#showAnim1').on('click', () => {
+      socket.emit('showAnim', 1)
+    })
+    $('#showAnim2').on('click', () => {
+      socket.emit('showAnim', 2)
+    })
+    $('#showAnim3').on('click', () => {
+      socket.emit('showAnim', 3)
+    })
+    $('#showAnim4').on('click', () => {
+      socket.emit('showAnim', 4)
+    })
+    $('#showAnim5').on('click', () => {
+      socket.emit('showAnim', 5)
+    })
+    $('#showJackpotBall1').on('click', () => {
+      socket.emit('showBalls', $('#jackpotInput1').val(), 1)
+    })
+    $('#showJackpotBall2').on('click', () => {
+      socket.emit('showBalls', $('#jackpotInput2').val(), 2)
+    })
+    $('#showJackpotBall3').on('click', () => {
+      socket.emit('showBalls', $('#jackpotInput3').val(), 3)
+    })
+    $('#showJackpotBall4').on('click', () => {
+      socket.emit('showBalls', $('#jackpotInput4').val(), 4)
+    })
+    $('#showJackpotBall5').on('click', () => {
+      socket.emit('showBalls', $('#jackpotInput5').val(), 5)
+    })
+
+    $('#playJackpotGpx').on('click', () => {
+      socket.emit('playJackpotGpx')
+    })
+    $('#showJackpotGpx').on('click', () => {
+      socket.emit('showJackpotGpx')
+    })
+    $('#hideJackpotGpx').on('click', () => {
+      socket.emit('hideJackpotGpx')
+    })
+    $('#resetJackpotGpx').on('click', () => {
+      socket.emit('resetJackpotGpx')
+    })
+
+    $('#anim_3BallsJackpotted').on('click', () => {
+      socket.emit('anim_3BallsJackpotted')
+    })
+    $('#anim_3BallsPrize').on('click', () => {
+      socket.emit('anim_3BallsPrize')
+    })
+    $('#anim_5BallsJackpotted').on('click', () => {
+      socket.emit('anim_5BallsJackpotted')
+    })
+    $('#anim_5BallsPrize').on('click', () => {
+      socket.emit('anim_5BallsPrize')
+    })
+    $('#anim_qbv').on('click', () => {
+      socket.emit('anim_QbvPrize')
+    })
+    $('#anim_fadeOut').on('click', () => {
+      socket.emit('anim_fadeOutJackpotRules')
+    })
+
+    //web host
+    $('#showP1Info').on('click', () => {
+      $('#showP1Info').css({ 'background-color': 'white', 'color': 'black' })
+      $('#showP2Info').css({ 'background-color': 'black', 'color': 'white' })
+      $('#showP3Info').css({ 'background-color': 'black', 'color': 'white' })
+      socket.emit('showPInfo', 1)
+      playerToAddBall = 1
+      socket.emit('updateTime', 60)
+    })
+    $('#showP2Info').on('click', () => {
+      $('#showP2Info').css({ 'background-color': 'white', 'color': 'black' })
+      $('#showP1Info').css({ 'background-color': 'black', 'color': 'white' })
+      $('#showP3Info').css({ 'background-color': 'black', 'color': 'white' })
+      socket.emit('showPInfo', 2)
+      playerToAddBall = 2
+      socket.emit('updateTime', 60)
+    })
+    $('#showP3Info').on('click', () => {
+      $('#showP3Info').css({ 'background-color': 'white', 'color': 'black' })
+      $('#showP2Info').css({ 'background-color': 'black', 'color': 'white' })
+      $('#showP1Info').css({ 'background-color': 'black', 'color': 'white' })
+      socket.emit('showPInfo', 3)
+      playerToAddBall = 3
+      socket.emit('updateTime', 60)
+    })
+  </script>
+</body>
+
+</html>
