@@ -1,5 +1,7 @@
 const express = require('express');
 const { join } = require('path');
+const config = require("./config.js");
+console.log(config)
 // const { initializeApp } = require('firebase/app')
 // const { getFirestore, getDoc, doc, updateDoc } = require('firebase/firestore')
 
@@ -10,49 +12,67 @@ app.use(express.static('public'));
 
 const ioServer = require('socket.io')(server)
 
-app.get('/p1', (req, res) => {
+app.get(`${config.p1Route}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/p1.html'))
 })
-app.get('/p2', (req, res) => {
+app.get(`${config.p2Route}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/p2.html'))
 })
-app.get('/p3', (req, res) => {
+app.get(`${config.p3Route}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/p3.html'))
 })
-app.get('/controller', (req, res) => {
+app.get(`${config.controllerRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/control.html'))
 })
-app.get('/gpx', (req, res) => {
+app.get(`${config.gpxRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/gpx.html'))
 })
-app.get('/host', (req, res) => {
+app.get(`${config.hostRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/host.html'))
 })
-app.get('/ballBoard', (req, res) => {
+app.get(`${config.ballBoardRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/ballBoard.html'))
 })
-app.get('/overlay', (req, res) => {
+app.get(`${config.overlayRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/overlay.html'))
 })
 
-const p1ns = ioServer.of('/p1')
-const p2ns = ioServer.of('/p2')
-const p3ns = ioServer.of('/p3')
-const cns = ioServer.of('/controller')
-const gns = ioServer.of('/gpx')
-const hns = ioServer.of('/host')
-const bbns = ioServer.of('/ballBoard')
-const ovlns = ioServer.of('/overlay')
+const p1ns = ioServer.of(`${config.p1Route}`)
+const p2ns = ioServer.of(`${config.p2Route}`)
+const p3ns = ioServer.of(`${config.p3Route}`)
+const cns = ioServer.of(`${config.controllerRoute}`)
+const gns = ioServer.of(`${config.gpxRoute}`)
+const hns = ioServer.of(`${config.hostRoute}`)
+const bbns = ioServer.of(`${config.ballBoardRoute}`)
+const ovlns = ioServer.of(`${config.overlayRoute}`)
 
-console.log('http://localhost:3000/p1')
-console.log('http://localhost:3000/p2')
-console.log('http://localhost:3000/p3')
-console.log('http://localhost:3000/controller')
-console.log('http://localhost:3000/gpx')
-console.log('http://localhost:3000/host')
-console.log('http://localhost:3000/ballBoard')
-console.log('http://localhost:3000/overlay')
+console.log(`http://localhost:3000${config.p1Route}`)
+console.log(`http://localhost:3000${config.p2Route}`)
+console.log(`http://localhost:3000${config.p3Route}`)
+console.log(`http://localhost:3000${config.controllerRoute}`)
+console.log(`http://localhost:3000${config.gpxRoute}`)
+console.log(`http://localhost:3000${config.hostRoute}`)
+console.log(`http://localhost:3000${config.ballBoardRoute}`)
+console.log(`http://localhost:3000${config.overlayRoute}`)
 
+//logics
+let systemBalls = [];
+for (let i = 1; i <= 50; i++) {
+	systemBalls.push(i);
+}
+let p1Balls = []
+let p2Balls = []
+let p3Balls = []
+let p1Jackpots = []
+let p2Jackpots = []
+let p3Jackpots = []
+let p1Name = ''
+let p2Name = ''
+let p3Name = ''
+let p1Score = 0
+let p2Score = 0
+let p3Score = 0
+const BALLSCORE = 500;
 function broadcastToAllPlayers(event, ...data) {
 	p1ns.emit(event, ...data)
 	p2ns.emit(event, ...data)
@@ -63,13 +83,13 @@ function broadcastToAllPlayers(event, ...data) {
 p1ns.on('connection', socket => {
 	console.log('p1 connected')
 	//init
-	socket.emit('updateBalls', 1, p1Balls)
-	socket.emit('updateBalls', 2, p2Balls)
-	socket.emit('updateBalls', 3, p3Balls)
-	socket.emit('updateBalls', 'system', systemBalls)
-	socket.emit('updateJackpots', 1, p1Jackpots)
-	socket.emit('updateJackpots', 2, p2Jackpots)
-	socket.emit('updateJackpots', 3, p3Jackpots)
+	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
+	p1Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 1, ball))
+	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
+	p2Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 2, ball))
+	p3Balls.forEach(ball => socket.emit('updateBall', 'add', 3, ball))
+	p3Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 3, ball))
+	systemBalls.forEach(ball => socket.emit('updateBall', 'add', 'system', ball))
 	socket.emit('updateScore', 1, p1Score)
 	socket.emit('updateScore', 2, p2Score)
 	socket.emit('updateScore', 3, p3Score)
@@ -85,13 +105,13 @@ p1ns.on('connection', socket => {
 p2ns.on('connection', socket => {
 	console.log('p2 connected')
 	//init
-	socket.emit('updateBalls', 1, p1Balls)
-	socket.emit('updateBalls', 2, p2Balls)
-	socket.emit('updateBalls', 3, p3Balls)
-	socket.emit('updateBalls', 'system', systemBalls)
-	socket.emit('updateJackpots', 1, p1Jackpots)
-	socket.emit('updateJackpots', 2, p2Jackpots)
-	socket.emit('updateJackpots', 3, p3Jackpots)
+	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
+	p1Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 1, ball))
+	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
+	p2Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 2, ball))
+	p3Balls.forEach(ball => socket.emit('updateBall', 'add', 3, ball))
+	p3Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 3, ball))
+	systemBalls.forEach(ball => socket.emit('updateBall', 'add', 'system', ball))
 	socket.emit('updateScore', 1, p1Score)
 	socket.emit('updateScore', 2, p2Score)
 	socket.emit('updateScore', 3, p3Score)
@@ -107,13 +127,13 @@ p2ns.on('connection', socket => {
 p3ns.on('connection', socket => {
 	console.log('p3 connected')
 	//init
-	socket.emit('updateBalls', 1, p1Balls)
-	socket.emit('updateBalls', 2, p2Balls)
-	socket.emit('updateBalls', 3, p3Balls)
-	socket.emit('updateBalls', 'system', systemBalls)
-	socket.emit('updateJackpots', 1, p1Jackpots)
-	socket.emit('updateJackpots', 2, p2Jackpots)
-	socket.emit('updateJackpots', 3, p3Jackpots)
+	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
+	p1Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 1, ball))
+	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
+	p2Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 2, ball))
+	p3Balls.forEach(ball => socket.emit('updateBall', 'add', 3, ball))
+	p3Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 3, ball))
+	systemBalls.forEach(ball => socket.emit('updateBall', 'add', 'system', ball))
 	socket.emit('updateScore', 1, p1Score)
 	socket.emit('updateScore', 2, p2Score)
 	socket.emit('updateScore', 3, p3Score)
@@ -194,243 +214,228 @@ cns.on('connection', socket => {
 		gns.emit('changePlayerPodium', p, state)
 	})
 
-	socket.on('updateBall', (mode, player, ball) => {
+	socket.on('updateBalls', (mode, player, balls) => {
 		if (mode == 'add') {
 			if (player == 1) {
-				if (p1Balls.includes(ball)) return
-				else if (p2Balls.includes(ball)) {
-					p2Balls = p2Balls.filter(b => b != ball)
-					hns.emit('updateBalls', 2, p2Balls)
-					p2Score -= BALLSCORE
-					hns.emit('updateScore', 2, p2Score)
-					gns.emit('updateScore', 2, p2Score)
-					broadcastToAllPlayers('updateBalls', 2, p2Balls)
-					broadcastToAllPlayers('updateScore', 2, p2Score)
-				}
-				else if (p3Balls.includes(ball)) {
-					p3Balls = p3Balls.filter(b => b != ball)
-					hns.emit('updateBalls', 3, p3Balls)
-					p3Score -= BALLSCORE
-					hns.emit('updateScore', 3, p3Score)
-					gns.emit('updateScore', 3, p3Score)
-					broadcastToAllPlayers('updateBalls', 3, p3Balls)
-					broadcastToAllPlayers('updateScore', 3, p3Score)
-				}
-				p1Balls.push(ball)
-				p1Balls.sort((a, b) => a - b)
-				systemBalls = systemBalls.filter(b => b != ball)
-				if (qnom < 40 || qnom > 49) {
-					bbns.emit('removeBall', ball)
-				}
-				//update using the ball array
-				hns.emit('updateBalls', 1, p1Balls)
-				hns.emit('updateBalls', 'system', systemBalls)
-				console.log(p1Balls, p2Balls, p3Balls, systemBalls)
-				p1Score += BALLSCORE
-				hns.emit('updateScore', 1, p1Score)
-				gns.emit('updateScore', 1, p1Score)
-				broadcastToAllPlayers('updateBalls', 1, p1Balls)
-				broadcastToAllPlayers('updateBalls', 'system', systemBalls)
-				broadcastToAllPlayers('updateScore', 1, p1Score)
-				//update using the ball param
-				gns.emit('updateBall', 'add', 1, ball)
-
+				balls.forEach(ball => {
+					if (ball == '' || isNaN(ball) || ball < 1 || ball > 50 || p1Balls.includes(ball)) return
+					else if (p2Balls.includes(ball)) {
+						p2Balls = p2Balls.filter(b => b != ball)
+						p2Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 2, ball)
+						gns.emit('updateBall', 'del', 2, ball)
+						broadcastToAllPlayers('updateBall', 'del', 2, ball)
+					}
+					else if (p3Balls.includes(ball)) {
+						p3Balls = p3Balls.filter(b => b != ball)
+						p3Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 3, ball)
+						gns.emit('updateBall', 'del', 3, ball)
+						broadcastToAllPlayers('updateBall', 'del', 3, ball)
+					}
+					if (qnom < 40 || qnom > 49) {
+						bbns.emit('removeBall', ball)
+					}
+					p1Balls.push(ball)
+					p1Score += BALLSCORE
+					p1Balls.sort((a, b) => a - b)
+					systemBalls = systemBalls.filter(b => b != ball)
+					hns.emit('updateBall', 'add', 1, ball)
+					hns.emit('updateBall', 'del', 'system', ball)
+					gns.emit('updateBall', 'add', 1, ball)
+					broadcastToAllPlayers('updateBall', 'add', 1, ball)
+					broadcastToAllPlayers('updateBall', 'del', 'system', ball)
+				})
 				//for R2, after all balls has been added
 				hns.emit('delAllGlowBall')
 				broadcastToAllPlayers('delAllGlowBall')
 			}
 			else if (player == 2) {
-				if (p2Balls.includes(ball)) return
-				else if (p1Balls.includes(ball)) {
-					p1Balls = p1Balls.filter(b => b != ball)
-					hns.emit('updateBalls', 1, p1Balls)
-					p1Score -= BALLSCORE
-					hns.emit('updateScore', 1, p1Score)
-					gns.emit('updateScore', 1, p1Score)
-					broadcastToAllPlayers('updateBalls', 1, p1Balls)
-					broadcastToAllPlayers('updateScore', 1, p1Score)
-				}
-				else if (p3Balls.includes(ball)) {
-					p3Balls = p3Balls.filter(b => b != ball)
-					hns.emit('updateBalls', 3, p3Balls)
-					p3Score -= BALLSCORE
-					hns.emit('updateScore', 3, p3Score)
-					gns.emit('updateScore', 3, p3Score)
-					broadcastToAllPlayers('updateBalls', 3, p3Balls)
-					broadcastToAllPlayers('updateScore', 3, p3Score)
-				}
-				p2Balls.push(ball)
-				p2Balls.sort((a, b) => a - b)
-				systemBalls = systemBalls.filter(b => b != ball)
-				if (qnom < 40 || qnom > 49) {
-					bbns.emit('removeBall', ball)
-				}
-				//update using the ball array
-				hns.emit('updateBalls', 2, p2Balls)
-				hns.emit('updateBalls', 'system', systemBalls)
-				console.log(p1Balls, p2Balls, p3Balls, systemBalls)
-				p2Score += BALLSCORE
-				hns.emit('updateScore', 2, p2Score)
-				gns.emit('updateScore', 2, p2Score)
-				broadcastToAllPlayers('updateBalls', 2, p2Balls)
-				broadcastToAllPlayers('updateBalls', 'system', systemBalls)
-				broadcastToAllPlayers('updateScore', 2, p2Score)
-				//update using the ball param
-				gns.emit('updateBall', 'add', 2, ball)
-
-				//for R2, after all balls has been added
-				hns.emit('delAllGlowBall')
-				broadcastToAllPlayers('delAllGlowBall')
+				balls.forEach(ball => {
+					if (ball == '' || isNaN(ball) || ball < 1 || ball > 50 || p2Balls.includes(ball)) return
+					else if (p1Balls.includes(ball)) {
+						p1Balls = p1Balls.filter(b => b != ball)
+						p1Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 1, ball)
+						gns.emit('updateBall', 'del', 1, ball)
+						broadcastToAllPlayers('updateBall', 'del', 1, ball)
+					}
+					else if (p3Balls.includes(ball)) {
+						p3Balls = p3Balls.filter(b => b != ball)
+						p3Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 3, ball)
+						gns.emit('updateBall', 'del', 3, ball)
+						broadcastToAllPlayers('updateBall', 'del', 3, ball)
+					}
+					if (qnom < 40 || qnom > 49) {
+						bbns.emit('removeBall', ball)
+					}
+					p2Balls.push(ball)
+					p2Score += BALLSCORE
+					p2Balls.sort((a, b) => a - b)
+					systemBalls = systemBalls.filter(b => b != ball)
+					hns.emit('updateBall', 'add', 2, ball)
+					hns.emit('updateBall', 'del', 'system', ball)
+					gns.emit('updateBall', 'add', 2, ball)
+					broadcastToAllPlayers('updateBall', 'add', 2, ball)
+					broadcastToAllPlayers('updateBall', 'del', 'system', ball)
+				})
 			}
 			else if (player == 3) {
-				if (p3Balls.includes(ball)) return
-				else if (p2Balls.includes(ball)) {
-					p2Balls = p2Balls.filter(b => b != ball)
-					hns.emit('updateBalls', 2, p2Balls)
-					p2Score -= BALLSCORE
-					hns.emit('updateScore', 2, p2Score)
-					gns.emit('updateScore', 2, p2Score)
-					broadcastToAllPlayers('updateBalls', 2, p2Balls)
-					broadcastToAllPlayers('updateScore', 2, p2Score)
-				}
-				else if (p1Balls.includes(ball)) {
-					p1Balls = p1Balls.filter(b => b != ball)
-					hns.emit('updateBalls', 1, p1Balls)
-					p1Score -= BALLSCORE
-					hns.emit('updateScore', 1, p1Score)
-					gns.emit('updateScore', 1, p1Score)
-					broadcastToAllPlayers('updateBalls', 1, p1Balls)
-					broadcastToAllPlayers('updateScore', 1, p1Score)
-				}
-				p3Balls.push(ball)
-				p3Balls.sort((a, b) => a - b)
-				systemBalls = systemBalls.filter(b => b != ball)
-				if (qnom < 40 || qnom > 49) {
-					bbns.emit('removeBall', ball)
-				}
-				//update using the ball array
-				hns.emit('updateBalls', 3, p3Balls)
-				hns.emit('updateBalls', 'system', systemBalls)
-				console.log(p1Balls, p2Balls, p3Balls, systemBalls)
-				p3Score += BALLSCORE
-				hns.emit('updateScore', 3, p3Score)
-				gns.emit('updateScore', 3, p3Score)
-				broadcastToAllPlayers('updateBalls', 3, p3Balls)
-				broadcastToAllPlayers('updateBalls', 'system', systemBalls)
-				broadcastToAllPlayers('updateScore', 3, p3Score)
-				//update using the ball param
-				gns.emit('updateBall', 'add', 3, ball)
-
-				//for R2, after all balls has been added
-				hns.emit('delAllGlowBall')
-				broadcastToAllPlayers('delAllGlowBall')
+				balls.forEach(ball => {
+					if (ball == '' || isNaN(ball) || ball < 1 || ball > 50 || p3Balls.includes(ball)) return
+					else if (p2Balls.includes(ball)) {
+						p2Balls = p2Balls.filter(b => b != ball)
+						p2Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 2, ball)
+						gns.emit('updateBall', 'del', 2, ball)
+						broadcastToAllPlayers('updateBall', 'del', 2, ball)
+					}
+					else if (p1Balls.includes(ball)) {
+						p1Balls = p1Balls.filter(b => b != ball)
+						p1Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 1, ball)
+						gns.emit('updateBall', 'del', 1, ball)
+						broadcastToAllPlayers('updateBall', 'del', 1, ball)
+					}
+					if (qnom < 40 || qnom > 49) {
+						bbns.emit('removeBall', ball)
+					}
+					p3Balls.push(ball)
+					p3Score += BALLSCORE
+					p3Balls.sort((a, b) => a - b)
+					systemBalls = systemBalls.filter(b => b != ball)
+					hns.emit('updateBall', 'add', 3, ball)
+					hns.emit('updateBall', 'del', 'system', ball)
+					gns.emit('updateBall', 'add', 3, ball)
+					broadcastToAllPlayers('updateBall', 'add', 3, ball)
+					broadcastToAllPlayers('updateBall', 'del', 'system', ball)
+				})
 			}
+			hns.emit('delAllGlowBall')
+			broadcastToAllPlayers('delAllGlowBall')
 		}
 		else if (mode == 'del') {
 			if (player == '1') {
-				if (!p1Balls.includes(ball)) return
-				else {
-					p1Balls = p1Balls.filter(b => !ball.includes(b))
-					systemBalls.push(parseInt(ball))
-					hns.emit('updateBalls', 1, p1Balls)
-					hns.emit('updateBalls', 'system', systemBalls)
-					p1Score -= BALLSCORE
-					hns.emit('updateScore', 1, p1Score)
-					gns.emit('updateScore', 1, p1Score)
-					gns.emit('updateBall', 'del', 1, ball)
-					broadcastToAllPlayers('updateBalls', 1, p1Balls)
-					broadcastToAllPlayers('updateBalls', 'system', systemBalls)
-					broadcastToAllPlayers('updateScore', 1, p1Score)
-				}
+				balls.forEach(ball => {
+					if (!p1Balls.includes(ball)) return
+					else {
+						p1Balls = p1Balls.filter(b => !ball.includes(b))
+						systemBalls.push(parseInt(ball))
+						p1Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 1, ball)
+						hns.emit('updateBall', 'add', 'system', ball)
+						gns.emit('updateBall', 'del', 1, ball)
+						broadcastToAllPlayers('updateBall', 'del', 1, ball)
+						broadcastToAllPlayers('updateBall', 'add', 'system', ball)
+					}
+				})
 			}
 			else if (player == '2') {
-				if (!p2Balls.includes(ball)) return
-				else {
-					p2Balls = p2Balls.filter(b => !ball.includes(b))
-					systemBalls.push(parseInt(ball))
-					hns.emit('updateBalls', 2, p2Balls)
-					hns.emit('updateBalls', 'system', systemBalls)
-					p2Score -= BALLSCORE
-					hns.emit('updateScore', 2, p2Score)
-					gns.emit('updateScore', 2, p2Score)
-					gns.emit('updateBall', 'del', 2, ball)
-					broadcastToAllPlayers('updateBalls', 2, p2Balls)
-					broadcastToAllPlayers('updateBalls', 'system', systemBalls)
-					broadcastToAllPlayers('updateScore', 2, p2Score)
-				}
+				balls.forEach(ball => {
+					if (!p2Balls.includes(ball)) return
+					else {
+						p2Balls = p2Balls.filter(b => !ball.includes(b))
+						systemBalls.push(parseInt(ball))
+						p2Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 2, ball)
+						hns.emit('updateBall', 'add', 'system', ball)
+						gns.emit('updateBall', 'del', 2, ball)
+						broadcastToAllPlayers('updateBall', 'del', 2, ball)
+						broadcastToAllPlayers('updateBall', 'add', 'system', ball)
+					}
+				})
 			}
 			else if (player == '3') {
-				if (!p3Balls.includes(ball)) return
-				else {
-					p3Balls = p3Balls.filter(b => !ball.includes(b))
-					systemBalls.push(parseInt(ball))
-					hns.emit('updateBalls', 3, p3Balls)
-					hns.emit('updateBalls', 'system', systemBalls)
-					p3Score -= BALLSCORE
-					hns.emit('updateScore', 3, p3Score)
-					gns.emit('updateScore', 3, p3Score)
-					gns.emit('updateBall', 'del', 3, ball)
-					broadcastToAllPlayers('updateBalls', 3, p3Balls)
-					broadcastToAllPlayers('updateBalls', 'system', systemBalls)
-					broadcastToAllPlayers('updateScore', 3, p3Score)
-				}
+				balls.forEach(ball => {
+					if (!p3Balls.includes(ball)) return
+					else {
+						p3Balls = p3Balls.filter(b => !ball.includes(b))
+						systemBalls.push(parseInt(ball))
+						p3Score -= BALLSCORE
+						hns.emit('updateBall', 'del', 3, ball)
+						hns.emit('updateBall', 'add', 'system', ball)
+						gns.emit('updateBall', 'del', 3, ball)
+						broadcastToAllPlayers('updateBall', 'del', 3, ball)
+						broadcastToAllPlayers('updateBall', 'add', 'system', ball)
+					}
+				})
 			}
 		}
 		else if (mode == 'jackpotAdd') {
 			if (player == 1) {
-				console.log(ball, p1Balls)
-				if (p1Balls.includes(ball)) {
-					p1Jackpots.push(ball)
-					hns.emit('updateJackpots', 1, p1Jackpots)
-					gns.emit('updateBall', 'jackpotAdd', 1, ball)
-					broadcastToAllPlayers('updateJackpots', 1, p1Jackpots)
-				}
+				balls.forEach(ball => {
+					if (p1Balls.includes(ball)) {
+						p1Jackpots.push(ball)
+						hns.emit('updateJackpot', 'add', 1, ball)
+						gns.emit('updateBall', 'jackpotAdd', 1, ball)
+						broadcastToAllPlayers('updateJackpot', 'add', 1, ball)
+					}
+				})
 			}
 			else if (player == 2) {
-				if (p2Balls.includes(ball)) {
-					p2Jackpots.push(ball)
-					hns.emit('updateJackpots', 2, p2Jackpots)
-					gns.emit('updateBall', 'jackpotAdd', 2, ball)
-					broadcastToAllPlayers('updateJackpots', 2, p2Jackpots)
-				}
+				balls.forEach(ball => {
+					if (p2Balls.includes(ball)) {
+						p2Jackpots.push(ball)
+						hns.emit('updateJackpot', 'add', 2, ball)
+						gns.emit('updateBall', 'jackpotAdd', 2, ball)
+						broadcastToAllPlayers('updateJackpot', 'add', 2, ball)
+					}
+				})
 			}
 			else if (player == 3) {
-				if (p3Balls.includes(ball)) {
-					p3Jackpots.push(ball)
-					hns.emit('updateJackpots', 3, p3Jackpots)
-					gns.emit('updateBall', 'jackpotAdd', 3, ball)
-					broadcastToAllPlayers('updateJackpots', 3, p3Jackpots)
-				}
+				balls.forEach(ball => {
+					if (p3Balls.includes(ball)) {
+						p3Jackpots.push(ball)
+						hns.emit('updateJackpot', 'add', 3, ball)
+						gns.emit('updateBall', 'jackpotAdd', 3, ball)
+						broadcastToAllPlayers('updateJackpot', 'add', 3, ball)
+					}
+				})
 			}
 			console.log(p1Jackpots, p2Jackpots, p3Jackpots)
 		}
 		else if (mode == 'jackpotDel') {
 			if (player == 1) {
-				if (p1Jackpots.includes(ball)) {
-					p1Jackpots = p1Jackpots.filter(b => b != ball)
-					hns.emit('updateJackpots', 1, p1Jackpots)
-					gns.emit('updateBall', 'jackpotDel', 1, ball)
-					broadcastToAllPlayers('updateJackpots', 1, p1Jackpots)
-				}
+				balls.forEach(ball => {
+					if (p1Balls.includes(ball)) {
+						p1Jackpots = p1Jackpots.filter(b => b != ball)
+						hns.emit('updateJackpot', 'del', 1, ball)
+						gns.emit('updateBall', 'jackpotDel', 1, ball)
+						broadcastToAllPlayers('updateJackpot', 'del', 1, ball)
+					}
+				})
 			}
 			else if (player == 2) {
-				if (p2Jackpots.includes(ball)) {
-					p2Jackpots = p2Jackpots.filter(b => b != ball)
-					hns.emit('updateJackpots', 2, p2Jackpots)
-					gns.emit('updateBall', 'jackpotDel', 2, ball)
-					broadcastToAllPlayers('updateJackpots', 2, p2Jackpots)
-				}
+				balls.forEach(ball => {
+					if (p2Balls.includes(ball)) {
+						p2Jackpots = p2Jackpots.filter(b => b != ball)
+						hns.emit('updateJackpot', 'del', 2, ball)
+						gns.emit('updateBall', 'jackpotDel', 2, ball)
+						broadcastToAllPlayers('updateJackpot', 'del', 2, ball)
+					}
+				})
 			}
 			else if (player == 3) {
-				if (p3Jackpots.includes(ball)) {
-					p3Jackpots = p3Jackpots.filter(b => b != ball)
-					hns.emit('updateJackpots', 3, p3Jackpots)
-					gns.emit('updateBall', 'jackpotDel', 3, ball)
-					broadcastToAllPlayers('updateJackpots', 3, p3Jackpots)
-				}
+				balls.forEach(ball => {
+					if (p3Balls.includes(ball)) {
+						p3Jackpots = p3Jackpots.filter(b => b != ball)
+						hns.emit('updateJackpot', 'del', 3, ball)
+						gns.emit('updateBall', 'jackpotDel', 3, ball)
+						broadcastToAllPlayers('updateJackpot', 'add', 3, ball)
+					}
+				})
 			}
-			console.log(p1Jackpots, p2Jackpots, p3Jackpots)
 		}
+		hns.emit('updateScore', 1, p1Score)
+		gns.emit('updateScore', 1, p1Score)
+		broadcastToAllPlayers('updateScore', 1, p1Score)
+		hns.emit('updateScore', 2, p2Score)
+		gns.emit('updateScore', 2, p2Score)
+		broadcastToAllPlayers('updateScore', 2, p2Score)
+		hns.emit('updateScore', 3, p3Score)
+		gns.emit('updateScore', 3, p3Score)
+		broadcastToAllPlayers('updateScore', 3, p3Score)
 	})
 
 	socket.on('updateScore', (mode, p, score) => {
@@ -677,21 +682,3 @@ bbns.on('connection', socket => {
 })
 
 
-//logics
-let systemBalls = [];
-for (let i = 1; i <= 50; i++) {
-	systemBalls.push(i);
-}
-let p1Balls = []
-let p2Balls = []
-let p3Balls = []
-let p1Jackpots = []
-let p2Jackpots = []
-let p3Jackpots = []
-let p1Name = ''
-let p2Name = ''
-let p3Name = ''
-let p1Score = 0
-let p2Score = 0
-let p3Score = 0
-const BALLSCORE = 200;

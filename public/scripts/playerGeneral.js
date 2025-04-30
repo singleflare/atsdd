@@ -24,52 +24,38 @@ function qna(qnas, qno) {
   }
 }
 
-function updateBalls(p, balls) {
+function updateBall(mode, p, ball) {
+  console.log('updateBall', mode, p, ball)
   if (p == 'system') {
-    $('#systemBallGrid').empty()
-    for (let i = 1; i <= 50; i++) {
-      $('#systemBallGrid').append(`<img src='../media/${i}.png' class='ball' id='ball${i}'>`)
-      if (!balls.includes(i)) $(`#ball${i}`).css('opacity', '0')
-    }
+    if (mode == 'add') $(`#systemBallGrid #ball${ball}`).css('opacity', 1)
+    else if (mode == 'del') $(`#systemBallGrid #ball${ball}`).css('opacity', 0)
   }
   else if (p == 1) {
-    $('#p1Balls').empty()
-    balls.forEach((ball) => {
-      $('#p1Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
-    })
+    if (mode == 'add') $('#p1Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+    else if (mode == 'del') $('#p1Balls #ball' + ball).remove()
   }
   else if (p == 2) {
-    $('#p2Balls').empty()
-    balls.forEach((ball) => {
-      $('#p2Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
-    })
+    if (mode == 'add') $('#p2Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+    else if (mode == 'del') $('#p2Balls #ball' + ball).remove()
   }
   else if (p == 3) {
-    $('#p3Balls').empty()
-    balls.forEach((ball) => {
-      $('#p3Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
-    })
+    if (mode == 'add') $('#p3Balls').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+    else if (mode == 'del') $('#p3Balls #ball' + ball).remove()
   }
 }
 
-function updateJackpots(p, balls) {
+function updateJackpot(mode, p, ball) {
   if (p == 1) {
-    $('#p1Jackpots').empty()
-    balls.forEach((ball) => {
-      $('#p1Jackpots').append(`<img src='../media/${ball}.png' id='${ball}'>`)
-    })
+    if (mode == 'add') $('#p1Jackpots').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+    else if (mode == 'del') $('#p1Jackpots #ball' + ball).remove()
   }
   else if (p == 2) {
-    $('#p2Jackpots').empty()
-    balls.forEach((ball) => {
-      $('#p2Jackpots').append(`<img src='../media/${ball}.png' id='${ball}'>`)
-    })
+    if (mode == 'add') $('#p2Jackpots').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+    else if (mode == 'del') $('#p2Jackpots #ball' + ball).remove()
   }
   else if (p == 3) {
-    $('#p3Jackpots').empty()
-    balls.forEach((ball) => {
-      $('#p3Jackpots').append(`<img src='../media/${ball}.png' id='${ball}'>`)
-    })
+    if (mode == 'add') $('#p3Jackpots').append(`<img src='../media/${ball}.png' class='ball' id='ball${ball}'>`)
+    else if (mode == 'del') $('#p3Jackpots #ball' + ball).remove()
   }
 }
 

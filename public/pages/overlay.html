@@ -655,7 +655,8 @@
       $('#qbvPrizeNum').css('opacity', 0);
     }
 
-    let sound;
+    //TD: correct and fadeout question (if possible)
+    let sounds = [];
     let blockedSounds = ['../media/60s vòng 2.mp3', '../media/nhạc giao lưu trong vòng 2.mp3', '../media/nhạc nền quay bóng.MP3']
     socket.on('playMusic', (url) => {
       if (blockedSounds.includes(url)) return
@@ -663,15 +664,21 @@
         src: [url]
       })
       sound.play()
+      sounds.push(sound)
+
     })
     socket.on('stopMusic', () => {
-      sound.fade(1, 0, 1000)
-      setTimeout(() => {
-        Howler.stop()
-      }, 1000)
+      sounds.forEach(sound => {
+        sound.fade(1, 0, 1000)
+        setTimeout(() => {
+          sound.stop()
+        }, 1000)
+      })
     })
     socket.on('pauseMusic', () => {
-      Howler.pause()
+      sounds.forEach(sound => {
+        sound.pause()
+      })
     })
 
     socket.on('updateTime', (time) => {

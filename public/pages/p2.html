@@ -167,26 +167,35 @@
     socket.on('buzzLate', () => {
       buzzLate()
     })
-    socket.on('updateBalls', (p, balls) => {
-      updateBalls(p, balls)
+    socket.on('updateBall', (mode, p, ball) => {
+      updateBall(mode, p, ball)
     })
     socket.on('updateScore', (p, score) => {
       updateScore(p, score)
     })
-    socket.on('updateJackpots', (p, jackpot) => {
-      updateJackpots(p, jackpot)
+    socket.on('updateJackpot', (mode, p, ball) => {
+      updateJackpot(mode, p, ball)
     })
     socket.on('updateName', (p, name) => {
       updateName(p, name)
     })
+
+    let sounds = [];
     socket.on('playMusic', url => {
       playSound(url)
     })
     socket.on('stopMusic', () => {
-      Howler.stop()
+      sounds.forEach(sound => {
+        sound.fade(1, 0, 1000)
+        setTimeout(() => {
+          sound.stop()
+        }, 1000)
+      })
     })
     socket.on('pauseMusic', () => {
-      Howler.pause()
+      sounds.forEach(sound => {
+        sound.pause()
+      })
     })
     socket.on('qna', (qnas, qno) => {
       qna(qnas, qno)

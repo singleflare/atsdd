@@ -273,6 +273,7 @@
       <span>Chuông</span>
       <button id='openBuzzer'>Mở</button>
       <button id='resetBuzzer'>Reset</button>
+      <button id='resetThenOpenBuzzer'>Reset & mở</button>
       <span id='buzzedFirst'>1.</span>
       <span id='buzzedSecond'>2.</span>
       <span id='buzzedThird'>3.</span>
@@ -338,6 +339,7 @@
       <button id='addBallWhenCorrect'>Đúng</button>
       <button id='wrongAns'>Sai</button>
       <button id='pass'>Bỏ qua</button>
+      <button id='addBallWhenCorrectThenHideQuestion'>Đúng & Ẩn câu hỏi</button>
       <button id='addBallR2'>Thêm bóng</button>
     </div>
     <div id='gpxWebControl'>
@@ -355,12 +357,15 @@
       <div class='flex-container two'>
         <button id='podium1ToNormal'>Thường</button>
         <button id='podium1ToBuzzed'>Chuông</button>
+        <button id='podium1ToCg'>CG</button>
         <button id='podium1ToStop'>Dừng</button>
         <button id='podium2ToNormal'>Thường</button>
         <button id='podium2ToBuzzed'>Chuông</button>
+        <button id='podium2ToCg'>CG</button>
         <button id='podium2ToStop'>Dừng</button>
         <button id='podium3ToNormal'>Thường</button>
         <button id='podium3ToBuzzed'>Chuông</button>
+        <button id='podium3ToCg'>CG</button>
         <button id='podium3ToStop'>Dừng</button>
       </div>
     </div>
@@ -386,14 +391,17 @@
     </div>
     <div id='overlayWebControl'>
       <button class='controlLabel' id='swapToOverlay'>Web overlay</button>
-      <button id='showQGpx'>Hiện gpx V1,3,4 và câu hỏi</button>
-      <button id='showR2Gpx'>Hiện gpx V2 trống</button>
-      <button id='hideQGpx'>Ẩn gpx câu hỏi</button>
+      <span>Gpx câu hỏi</span>
+      <button id='showQGpx'>Hiện V1,3,4 và câu hỏi</button>
+      <button id='showR2Gpx'>Hiện V2 trống</button>
+      <button id='hideQGpx'>Ẩn</button>
       <br>
-      <button id='playJackpotGpx'>Phát gpx đ.đắc</button>
-      <button id='showJackpotGpx'>Hiện gpx đ.đắc</button>
-      <button id='hideJackpotGpx'>Ẩn gpx đ.đắc</button>
-      <button id='resetJackpotGpx'>Reset gpx đ.đắc</button>
+      <span>Gpx quay bóng</span>
+      <button id='playJackpotGpx'>Phát</button>
+      <button id='showJackpotGpx'>Hiện</button>
+      <button id='hideJackpotGpx'>Ẩn</button>
+      <button id='resetJackpotGpx'>Reset</button>
+      <br>
       <span>Chỉnh animation</span>
       <button id='setWaitAnimToOrbit'>Orbit</button>
       <button id='setWaitAnimToWipe'>Wipe</button>
@@ -525,6 +533,7 @@
       socket.emit('playMusic', '../media/nhạc nền quay bóng.MP3')
     })
     $('#play60s').on('click', () => {
+      socket.emit('stopMusic')
       socket.emit('playMusic', '../media/60s vòng 2.mp3')
     })
     $('#stopMusic').on('click', () => {
@@ -625,6 +634,9 @@
       socket.emit('changePlayerPodium', 2, 'stop')
       socket.emit('changePlayerPodium', 3, 'stop')
     })
+    $('#podium1ToCg').on('click', () => {
+      socket.emit('changePlayerPodium', 1, 'cg')
+    })
     $('#podium1ToNormal').on('click', () => {
       socket.emit('changePlayerPodium', 1, 'normal')
     })
@@ -634,6 +646,9 @@
     $('#podium1ToStop').on('click', () => {
       socket.emit('changePlayerPodium', 1, 'stop')
     })
+    $('#podium2ToCg').on('click', () => {
+      socket.emit('changePlayerPodium', 2, 'cg')
+    })
     $('#podium2ToNormal').on('click', () => {
       socket.emit('changePlayerPodium', 2, 'normal')
     })
@@ -642,6 +657,9 @@
     })
     $('#podium2ToStop').on('click', () => {
       socket.emit('changePlayerPodium', 2, 'stop')
+    })
+    $('#podium3ToCg').on('click', () => {
+      socket.emit('changePlayerPodium', 3, 'cg')
     })
     $('#podium3ToNormal').on('click', () => {
       socket.emit('changePlayerPodium', 3, 'normal')
@@ -657,107 +675,70 @@
     $('#p1BallsControl .addBall').on('click', () => {
       const balls = $('#ballForP1').val().split(',')
       $('#ballForP1').val('')
-      for (let ball of balls) {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) continue
-        else socket.emit('updateBall', 'add', 1, ball);
-      }
+      socket.emit('updateBalls', 'add', 1, balls);
       socket.emit('playMusic', '../media/chọn bóng.mp3')
     })
     $('#p2BallsControl .addBall').on('click', () => {
       const balls = $('#ballForP2').val().split(',')
       $('#ballForP2').val('')
-      for (let ball of balls) {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) continue
-        else socket.emit('updateBall', 'add', 2, ball);
-      }
+      socket.emit('updateBalls', 'add', 2, balls);
       socket.emit('playMusic', '../media/chọn bóng.mp3')
     })
     $('#p3BallsControl .addBall').on('click', () => {
       const balls = $('#ballForP3').val().split(',')
       $('#ballForP3').val('')
-      for (let ball of balls) {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) continue
-        else socket.emit('updateBall', 'add', 3, ball);
-      }
+      socket.emit('updateBalls', 'add', 3, balls);
       socket.emit('playMusic', '../media/chọn bóng.mp3')
     })
 
     $('#p1BallsControl .delBall').on('click', () => {
       const balls = $('#ballForP1').val().split(',')
       $('#ballForP1').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        else socket.emit('updateBall', 'del', 1, ball)
-      })
+      socket.emit('updateBalls', 'del', 1, balls);
     })
     $('#p2BallsControl .delBall').on('click', () => {
       const balls = $('#ballForP2').val().split(',')
       $('#ballForP2').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        else socket.emit('updateBall', 'del', 2, ball)
-      })
+      socket.emit('updateBalls', 'del', 2, balls);
     })
     $('#p3BallsControl .delBall').on('click', () => {
       const balls = $('#ballForP3').val().split(',')
       $('#ballForP3').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        else socket.emit('updateBall', 'del', 3, ball)
-      })
+      socket.emit('updateBalls', 'del', 3, balls);
     })
 
     $('#p1BallsControl .addJackpotBall').on('click', () => {
       socket.emit('color', 'all')
       const balls = $('#jackpotForP1').val().split(',')
       $('#jackpotForP1').val('')
-      balls.forEach(ball => {
-        console.log(ball)
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        else socket.emit('updateBall', 'jackpotAdd', 1, ball)
-      })
+      socket.emit('updateBalls', 'jackpotAdd', 1, balls);
     })
     $('#p2BallsControl .addJackpotBall').on('click', () => {
       socket.emit('color', 'all')
       const balls = $('#jackpotForP2').val().split(',')
       $('#jackpotForP2').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        else socket.emit('updateBall', 'jackpotAdd', 2, ball)
-      })
+      socket.emit('updateBalls', 'jackpotAdd', 2, balls);
     })
     $('#p3BallsControl .addJackpotBall').on('click', () => {
       socket.emit('color', 'all')
       const balls = $('#jackpotForP3').val().split(',')
       $('#jackpotForP3').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        else socket.emit('updateBall', 'jackpotAdd', 3, ball)
-      })
+      socket.emit('updateBalls', 'jackpotAdd', 3, balls);
     })
     $('#p1BallsControl .delJackpotBall').on('click', () => {
       const balls = $('#jackpotForP1').val().split(',')
       $('#jackpotForP1').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        socket.emit('updateBall', 'jackpotDel', 1, ball)
-      })
+      socket.emit('updateBalls', 'jackpotDel', 1, balls);
     })
     $('#p2BallsControl .delJackpotBall').on('click', () => {
       const balls = $('#jackpotForP2').val().split(',')
       $('#jackpotForP2').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        socket.emit('updateBall', 'jackpotDel', 2, ball)
-      })
+      socket.emit('updateBalls', 'jackpotDel', 2, balls);
     })
     $('#p3BallsControl .delJackpotBall').on('click', () => {
       const balls = $('#jackpotForP3').val().split(',')
       $('#jackpotForP3').val('')
-      balls.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        socket.emit('updateBall', 'jackpotDel', 3, ball)
-      })
+      socket.emit('updateBalls', 'jackpotDel', 3, balls);
     })
 
     //score and name control
@@ -848,11 +829,18 @@
     })
 
     $('#openBuzzer').on('click', () => {
-      console.log('openBuzzer')
       socket.emit('buzzer', 'open')
     })
     $('#resetBuzzer').on('click', () => {
       socket.emit('buzzer', 'reset')
+      buzzed = []
+      $('#buzzedFirst').text('1. ')
+      $('#buzzedSecond').text('2. ')
+      $('#buzzedThird').text('3. ')
+    })
+    $('#resetThenOpenBuzzer').on('click', () => {
+      socket.emit('buzzer', 'reset')
+      socket.emit('buzzer', 'open')
       buzzed = []
       $('#buzzedFirst').text('1. ')
       $('#buzzedSecond').text('2. ')
@@ -967,10 +955,10 @@
       time = 60
       socket.emit('updateTime', time)
     })
-    // $('#pause60s').on('click', () => {
-    //   socket.emit('pauseMusic')
-    //   clearInterval(sixtySecInterval)
-    // })
+    $('#pause60s').on('click', () => {
+      socket.emit('pauseMusic')
+      clearInterval(sixtySecInterval)
+    })
     $('#addBallWhenCorrect').on('click', () => {
       socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10, $('#ballToAddWhenCorrect').val())
       ballsToAdd.push($('#ballToAddWhenCorrect').val())
@@ -981,6 +969,8 @@
           console.log('no more questions')
           socket.emit('hideQ')
           socket.emit('hideR2Question')
+          socket.emit('stopMusic')
+          clearInterval(sixtySecInterval)
           return
         }
         else { //if there are passed questions
@@ -997,6 +987,14 @@
         chooseQ(questionsInThisPack[thisPackIndex])
       }
     })
+    $('#addBallWhenCorrectThenHideQuestion').on('click', () => {
+      socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10, $('#ballToAddWhenCorrect').val())
+      ballsToAdd.push($('#ballToAddWhenCorrect').val())
+      $('#ballToAddWhenCorrect').val('')
+      socket.emit('hideQ')
+      socket.emit('hideR2Question')
+      return
+    })
     $('#wrongAns').on('click', () => {
       socket.emit('updateAnsStatus', 'wrong', questionsInThisPack[thisPackIndex] % 10)
       if (thisPackIndex >= questionsInThisPack.length - 1) {
@@ -1004,6 +1002,8 @@
           console.log('no more questions')
           socket.emit('hideQ')
           socket.emit('hideR2Question')
+          socket.emit('stopMusic')
+          clearInterval(sixtySecInterval)
           return
         }
         else {
@@ -1042,10 +1042,7 @@
     })
     $('#addBallR2').on('click', () => {
       if (ballsToAdd.length == 0) return
-      ballsToAdd.forEach(ball => {
-        if (ball == '' || isNaN(ball) || ball < 1 || ball > 50) return
-        else socket.emit('updateBall', 'add', playerToAddBall, ball)
-      })
+      socket.emit('updateBalls', 'add', playerToAddBall, ballsToAdd)
     })
     $('#loadPack1').on('click', () => {
       questionsInThisPack = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
