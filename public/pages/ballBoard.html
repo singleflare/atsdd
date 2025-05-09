@@ -322,6 +322,7 @@
       }, 1000 + 60 * 50)
     })
     socket.on('removeBall', (ball) => {
+      console.log(ball)
       $('#ball' + ball).removeClass('appear')
       $('#ball' + ball).addClass('disappear')
       setTimeout(() => {

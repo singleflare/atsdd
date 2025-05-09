@@ -156,6 +156,10 @@
       box-sizing: border-box;
     }
 
+    #musicControl button {
+      font-size: 15px;
+    }
+
     #buzzerControl {
       position: relative;
       width: 960px;
@@ -192,10 +196,7 @@
       position: relative;
     }
 
-    #gpxIframe,
-    #hostIframe,
-    #ballBoardIframe,
-    #overlayIframe {
+    #hostIframe {
       position: absolute;
       width: 1920px;
       height: 1080px;
@@ -249,9 +250,9 @@
     </div>
     <div id='webView'>
       <iframe src='http://localhost:3000/host' id='hostIframe'></iframe>
-      <iframe src='http://localhost:3000/gpx' id='gpxIframe' style='opacity:0;'></iframe>
+      <!-- <iframe src='http://localhost:3000/gpx' id='gpxIframe' style='opacity:0;'></iframe>
       <iframe src='http://localhost:3000/ballBoard' id='ballBoardIframe' style='opacity:0'></iframe>
-      <iframe src='http://localhost:3000/overlay' id='overlayIframe' style='opacity:0'></iframe>
+      <iframe src='http://localhost:3000/overlay' id='overlayIframe' style='opacity:0'></iframe> -->
     </div>
     <div id='systemBallsControl'>
       <div class='controlLabel'>Hệ thống</div>
@@ -263,26 +264,19 @@
       <button id='coloredGreen'>XL</button>
       <button id='coloredPink'>H</button>
       <button id='coloredYellow'>V</button>
-      <span>Reset</span>
-      <button>Bóng</button>
-      <button>Độc đắc</button>
-      <button>Tên</button>
-      <button>Điểm</button>
-      <button>All</button>
       <br>
       <span>Chuông</span>
       <button id='openBuzzer'>Mở</button>
       <button id='resetBuzzer'>Reset</button>
       <button id='resetThenOpenBuzzer'>Reset & mở</button>
-      <span id='buzzedFirst'>1.</span>
-      <span id='buzzedSecond'>2.</span>
-      <span id='buzzedThird'>3.</span>
       <br>
       <span>Glow</span>
       <input type='text' id='ballForGlow' placeholder='Bóng'>
       <button id='glowBallBtn'>Glow</button>
       <button id='delGlowBallBtn'>Xóa glow</button>
       <button id='delAllGlowBallBtn'>Xóa tất cả glow</button>
+      <br>
+      <button id='resetServerData'>Reset server data</button>
     </div>
     <div id='p1BallsControl'>
       <div class='controlLabel'>NC1</div>
@@ -326,6 +320,7 @@
       <button id='showP1Info'>NC1</button>
       <button id='showP2Info'>NC2</button>
       <button id='showP3Info'>NC3</button>
+      <br>
       <span>Tải bộ CH & hiện đồ họa V2</span>
       <button id='loadPack1'>Bộ 1 (11-20)</button>
       <button id='loadPack2'>Bộ 2 (21-30)</button>
@@ -333,7 +328,6 @@
       <br>
       <span>60s</span>
       <button id='start60s'>Bắt đầu</button>
-      <button id='pause60s'>Tạm dừng</button>
       <button id='reset60s'>Reset</button>
       <input id='ballToAddWhenCorrect' style='width:25%' placeholder='Bóng sẽ được thêm'>
       <button id='addBallWhenCorrect'>Đúng</button>
@@ -349,7 +343,7 @@
       <button id='podiumsToBuzzed'>Chuông</button>
       <button id='podiumsToJackpotRnd'>Quay bóng</button>
       <button id='podiumsToStop'>Dừng</button>
-      <div class='flex-container'>
+      <div class='flex-container' id='podiumList'>
         <span>Bục NC1</span>
         <span>Bục NC2</span>
         <span>Bục NC3</span>
@@ -456,13 +450,19 @@
     for (let i = 1; i <= 60; i++) qnas.push({ q: '', a: '', exp: '' })
     let qno = -1
 
+    let customSounds = ['5s 3 thí sinh', 'Endcap VTV', '60s O10', 'QC VTV 2021', 'O Sai', 'O Đúng', 'ID V3 2023']
     $(() => {
       for (let i = 0; i < 60; i++) {
         $('#qnaMenu').append(`<button id='q${i + 1}'> ${i + 1}. </button>`)
       }
-      for (let i = 0; i < 10; i++) {
-        $('#musicControl').append(`<button id='sfx${i + 1}' style='width:90px'> ${i + 1}</button>`)
-      }
+      fetch('http://localhost:3000/customSounds').then(res => res.json()).then(data => {
+        data.forEach((data, i) => {
+          $('#musicControl').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
+          $(`#musicControl #sfx${i + 1}`).on('click', () => {
+            socket.emit('playMusic', `../media/customSounds/${data}`)
+          })
+        })
+      })
     })
 
     $('#fileInput').on('change', async function (e) {
@@ -512,13 +512,13 @@
       socket.emit('playMusic', '../media/intro.mp3')
     })
     $('#playHostEntrance').on('click', () => {
-      socket.emit('playMusic', '../media/host entrance.MP3')
+      socket.emit('playMusic', '../media/host entrance.mp3')
     })
     $('#playRules').on('click', () => {
       socket.emit('playMusic', '../media/GT luật chơi.mp3')
     })
     $('#playShowQuestion').on('click', () => {
-      socket.emit('playMusic', '../media/Hiện câu hỏi.MP3')
+      socket.emit('playMusic', '../media/Hiện câu hỏi.mp3')
     })
     $('#playTimeUp').on('click', () => {
       socket.emit('playMusic', '../media/hết giờ.mp3')
@@ -530,7 +530,7 @@
       socket.emit('playMusic', '../media/nhạc giao lưu trong vòng 2.mp3')
     })
     $('#playRollingBed').on('click', () => {
-      socket.emit('playMusic', '../media/nhạc nền quay bóng.MP3')
+      socket.emit('playMusic', '../media/nhạc nền quay bóng.mp3')
     })
     $('#play60s').on('click', () => {
       socket.emit('stopMusic')
@@ -561,6 +561,7 @@
     })
 
     let ballCol = 0
+    let ballsInColToAdd = []
     function emitFlyDownBalls(col) {
       socket.emit('flyDownBalls', col)
     }
@@ -571,8 +572,23 @@
       console.log(qnas[qno])
       socket.emit('qna', qnas[qno], qno)
       if (qno >= 40 && qno <= 49) {
+        $('#ballForP1').val('')
+        $('#ballForP2').val('')
+        $('#ballForP3').val('')
+        ballsInColToAdd = []
         ballCol = qno - 40 + 1
         $('.addBall').on('click', () => emitFlyDownBalls(ballCol))
+        let sysBalls = []
+        fetch('http://localhost:3000/systemBalls').then(res => res.json()).then(data => {
+          sysBalls = data
+          console.log(sysBalls)
+          for (let i = 0; i < sysBalls.length; i++) {
+            if (sysBalls[i] % 10 == ballCol) {
+              ballsInColToAdd.push(sysBalls[i])
+            }
+          }
+          console.log(ballsInColToAdd)
+        })
       }
     }
 
@@ -745,6 +761,9 @@
     $('#p1BallsControl .setNameAndScore').on('click', () => {
       const score = $('#scoreForP1').val()
       const name = $('#nameForP1').val()
+      $('#p1BallsControl .controlLabel').text('NC1 (' + name + ')')
+      $('#showP1Info').text('NC1 (' + name + ')')
+      $('#podiumList span:nth-child(1)').text('Bục NC1 (' + name + ')')
       if (name === '') return
       socket.emit('updateName', 1, name)
       if (score === '' || isNaN(score)) return
@@ -753,6 +772,9 @@
     $('#p2BallsControl .setNameAndScore').on('click', () => {
       const score = $('#scoreForP2').val()
       const name = $('#nameForP2').val()
+      $('#p2BallsControl .controlLabel').text('NC2 (' + name + ')')
+      $('#showP2Info').text('NC2 (' + name + ')')
+      $('#podiumList span:nth-child(2)').text('Bục NC2 (' + name + ')')
       if (name === '') return
       socket.emit('updateName', 2, name)
       if (score === '' || isNaN(score)) return
@@ -761,10 +783,32 @@
     $('#p3BallsControl .setNameAndScore').on('click', () => {
       const score = $('#scoreForP3').val()
       const name = $('#nameForP3').val()
+      $('#p3BallsControl .controlLabel').text('NC3 (' + name + ')')
+      $('#showP3Info').text('NC3 (' + name + ')')
+      $('#podiumList span:nth-child(3)').text('Bục NC3 (' + name + ')')
       if (name === '') return
       socket.emit('updateName', 3, name)
       if (score === '' || isNaN(score)) return
       socket.emit('updateScore', 'set', 3, score)
+    })
+
+    socket.on('initNames', (p1, p2, p3) => {
+      p1Name = p1
+      p2Name = p2
+      p3Name = p3
+      $('#nameForP1').val(p1)
+      $('#nameForP2').val(p2)
+      $('#nameForP3').val(p3)
+      $('#p1BallsControl .controlLabel').text('NC1 (' + p1 + ')')
+      $('#p2BallsControl .controlLabel').text('NC2 (' + p2 + ')')
+      $('#p3BallsControl .controlLabel').text('NC3 (' + p3 + ')')
+      $('#showP1Info').text('NC1 (' + p1 + ')')
+      $('#showP2Info').text('NC2 (' + p2 + ')')
+      $('#showP3Info').text('NC3 (' + p3 + ')')
+      $('#podiumList span:nth-child(1)').text('Bục NC1 (' + p1 + ')')
+      $('#podiumList span:nth-child(2)').text('Bục NC2 (' + p2 + ')')
+      $('#podiumList span:nth-child(3)').text('Bục NC3 (' + p3 + ')')
+
     })
 
     //swap web preview
@@ -801,30 +845,48 @@
 
     function updateBuzzPosition() {
       console.log(buzzed)
-      $('#buzzedFirst').text(`1. ${buzzed[0]}`)
-      $('#buzzedSecond').text(`2. ${buzzed[1]}`)
-      $('#buzzedThird').text(`3. ${buzzed[2]}`)
       socket.emit('updateBuzzPositionToHost', buzzed)
     }
     socket.on('p1Buzzed', () => {
       buzzed.push($('#nameForP1').val())
       updateBuzzPosition()
-      console.log(buzzed.length)
-      if (buzzed.length == 1) socket.emit('p1BuzzEarly')
-      else socket.emit('p1BuzzLate')
+      if (buzzed.length == 1) {
+        socket.emit('p1BuzzEarly')
+        $('#p1BallsControl .controlLabel').css('background-color', 'green')
+        if (qno >= 40 && qno <= 49) {
+          let ballsString = ballsInColToAdd.join(',')
+          console.log(ballsString)
+          $('#ballForP1').val(ballsString)
+        }
+        else socket.emit('p1BuzzLate')
+      }
     })
     socket.on('p2Buzzed', () => {
       buzzed.push($('#nameForP2').val())
       updateBuzzPosition()
-      console.log(buzzed.length)
-      if (buzzed.length == 1) socket.emit('p2BuzzEarly')
+      if (buzzed.length == 1) {
+        socket.emit('p2BuzzEarly')
+        $('#p2BallsControl .controlLabel').css('background-color', 'green')
+        if (qno >= 40 && qno <= 49) {
+          let ballsString = ballsInColToAdd.join(',')
+          console.log(ballsString)
+          $('#ballForP2').val(ballsString)
+        }
+      }
       else socket.emit('p2BuzzLate')
     })
     socket.on('p3Buzzed', () => {
       buzzed.push($('#nameForP3').val())
       updateBuzzPosition()
-      console.log(buzzed.length)
-      if (buzzed.length == 1) socket.emit('p3BuzzEarly')
+      if (buzzed.length == 1) {
+        socket.emit('p3BuzzEarly')
+        $('#p3BallsControl .controlLabel').css('background-color', 'green')
+        if (qno >= 40 && qno <= 49) {
+          let ballsString = ballsInColToAdd.join(',')
+          console.log(ballsString)
+          $('#ballForP3').val(ballsString)
+        }
+      }
       else socket.emit('p3BuzzLate')
     })
 
@@ -834,17 +896,17 @@
     $('#resetBuzzer').on('click', () => {
       socket.emit('buzzer', 'reset')
       buzzed = []
-      $('#buzzedFirst').text('1. ')
-      $('#buzzedSecond').text('2. ')
-      $('#buzzedThird').text('3. ')
+      $('#p1BallsControl .controlLabel').css('background-color', 'white')
+      $('#p2BallsControl .controlLabel').css('background-color', 'white')
+      $('#p3BallsControl .controlLabel').css('background-color', 'white')
     })
     $('#resetThenOpenBuzzer').on('click', () => {
       socket.emit('buzzer', 'reset')
       socket.emit('buzzer', 'open')
       buzzed = []
-      $('#buzzedFirst').text('1. ')
-      $('#buzzedSecond').text('2. ')
-      $('#buzzedThird').text('3. ')
+      $('#p1BallsControl .controlLabel').css('background-color', 'white')
+      $('#p2BallsControl .controlLabel').css('background-color', 'white')
+      $('#p3BallsControl .controlLabel').css('background-color', 'white')
     })
 
     //webs control
@@ -955,10 +1017,6 @@
       time = 60
       socket.emit('updateTime', time)
     })
-    $('#pause60s').on('click', () => {
-      socket.emit('pauseMusic')
-      clearInterval(sixtySecInterval)
-    })
     $('#addBallWhenCorrect').on('click', () => {
       socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10, $('#ballToAddWhenCorrect').val())
       ballsToAdd.push($('#ballToAddWhenCorrect').val())
@@ -1043,6 +1101,7 @@
     $('#addBallR2').on('click', () => {
       if (ballsToAdd.length == 0) return
       socket.emit('updateBalls', 'add', playerToAddBall, ballsToAdd)
+      socket.emit('playMusic', '../media/chọn bóng.mp3')
     })
     $('#loadPack1').on('click', () => {
       questionsInThisPack = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
@@ -1050,6 +1109,7 @@
       passed = []
       socket.emit('hideQ')
       socket.emit('showR2Gpx')
+      time = 60
     })
     $('#loadPack2').on('click', () => {
       questionsInThisPack = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
@@ -1057,6 +1117,7 @@
       passed = []
       socket.emit('hideQ')
       socket.emit('showR2Gpx')
+      time = 60
     })
     $('#loadPack3').on('click', () => {
       questionsInThisPack = [30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
@@ -1064,6 +1125,7 @@
       passed = []
       socket.emit('hideQ')
       socket.emit('showR2Gpx')
+      time = 60
     })
 
     $('#showQGpx').on('click', () => {
@@ -1152,7 +1214,6 @@
       $('#showP3Info').css({ 'background-color': 'black', 'color': 'white' })
       socket.emit('showPInfo', 1)
       playerToAddBall = 1
-      socket.emit('updateTime', 60)
     })
     $('#showP2Info').on('click', () => {
       $('#showP2Info').css({ 'background-color': 'white', 'color': 'black' })
@@ -1160,7 +1221,6 @@
       $('#showP3Info').css({ 'background-color': 'black', 'color': 'white' })
       socket.emit('showPInfo', 2)
       playerToAddBall = 2
-      socket.emit('updateTime', 60)
     })
     $('#showP3Info').on('click', () => {
       $('#showP3Info').css({ 'background-color': 'white', 'color': 'black' })
@@ -1168,7 +1228,10 @@
       $('#showP1Info').css({ 'background-color': 'black', 'color': 'white' })
       socket.emit('showPInfo', 3)
       playerToAddBall = 3
-      socket.emit('updateTime', 60)
+    })
+
+    $('#resetServerData').on('click', () => {
+      socket.emit('resetData')
     })
   </script>
 </body>

@@ -324,18 +324,7 @@
   <div id='round2'>
     <video src='../media/r2_appear_anim.webm' muted id='qBar2'></video>
     <div class='question'></div>
-    <div class='ballsSequence'>
-      <img src='../media/unanswered.png' class='slot1'>
-      <img src='../media/unanswered.png' class='slot2'>
-      <img src='../media/unanswered.png' class='slot3'>
-      <img src='../media/unanswered.png' class='slot4'>
-      <img src='../media/unanswered.png' class='slot5'>
-      <img src='../media/unanswered.png' class='slot6'>
-      <img src='../media/unanswered.png' class='slot7'>
-      <img src='../media/unanswered.png' class='slot8'>
-      <img src='../media/unanswered.png' class='slot9'>
-      <img src='../media/unanswered.png' class='slot10'>
-    </div>
+    <div class='ballsSequence'></div>
     <div class='time'>60</div>
   </div>
   <div id='round4'>
@@ -512,20 +501,20 @@
       if (anim == 'orbit') {
         animation = 'orbit';
         $('#jackpotBallsContainer div').find('video').remove();
-        $('#jackpotBall1Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
-        $('#jackpotBall2Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
-        $('#jackpotBall3Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
-        $('#jackpotBall4Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
-        $('#jackpotBall5Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" autoplay loop muted />');
+        $('#jackpotBall1Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
+        $('#jackpotBall2Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
+        $('#jackpotBall3Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
+        $('#jackpotBall4Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
+        $('#jackpotBall5Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
       }
       else if (anim == 'wipe') {
         animation = 'wipe';
         $('#jackpotBallsContainer div').find('video').remove();
-        $('#jackpotBall1Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
-        $('#jackpotBall2Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
-        $('#jackpotBall3Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
-        $('#jackpotBall4Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
-        $('#jackpotBall5Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe"  autoplay loop muted />');
+        $('#jackpotBall1Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
+        $('#jackpotBall2Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
+        $('#jackpotBall3Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
+        $('#jackpotBall4Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
+        $('#jackpotBall5Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
       }
     }
     function startJackpotRoundGpx() {
@@ -561,6 +550,7 @@
       else if (animation == 'wipe') {
         $(`#jackpotBall${pos}Container .wipe`).css('animation', 'wipe-entrance 0.2s forwards linear');
       }
+      document.querySelector(`#jackpotBall${pos}Container .anim`).play();
     }
     function showBalls(ball, pos) {
       if (animation == 'orbit') {
@@ -634,16 +624,16 @@
       playFromTo(2.1, 2.7);
     }
     function anim_show5BallsPrize() {
-      playFromTo(3, 3.6);
+      playFromTo(3.1, 3.6);
       setTimeout(() => {
         $('#fiveBallsPrizeText').css('opacity', 1);
         $('#fiveBallsPrizeNum').css('opacity', 1);
-      }, 1000)
+      }, 900)
     }
     function anim_showQbvPrize() {
       $('#fiveBallsPrizeText').css('opacity', 0);
       $('#fiveBallsPrizeNum').css('opacity', 0);
-      playFromTo(4, 5);
+      playFromTo(3.8, 5);
       setTimeout(() => {
         $('#qbvPrizeText').css('opacity', 1);
         $('#qbvPrizeNum').css('opacity', 1);
@@ -665,7 +655,7 @@
       })
       sound.play()
       sounds.push(sound)
-
+      console.log(sounds)
     })
     socket.on('stopMusic', () => {
       sounds.forEach(sound => {
@@ -674,11 +664,7 @@
           sound.stop()
         }, 1000)
       })
-    })
-    socket.on('pauseMusic', () => {
-      sounds.forEach(sound => {
-        sound.pause()
-      })
+      sounds = []
     })
 
     socket.on('updateTime', (time) => {

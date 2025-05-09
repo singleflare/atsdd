@@ -60,17 +60,18 @@ button,
   width: 20%;
   height: 41%;
   font-size: 2.5vw;
-  border: none;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 button {
-  background-color: #c4c4c4;
+  background-color: black;
+  color: #c4c4c4;
 }
 
-button:hover {}
-
 button.idle {
-  border: none;
+  border: 5px solid white;
+  opacity: 0.5;
 }
 
 button.ready {

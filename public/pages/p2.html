@@ -116,8 +116,8 @@
   </div>
   <button class='idle' disabled>Buzzer</button>
   <img src='../media/qPanePlayer.png' id='qPane'>
-  <div id='qno'>Vòng Câu</div>
-  <div id='question'>Câu hỏi</div>
+  <div id='qno'></div>
+  <div id='question'></div>
   <div id='p1Area' class='pArea'>
     <div id='p1Name' class='name'></div>
     <div id='p1Jackpots' class='jackpot'></div>
@@ -140,7 +140,7 @@
     <div id='p3Balls' class='pBallsGrid'></div>
   </div>
 
-  <!-- <script src='../scripts/disableDevTools.js'></script> -->
+  <script src='../scripts/disableDevTools.js'></script>
   <script src='../scripts/jquery-3.7.1.min.js'></script>
   <script src='/socket.io/socket.io.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
@@ -149,6 +149,9 @@
   <script src='../scripts/playerGeneral.js'></script>
   <script>
     const socket = io('/p2')
+    socket.on('resetBalls', () => {
+      resetBalls()
+    })
     $('button').on('click', () => {
       $('button').prop('disabled', true)
       socket.emit('p2Buzzed')
@@ -181,8 +184,13 @@
     })
 
     let sounds = [];
-    socket.on('playMusic', url => {
-      playSound(url)
+    socket.on('playMusic', (url) => {
+      sound = new Howl({
+        src: [url]
+      })
+      sound.play()
+      sounds.push(sound)
+      console.log(sounds)
     })
     socket.on('stopMusic', () => {
       sounds.forEach(sound => {
@@ -191,12 +199,9 @@
           sound.stop()
         }, 1000)
       })
+      sounds = []
     })
-    socket.on('pauseMusic', () => {
-      sounds.forEach(sound => {
-        sound.pause()
-      })
-    })
+
     socket.on('qna', (qnas, qno) => {
       qna(qnas, qno)
     })

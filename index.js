@@ -1,6 +1,7 @@
 const express = require('express');
 const { join } = require('path');
 const config = require("./config.js");
+const fs = require('fs')
 console.log(config)
 // const { initializeApp } = require('firebase/app')
 // const { getFirestore, getDoc, doc, updateDoc } = require('firebase/firestore')
@@ -35,6 +36,18 @@ app.get(`${config.ballBoardRoute}`, (req, res) => {
 })
 app.get(`${config.overlayRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/overlay.html'))
+})
+app.get('/systemBalls', (req, res) => {
+	res.send(systemBalls)
+})
+app.get('/customSounds', (req, res) => {
+	fs.readdir('./public/media/customSounds', (err, files) => {
+		console.log(files)
+		let fileNames = []
+		files.forEach(file => fileNames.push(file))
+		console.log(fileNames)
+		res.send(fileNames)
+	})
 })
 
 const p1ns = ioServer.of(`${config.p1Route}`)
@@ -79,10 +92,45 @@ function broadcastToAllPlayers(event, ...data) {
 	p3ns.emit(event, ...data)
 }
 
+//read from file
+fs.readFile('data.txt', 'utf8', (err, data) => {
+	const lines = data.split(/\r?\n/); // Split by line break
+	lines.forEach((line, index) => {
+		if (index == 0 && line != '' && line != undefined) p1Name = line
+		else if (index == 1 && line != '' && line != undefined) p2Name = line
+		else if (index == 2 && line != '' && line != undefined) p3Name = line
+		else if (index == 3 && line != '' && line != undefined) line.split(',').forEach(ball => {
+			p1Balls.push(parseInt(ball))
+			p1Score += BALLSCORE
+			systemBalls = systemBalls.filter(b => b != ball)
+		})
+		else if (index == 4 && line != '' && line != undefined) line.split(',').forEach(ball => {
+			p2Balls.push(parseInt(ball))
+			p2Score += BALLSCORE
+			systemBalls = systemBalls.filter(b => b != ball)
+		})
+		else if (index == 5 && line != '' && line != undefined) line.split(',').forEach(ball => {
+			p3Balls.push(parseInt(ball))
+			p3Score += BALLSCORE
+			systemBalls = systemBalls.filter(b => b != ball)
+		})
+	});
+})
+
+// returns things in array 'a' that are not in array 'b'
+// > ['a','b','c','1', '2', '3'].complement(['b', 'c', 'd', 'e']);
+// ['a', '1', '2', '3'] 
+function complement(a, b) {
+	(b) || (b = a, a = this);
+	return (Array.isArray(a) && Array.isArray(b)) ? a.filter(x => { return b.indexOf(x) === -1; }) : undefined;
+}
+Array.prototype.complement = complement;
+
 //emits
 p1ns.on('connection', socket => {
 	console.log('p1 connected')
 	//init
+	socket.emit('resetBalls')
 	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
 	p1Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 1, ball))
 	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
@@ -105,6 +153,7 @@ p1ns.on('connection', socket => {
 p2ns.on('connection', socket => {
 	console.log('p2 connected')
 	//init
+	socket.emit('resetBalls')
 	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
 	p1Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 1, ball))
 	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
@@ -127,6 +176,7 @@ p2ns.on('connection', socket => {
 p3ns.on('connection', socket => {
 	console.log('p3 connected')
 	//init
+	socket.emit('resetBalls')
 	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
 	p1Jackpots.forEach(ball => socket.emit('updateJackpot', 'add', 1, ball))
 	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
@@ -149,6 +199,7 @@ p3ns.on('connection', socket => {
 let qnom = -1
 cns.on('connection', socket => {
 	console.log('controller connected')
+	socket.emit('initNames', p1Name, p2Name, p3Name)
 	socket.on('qna', (qnas, qno) => {
 		qnom = qno
 		console.log('qnom: ' + qnom)
@@ -166,6 +217,33 @@ cns.on('connection', socket => {
 			broadcastToAllPlayers('playMusic', '../media/Hiện câu hỏi.MP3')
 		}
 		else ovlns.emit('qna', qnas, qno)
+	})
+
+	socket.on('resetData', () => {
+		fs.writeFile('data.txt', `\n\n\n\n\n`, (err) => {
+			if (err) {
+				console.error('Error writing to file:', err);
+			} else {
+				console.log('Data written to file successfully!');
+			}
+		})
+		p1Balls = []
+		p2Balls = []
+		p3Balls = []
+		p1Jackpots = []
+		p2Jackpots = []
+		p3Jackpots = []
+		systemBalls = []
+		for (let i = 1; i <= 50; i++) {
+			systemBalls.push(i);
+		}
+		p1Score = 0
+		p2Score = 0
+		p3Score = 0
+	})
+
+	socket.on('getSystemBalls', () => {
+		cns.emit('getSystemBalls', systemBalls)
 	})
 
 	socket.on('flyDownBalls', col => {
@@ -202,12 +280,6 @@ cns.on('connection', socket => {
 		ovlns.emit('stopMusic')
 		broadcastToAllPlayers('stopMusic')
 	})
-	socket.on('pauseMusic', () => {
-		gns.emit('pauseMusic')
-		hns.emit('pauseMusic')
-		ovlns.emit('pauseMusic')
-		broadcastToAllPlayers('pauseMusic')
-	})
 
 	socket.on('changePlayerPodium', (p, state) => {
 		console.log(p, state)
@@ -223,14 +295,12 @@ cns.on('connection', socket => {
 						p2Balls = p2Balls.filter(b => b != ball)
 						p2Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 2, ball)
-						gns.emit('updateBall', 'del', 2, ball)
 						broadcastToAllPlayers('updateBall', 'del', 2, ball)
 					}
 					else if (p3Balls.includes(ball)) {
 						p3Balls = p3Balls.filter(b => b != ball)
 						p3Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 3, ball)
-						gns.emit('updateBall', 'del', 3, ball)
 						broadcastToAllPlayers('updateBall', 'del', 3, ball)
 					}
 					if (qnom < 40 || qnom > 49) {
@@ -257,14 +327,12 @@ cns.on('connection', socket => {
 						p1Balls = p1Balls.filter(b => b != ball)
 						p1Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 1, ball)
-						gns.emit('updateBall', 'del', 1, ball)
 						broadcastToAllPlayers('updateBall', 'del', 1, ball)
 					}
 					else if (p3Balls.includes(ball)) {
 						p3Balls = p3Balls.filter(b => b != ball)
 						p3Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 3, ball)
-						gns.emit('updateBall', 'del', 3, ball)
 						broadcastToAllPlayers('updateBall', 'del', 3, ball)
 					}
 					if (qnom < 40 || qnom > 49) {
@@ -288,14 +356,12 @@ cns.on('connection', socket => {
 						p2Balls = p2Balls.filter(b => b != ball)
 						p2Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 2, ball)
-						gns.emit('updateBall', 'del', 2, ball)
 						broadcastToAllPlayers('updateBall', 'del', 2, ball)
 					}
 					else if (p1Balls.includes(ball)) {
 						p1Balls = p1Balls.filter(b => b != ball)
 						p1Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 1, ball)
-						gns.emit('updateBall', 'del', 1, ball)
 						broadcastToAllPlayers('updateBall', 'del', 1, ball)
 					}
 					if (qnom < 40 || qnom > 49) {
@@ -436,6 +502,13 @@ cns.on('connection', socket => {
 		hns.emit('updateScore', 3, p3Score)
 		gns.emit('updateScore', 3, p3Score)
 		broadcastToAllPlayers('updateScore', 3, p3Score)
+		fs.writeFile('data.txt', `${p1Name}\n${p2Name}\n${p3Name}\n${p1Balls.join(',')}\n${p2Balls.join(',')}\n${p3Balls.join(',')}`, (err) => {
+			if (err) {
+				console.error('Error writing to file:', err);
+			} else {
+				console.log('Data written to file successfully!');
+			}
+		})
 	})
 
 	socket.on('updateScore', (mode, p, score) => {
@@ -471,6 +544,13 @@ cns.on('connection', socket => {
 			hns.emit('updateName', 3, p3Name)
 			broadcastToAllPlayers('updateName', 3, p3Name)
 		}
+		fs.writeFile('data.txt', `${p1Name}\n${p2Name}\n${p3Name}\n${p1Balls.join(',')}\n${p2Balls.join(',')}\n${p3Balls.join(',')}`, (err) => {
+			if (err) {
+				console.error('Error writing to file:', err);
+			} else {
+				console.log('Data written to file successfully!');
+			}
+		})
 	})
 
 	socket.on('buzzer', (mode) => {
@@ -525,6 +605,10 @@ cns.on('connection', socket => {
 	})
 	socket.on('introduceBalls', () => {
 		bbns.emit('introduceBalls')
+		setTimeout(() => {
+			let balls = p1Balls.concat(p2Balls, p3Balls)
+			balls.forEach(ball => bbns.emit('removeBall', ball))
+		}, 1000 + 60 * 50)
 	})
 	socket.on('glowBall', ball => {
 		bbns.emit('glowBall', ball)
@@ -553,10 +637,10 @@ cns.on('connection', socket => {
 			hns.emit('showPInfo', player, p1Name)
 		}
 		else if (player == 2) {
-			hns.emit('showPInfo', player, p1Name)
+			hns.emit('showPInfo', player, p2Name)
 		}
 		else if (player == 3) {
-			hns.emit('showPInfo', player, p1Name)
+			hns.emit('showPInfo', player, p3Name)
 		}
 	})
 
@@ -631,27 +715,12 @@ cns.on('connection', socket => {
 gns.on('connection', socket => {
 	console.log('gpx connected')
 	//init
-	p1Balls.forEach(ball => {
-		socket.emit('updateBall', 'add', 1, ball)
-	})
-	p1Jackpots.forEach(ball => {
-		socket.emit('updateBall', 'jackpotAdd', 1, ball)
-	}
-	)
-	p2Balls.forEach(ball => {
-		socket.emit('updateBall', 'add', 2, ball)
-	})
-	p2Jackpots.forEach(ball => {
-		socket.emit('updateBall', 'jackpotAdd', 2, ball)
-	}
-	)
-	p3Balls.forEach(ball => {
-		socket.emit('updateBall', 'add', 3, ball)
-	})
-	p3Jackpots.forEach(ball => {
-		socket.emit('updateBall', 'jackpotAdd', 3, ball)
-	}
-	)
+	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
+	p1Jackpots.forEach(ball => socket.emit('updateBall', 'jackpotAdd', 1, ball))
+	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
+	p2Jackpots.forEach(ball => socket.emit('updateBall', 'jackpotAdd', 2, ball))
+	p3Balls.forEach(ball => socket.emit('updateBall', 'add', 3, ball))
+	p3Jackpots.forEach(ball => socket.emit('updateBall', 'jackpotAdd', 3, ball))
 	socket.emit('updateScore', 1, p1Score)
 	socket.emit('updateScore', 2, p2Score)
 	socket.emit('updateScore', 3, p3Score)
@@ -660,13 +729,14 @@ gns.on('connection', socket => {
 hns.on('connection', socket => {
 	console.log('host connected')
 	//init
-	socket.emit('updateBalls', 1, p1Balls)
-	socket.emit('updateBalls', 2, p2Balls)
-	socket.emit('updateBalls', 3, p3Balls)
-	socket.emit('updateBalls', 'system', systemBalls)
-	socket.emit('updateJackpots', 1, p1Jackpots)
-	socket.emit('updateJackpots', 2, p2Jackpots)
-	socket.emit('updateJackpots', 3, p3Jackpots)
+	socket.emit('resetBalls')
+	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
+	p1Jackpots.forEach(ball => socket.emit('updateBall', 'jackpotAdd', 1, ball))
+	p2Balls.forEach(ball => socket.emit('updateBall', 'add', 2, ball))
+	p2Jackpots.forEach(ball => socket.emit('updateBall', 'jackpotAdd', 2, ball))
+	p3Balls.forEach(ball => socket.emit('updateBall', 'add', 3, ball))
+	p3Jackpots.forEach(ball => socket.emit('updateBall', 'jackpotAdd', 3, ball))
+	systemBalls.forEach(ball => socket.emit('updateBall', 'add', 'system', ball))
 	socket.emit('updateScore', 1, p1Score)
 	socket.emit('updateScore', 2, p2Score)
 	socket.emit('updateScore', 3, p3Score)

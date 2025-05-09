@@ -24,6 +24,19 @@ function qna(qnas, qno) {
   }
 }
 
+function resetBalls() {
+  $('#systemBallGrid img').css('opacity', 0)
+  $('#p1Jackpots').empty()
+  $('#p2Jackpots').empty()
+  $('#p3Jackpots').empty()
+  $('#p1Balls').empty()
+  $('#p2Balls').empty()
+  $('#p3Balls').empty()
+}
+function resetData() {
+  
+}
+
 function updateBall(mode, p, ball) {
   console.log('updateBall', mode, p, ball)
   if (p == 'system') {
@@ -119,13 +132,6 @@ function countdown(time) {
 function stopCountdown() {
   clearInterval(countdownInterval)
   $('#countdown').text('')
-}
-
-function playSound(url) {
-  var sound = new Howl({
-    src: [url]
-  })
-  sound.play()
 }
 
 function changeBallColor(color) {

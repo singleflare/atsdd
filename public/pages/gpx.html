@@ -429,21 +429,21 @@
       if (status == 'add') {
         if (player == 1) {
           if (!p2Balls.includes(ball) && !p3Balls.includes(ball)) {
+            p1Balls.push(ball)
+            p1Balls.sort((a, b) => a - b)
+            updateCoordinates(1)
+            $('body').append(
+              `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
+                style='
+                position:absolute;
+                left:${podium1StartingBallXY.x + (p1Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+                top:${podium1StartingBallXY.y + Math.floor((p1Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+                width:${ballSize}px;
+                scale:0';>
+                `)
             setTimeout(() => {
-              p1Balls.push(ball)
-              console.log(p1Balls)
-              p1Balls.sort((a, b) => a - b)
-              console.log(p1Balls)
-              updateCoordinates(1)
-              $('body').append(
-                `<img src='../media/${ball}.png' class='ball zoomin' id='ball${ball}'
-                  style='
-                  position:absolute;
-                  left:${podium1StartingBallXY.x + (p1Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
-                  top:${podium1StartingBallXY.y + Math.floor((p1Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
-                  width:${ballSize}px';>
-                  `)
-            }, 1500)
+              $(`#ball${ball}`).css('scale', '1')
+            }, 1000)
           }
           else if (p2Balls.includes(ball)) {
             p2Balls = p2Balls.filter(b => b != ball)
@@ -462,21 +462,21 @@
         }
         else if (player == 2) {
           if (!p1Balls.includes(ball) && !p3Balls.includes(ball)) {
+            p2Balls.push(ball)
+            p2Balls.sort((a, b) => a - b)
+            updateCoordinates(2)
+            $('body').append(
+              `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
+              style='
+              position:absolute;
+              left:${podium2StartingBallXY.x + (p2Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+              top:${podium2StartingBallXY.y + Math.floor((p2Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+              width:${ballSize}px;
+              scale:0';>
+              `)
             setTimeout(() => {
-              p2Balls.push(ball)
-              console.log(p2Balls)
-              p2Balls.sort((a, b) => a - b)
-              console.log(p2Balls)
-              updateCoordinates(2)
-              $('body').append(
-                `<img src='../media/${ball}.png' class='ball zoomin' id='ball${ball}'
-                style='
-                position:absolute;
-                left:${podium2StartingBallXY.x + (p2Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
-                top:${podium2StartingBallXY.y + Math.floor((p2Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
-                width:${ballSize}px';>
-                `)
-            }, 1500)
+              $(`#ball${ball}`).css('scale', '1')
+            }, 1000)
           }
           else if (p1Balls.includes(ball)) {
             p1Balls = p1Balls.filter(b => b != ball)
@@ -495,19 +495,21 @@
         }
         else if (player == 3) {
           if (!p1Balls.includes(ball) && !p2Balls.includes(ball)) {
+            p3Balls.push(ball)
+            p3Balls.sort((a, b) => a - b)
+            updateCoordinates(3)
+            $('body').append(
+              `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
+                style='
+                position:absolute;
+                left:${podium3StartingBallXY.x + (p3Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+                top:${podium3StartingBallXY.y + Math.floor((p3Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+                width:${ballSize}px;
+                scale:0';>
+                `)
             setTimeout(() => {
-              p3Balls.push(ball)
-              p3Balls.sort((a, b) => a - b)
-              updateCoordinates(3)
-              $('body').append(
-                `<img src='../media/${ball}.png' class='ball zoomin' id='ball${ball}'
-                  style='
-                  position:absolute;
-                  left:${podium3StartingBallXY.x + (p3Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
-                  top:${podium3StartingBallXY.y + Math.floor((p3Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
-                  width:${ballSize}px';>
-                  `)
-            }, 1500)
+              $(`#ball${ball}`).css('scale', '1')
+            }, 1000)
           }
           else if (p1Balls.includes(ball)) {
             p1Balls = p1Balls.filter(b => b != ball)
@@ -524,6 +526,7 @@
             updateCoordinates(3)
           }
         }
+        console.log(p1Balls, p2Balls, p3Balls)
       }
       else if (status == 'del') {
         if (player == 1) {
@@ -675,18 +678,6 @@
     socket.on('updateScore', (player, score) => {
       updateScore(player, score)
     })
-    // socket.on('playMusic', (url) => {
-    //   var sound = new Howl({
-    //     src: [url]
-    //   })
-    //   sound.play()
-    // })
-    // socket.on('stopMusic', () => {
-    //   Howler.stop()
-    // })
-    // socket.on('pauseMusic', () => {
-    //   Howler.pause()
-    // })
   </script>
 </body>
 
