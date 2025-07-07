@@ -316,14 +316,15 @@
       font-size: 80px;
     }
   </style>
+  <video id='hiddenPreload' preload='auto' src='../media/waitAnim_orbit.webm' style='display:none;'></video>
   <div id='round13'>
     <video src='../media/r13_appear_anim.webm' muted></video>
     <div class='qInfo'></div>
-    <div class='question'></div>
+    <div class='question'>X</div>
   </div>
   <div id='round2'>
     <video src='../media/r2_appear_anim.webm' muted id='qBar2'></video>
-    <div class='question'></div>
+    <div class='question'>X</div>
     <div class='ballsSequence'></div>
     <div class='time'>60</div>
   </div>
@@ -331,21 +332,7 @@
     <video src='../media/r4_appear_anim.webm' muted></video>
     <div class='qInfo'></div>
     <div class='category'></div>
-    <div class='question'></div>
-  </div>
-
-  <video src='../media/jackpot_5_balls.webm' id='jackpotRolling'></video>
-  <div id='jackpotBallsContainer'>
-    <div id='jackpotBall1Container'>
-    </div>
-    <div id='jackpotBall2Container'>
-    </div>
-    <div id='jackpotBall3Container'>
-    </div>
-    <div id='jackpotBall4Container'>
-    </div>
-    <div id='jackpotBall5Container'>
-    </div>
+    <div class='question'>X</div>
   </div>
 
   <div id='jackpotRulesContainer'>
@@ -357,6 +344,25 @@
     <span id='qbvPrizeText'>QUẢ BÓNG VÀNG</span>
     <span id='qbvPrizeNum'>5.000 CG / QUẢ</span>
   </div>
+  
+  <!--<video src='../media/jackpot_5_balls.webm' id='jackpotRolling'></video>
+  <div id='jackpotBallsContainer'>
+    <div id='jackpotBall1Container'>
+      <video loop></video>
+    </div>
+    <div id='jackpotBall2Container'>
+      <video loop></video>
+    </div>
+    <div id='jackpotBall3Container'>
+      <video loop></video>
+    </div>
+    <div id='jackpotBall4Container'>
+      <video loop></video>
+    </div>
+    <div id='jackpotBall5Container'>
+      <video loop></video>
+    </div>
+  </div>-->
 
   <script src='../scripts/jquery-3.7.1.min.js'></script>
   <script src='/socket.io/socket.io.js'></script>
@@ -365,121 +371,51 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     const socket = io('/overlay');
-
+    let jackpotRulesVid = document.querySelector('#jackpotRules')
+    let r13GpxVideo = document.querySelector('#round13 video')
+    let r2GpxVideo = document.querySelector('#round2 video')
+    let r4GpxVideo = document.querySelector('#round4 video')
+    let jackpotRulesVideo = document.querySelector('#jackpotRulesContainer video')
+    
     let cat = 'Viễn thông'
+    
     socket.on('qna', (qnas, qno) => {
       qno++
       console.log(qnas, qno);
-      showQuestionAndGpx(qno, qnas.q, cat);
-    })
-    socket.on('hideQGpx', () => {
-      hideAllGpx();
-    })
-    socket.on('showR2Gpx', () => {
-      showR2Gpx();
-    })
-    // socket.on('hideR2Gpx', () => {
-    //   hideAllGpx();
-    // })
-    socket.on('showR2Question', (question) => {
-      showR2Question(question);
-    })
-    socket.on('hideR2Question', () => {
-      $('#round2 .question').css('opacity', 0);
-    })
-    socket.on('updateAnsStatus', (stat, i, ball) => {
-      i++
-      if (stat == 'correct') {
-        $(`.slot${i}`).prop('src', `../media/${ball}.png`)
-      }
-      else if (stat == 'wrong') {
-        $(`.slot${i}`).prop('src', `../media/wrongBall r2.png`)
-      }
-      else if (stat == 'pass') {
-        $(`.slot${i}`).prop('src', `../media/passed.png`)
-      }
-    })
-    socket.on('setWaitAnim', anim => {
-      setWaitAnim(anim)
-    })
-    socket.on('showAnim', pos => {
-      showAnim(pos)
-    })
-    socket.on('showBalls', (ball, pos) => {
-      showBalls(ball, pos)
-    })
-
-    function showQuestionAndGpx(qno, question, category) {
       if (qno >= 1 && qno <= 10) {
-        document.querySelector('#round13 video').play();
+        r13GpxVideo.play();
         $('#round13 video').css('opacity', 1);
         setTimeout(() => {
           $('#round13 .qInfo').css('opacity', 1);
           $('#round13 .question').css('opacity', 1);
           $('#round13 .qInfo').text(`VÒNG 1 - CÂU ${qno}`);
-          $('#round13 .question').text(question);
+          $('#round13 .question').text(qnas.q);
         }, 850)
       }
       else if (qno >= 41 && qno <= 50) {
-        document.querySelector('#round13 video').play();
+        r13GpxVideo.play();
         $('#round13 video').css('opacity', 1);
         setTimeout(() => {
           $('#round13 .qInfo').css('opacity', 1);
           $('#round13 .question').css('opacity', 1);
           $('#round13 .qInfo').text(`VÒNG 3 - CÂU ${qno - 40}`);
-          $('#round13 .question').text(question);
+          $('#round13 .question').text(qnas.q);
         }, 850)
       }
       else if (qno >= 51 && qno <= 60) {
-        document.querySelector('#round4 video').play();
+        r4GpxVideo.play();
         $('#round4 video').css('opacity', 1);
         setTimeout(() => {
           $('#round4 .qInfo').css('opacity', 1);
           $('#round4 .category').css('opacity', 1);
           $('#round4 .question').css('opacity', 1);
           $('#round4 .qInfo').text(`VÒNG 4 - CÂU ${qno - 50}`);
-          $('#round4 .category').text(`Chủ đề: ${category}`);
-          $('#round4 .question').text(question);
+          $('#round4 .category').text(`Chủ đề: ${cat}`);
+          $('#round4 .question').text(qnas.q);
         }, 850)
       }
-    }
-
-    function showR2Gpx() {
-      $('.ballsSequence').html(`
-      <img src='../media/unanswered.png' class='slot1'>
-      <img src='../media/unanswered.png' class='slot2'>
-      <img src='../media/unanswered.png' class='slot3'>
-      <img src='../media/unanswered.png' class='slot4'>
-      <img src='../media/unanswered.png' class='slot5'>
-      <img src='../media/unanswered.png' class='slot6'>
-      <img src='../media/unanswered.png' class='slot7'>
-      <img src='../media/unanswered.png' class='slot8'>
-      <img src='../media/unanswered.png' class='slot9'>
-      <img src='../media/unanswered.png' class='slot10'>
-      `)
-      document.querySelector('#round2 video').play();
-      $('#round2 video').css('opacity', 1);
-      $('.ballsSequence').css('opacity', 1);
-      setTimeout(() => {
-        $('.time').css('opacity', 1);
-        $('.ballsSequence img').each((i, el) => {
-          setTimeout(() => {
-            $(el).css('opacity', 1);
-          }, i * 50);
-        })
-      }, 900)
-    }
-
-    function showR2Question(question) {
-      $('#round2 .question').text(question.q);
-      $('#round2 .question').css('opacity', 1);
-    }
-
-    function updateTime(time) {
-      $('.time').text(time);
-    }
-
-    function hideAllGpx() {
+    })
+    socket.on('hideQGpx', () => {
       $('#round13 video').css('opacity', 0);
       $('#round13 .qInfo').css('opacity', 0);
       $('#round13 .question').css('opacity', 0);
@@ -492,78 +428,57 @@
       $('#round4 .category').css('opacity', 0);
       $('#round4 .question').css('opacity', 0);
       $('.ballsSequence img').css('opacity', 0);
-    }
+      setTimeout(()=>{
+        r2GpxVideo.currentTime=0
+        r13GpxVideo.currentTime=0
+        r4GpxVideo.currentTime=0
+      },250)
+    })
+    socket.on('showR2Gpx', () => {
+      $('.ballsSequence').html(`
+      <img src='../media/unanswered.png' class='slot1'>
+      <img src='../media/unanswered.png' class='slot2'>
+      <img src='../media/unanswered.png' class='slot3'>
+      <img src='../media/unanswered.png' class='slot4'>
+      <img src='../media/unanswered.png' class='slot5'>
+      <img src='../media/unanswered.png' class='slot6'>
+      <img src='../media/unanswered.png' class='slot7'>
+      <img src='../media/unanswered.png' class='slot8'>
+      <img src='../media/unanswered.png' class='slot9'>
+      <img src='../media/unanswered.png' class='slot10'>
+      `)
+      r2GpxVideo.play();
+      $('#round2 video').css('opacity', 1);
+      $('.ballsSequence').css('opacity', 1);
+      setTimeout(() => {
+        $('.time').css('opacity', 1);
+        $('.ballsSequence img').each((i, el) => {
+          setTimeout(() => {
+            $(el).css('opacity', 1);
+          }, i * 50);
+        })
+      }, 900)
+    })
+    socket.on('showR2Question', (question) => {
+      $('#round2 .question').text(question.q);
+      $('#round2 .question').css('opacity', 1);
+    })
+    socket.on('hideR2Question', () => {
+      $('#round2 .question').css('opacity', 0);
+    })
+    socket.on('updateAnsStatus', (stat, i) => {
+      i++
+      if (stat == 'correct') {
+        $(`.slot${i}`).prop('src', `../media/11.png`)
+      }
+      else if (stat == 'wrong') {
+        $(`.slot${i}`).prop('src', `../media/wrongBall r2.png`)
+      }
+      else if (stat == 'pass') {
+        $(`.slot${i}`).prop('src', `../media/passed.png`)
+      }
+    })
 
-    //jackpot round
-    let animation = 'orbit';
-    setWaitAnim('orbit');
-    function setWaitAnim(anim) {
-      if (anim == 'orbit') {
-        animation = 'orbit';
-        $('#jackpotBallsContainer div').find('video').remove();
-        $('#jackpotBall1Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
-        $('#jackpotBall2Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
-        $('#jackpotBall3Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
-        $('#jackpotBall4Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
-        $('#jackpotBall5Container').append('<video src="../media/waitAnim_orbit.webm" class="anim orbit" loop/>');
-      }
-      else if (anim == 'wipe') {
-        animation = 'wipe';
-        $('#jackpotBallsContainer div').find('video').remove();
-        $('#jackpotBall1Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
-        $('#jackpotBall2Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
-        $('#jackpotBall3Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
-        $('#jackpotBall4Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
-        $('#jackpotBall5Container').append('<video src="../media/waitAnim_wipe.webm" class="anim wipe" loop/>');
-      }
-    }
-    function startJackpotRoundGpx() {
-      $('#jackpotBallsContainer').css('opacity', 1);
-      $('#jackpotRolling').css('opacity', 1);
-      document.querySelector('#jackpotRolling').play();
-    }
-    function fadeOutJackpotRoundGpx() {
-      $('#jackpotBallsContainer').css('opacity', 0);
-      $('#jackpotRolling').css('opacity', 0);
-    }
-    function fadeInJackpotRoundGpx() {
-      $('#jackpotBallsContainer').css('opacity', 1);
-      $('#jackpotRolling').css('opacity', 1);
-    }
-    function resetJackpotRoundGpx() {
-      $('#jackpotBallsContainer').css('opacity', 0);
-      $('#jackpotRolling').css('opacity', 0);
-      $('#jackpotBallsContainer div').find('video').remove();
-      $('#jackpotBall1Container').find('img').remove();
-      $('#jackpotBall2Container').find('img').remove();
-      $('#jackpotBall3Container').find('img').remove();
-      $('#jackpotBall4Container').find('img').remove();
-      $('#jackpotBall5Container').find('img').remove();
-    }
-
-    //anim
-    function showAnim(pos) {
-      console.log('showAnim');
-      if (animation == 'orbit') {
-        $(`#jackpotBall${pos}Container .orbit`).css('animation', 'orbit-entrance 0.5s forwards linear');
-      }
-      else if (animation == 'wipe') {
-        $(`#jackpotBall${pos}Container .wipe`).css('animation', 'wipe-entrance 0.2s forwards linear');
-      }
-      document.querySelector(`#jackpotBall${pos}Container .anim`).play();
-    }
-    function showBalls(ball, pos) {
-      if (animation == 'orbit') {
-        $(`#jackpotBall${pos}Container .orbit`).css('animation', 'orbit-exit 1s forwards linear');
-        $(`#jackpotBall${pos}Container`).append(`<img class='ball' src="../media/${ball}.png" style="animation: ball-entrance-for-orbit 0.3s 1s forwards linear" />`);
-      }
-      if (animation == 'wipe') {
-        $(`#jackpotBall${pos}Container .wipe`).css('animation', 'wipe-exit 0.2s forwards linear');
-        $(`#jackpotBall${pos}Container`).append(`<img class='ball' src="../media/${ball}.png" style="animation: ball-entrance-for-wipe 0s forwards linear 0s" />`);
-      }
-    }
-
-    let jackpotRulesVid = document.querySelector('#jackpotRules')
     function playFromTo(from, to) {
       jackpotRulesVid.currentTime = from;
       jackpotRulesVid.play();
@@ -576,78 +491,61 @@
       };
       jackpotRulesVid.addEventListener('timeupdate', stopVideo);
     }
-
-    socket.on('playJackpotGpx', () => {
-      startJackpotRoundGpx();
-    })
-    socket.on('showJackpotGpx', () => {
-      fadeInJackpotRoundGpx();
-    })
-    socket.on('hideJackpotGpx', () => {
-      fadeOutJackpotRoundGpx();
-    })
-    socket.on('resetJackpotGpx', () => {
-      resetJackpotRoundGpx();
-    })
-    socket.on('anim_3BallsJackpotted', () => {
-      anim_show3BallsJackpotted();
-    })
-    socket.on('anim_3BallsPrize', () => {
-      anim_show3BallsPrize();
-    })
-    socket.on('anim_5BallsJackpotted', () => {
-      anim_show5BallsJackpotted();
-    })
-    socket.on('anim_5BallsPrize', () => {
-      anim_show5BallsPrize();
-    })
-    socket.on('anim_QbvPrize', () => {
-      anim_showQbvPrize();
-    })
-    socket.on('anim_fadeOutJackpotRules', () => {
-      anim_fadeOutJackpotRules();
-    })
-    function anim_show3BallsJackpotted() {
-      jackpotRulesVid.style.opacity = 1;
-      playFromTo(0, 0.7);
-    }
-    function anim_show3BallsPrize() {
-      playFromTo(1.1, 1.7);
+    function show3BallsPrizeText(){
+      console.log('event add')
       setTimeout(() => {
         $('#threeBallsPrizeText').css('opacity', 1);
         $('#threeBallsPrizeNum').css('opacity', 1);
       }, 600)
     }
-    function anim_show5BallsJackpotted() {
-      $('#threeBallsPrizeText').css('opacity', 0);
-      $('#threeBallsPrizeNum').css('opacity', 0);
-      playFromTo(2.1, 2.7);
-    }
-    function anim_show5BallsPrize() {
-      playFromTo(3.1, 3.6);
+    function show5BallsPrizeText(){
       setTimeout(() => {
         $('#fiveBallsPrizeText').css('opacity', 1);
         $('#fiveBallsPrizeNum').css('opacity', 1);
       }, 900)
     }
-    function anim_showQbvPrize() {
-      $('#fiveBallsPrizeText').css('opacity', 0);
-      $('#fiveBallsPrizeNum').css('opacity', 0);
-      playFromTo(3.8, 5);
+    function showQbvPrizeText(){
       setTimeout(() => {
         $('#qbvPrizeText').css('opacity', 1);
         $('#qbvPrizeNum').css('opacity', 1);
       }, 1200)
     }
-    function anim_fadeOutJackpotRules() {
+    
+    socket.on('anim_3BallsJackpotted', () => {
+      jackpotRulesVid.style.opacity = 1;
+      playFromTo(0, 0.7);
+    })
+    socket.on('anim_3BallsPrize', () => {
+      playFromTo(1.1, 1.7);
+      jackpotRulesVid.addEventListener('play',show3BallsPrizeText)
+      
+    })
+    socket.on('anim_5BallsJackpotted', () => {
+      jackpotRulesVid.removeEventListener('play',show3BallsPrizeText)
+      $('#threeBallsPrizeText').css('opacity', 0);
+      $('#threeBallsPrizeNum').css('opacity', 0);
+      playFromTo(2.1, 2.7);
+    })
+    socket.on('anim_5BallsPrize', () => {
+      playFromTo(3.1, 3.6);
+      jackpotRulesVid.addEventListener('play',show5BallsPrizeText)
+    })
+    socket.on('anim_QbvPrize', () => {
+      jackpotRulesVid.removeEventListener('play',show5BallsPrizeText)
+      $('#fiveBallsPrizeText').css('opacity', 0);
+      $('#fiveBallsPrizeNum').css('opacity', 0);
+      playFromTo(3.8, 5);
+      jackpotRulesVid.addEventListener('play',showQbvPrizeText)
+    })
+    socket.on('anim_fadeOutJackpotRules', () => {
+      jackpotRulesVid.removeEventListener('play',showQbvPrizeText)
       jackpotRulesVid.style.opacity = 0;
       $('#qbvPrizeText').css('opacity', 0);
       $('#qbvPrizeNum').css('opacity', 0);
-    }
+    })
 
-    //TD: correct and fadeout question (if possible)
     let sounds = [];
-    let blockedSounds = ['../media/60s vòng 2.mp3', '../media/nhạc giao lưu trong vòng 2.mp3', '../media/nhạc nền quay bóng.MP3']
+    let blockedSounds = ['../media/60s vòng 2.mp3', '../media/nhạc giao lưu trong vòng 2.mp3', '../media/nhạc nền quay bóng.mp3']
     socket.on('playMusic', (url) => {
       if (blockedSounds.includes(url)) return
       sound = new Howl({
@@ -670,6 +568,71 @@
     socket.on('updateTime', (time) => {
       $('.time').text(time);
     })
+    socket.on('stopTime',()=>{
+      
+    })
+    
+    /*jackpot round
+    let jackpotRollingVideo = document.querySelector('#jackpotRolling')
+    let animation = 'orbit';
+    $('#jackpotBallsContainer div').find('video').prop('src','../media/waitAnim_orbit.webm')
+    $('#jackpotBallsContainer div').find('video').addClass('anim orbit')
+    
+    socket.on('setWaitAnim', anim => {
+      if (anim == 'orbit') {
+        animation = 'orbit';
+        $('#jackpotBallsContainer div').find('video').prop('src','')
+        $('#jackpotBallsContainer div').find('video').prop('src','../media/waitAnim_orbit.webm')
+        $('#jackpotBallsContainer div').find('video').addClass('anim orbit')
+        
+      }
+      else if (anim == 'wipe') {
+        animation = 'wipe';
+        $('#jackpotBallsContainer div').find('video').prop('src','')
+        $('#jackpotBallsContainer div').find('video').prop('src','../media/waitAnim_wipe.webm')
+        $('#jackpotBallsContainer div').find('video').addClass('anim wipe')
+      }
+    })
+    socket.on('showAnim', pos => {
+      if (animation == 'orbit') $(`#jackpotBall${pos}Container .orbit`).css('animation', 'orbit-entrance 0.5s forwards linear');
+      else if (animation == 'wipe') $(`#jackpotBall${pos}Container .wipe`).css('animation', 'wipe-entrance 0.2s forwards linear');
+      document.querySelector(`#jackpotBall${pos}Container .anim`).play();
+    })
+    socket.on('showBalls', (ball, pos) => {
+      if (animation == 'orbit') {
+        $(`#jackpotBall${pos}Container .orbit`).css('animation', 'orbit-exit 1s forwards linear');
+        $(`#jackpotBall${pos}Container`).append(`<img class='ball' src="../media/${ball}.png" style="animation: ball-entrance-for-orbit 0.3s 1s forwards linear" />`);
+      }
+      if (animation == 'wipe') {
+        $(`#jackpotBall${pos}Container .wipe`).css('animation', 'wipe-exit 0.2s forwards linear');
+        $(`#jackpotBall${pos}Container`).append(`<img class='ball' src="../media/${ball}.png" style="animation: ball-entrance-for-wipe 0s forwards linear 0s" />`);
+      }
+    })
+    socket.on('playJackpotGpx', () => {
+      $('#jackpotBallsContainer').css('opacity', 1);
+      $('#jackpotRolling').css('opacity', 1);
+      jackpotRollingVideo.play();
+    })
+    socket.on('showJackpotGpx', () => {
+      $('#jackpotBallsContainer').css('opacity', 1);
+      $('#jackpotRolling').css('opacity', 1);
+    })
+    socket.on('hideJackpotGpx', () => {
+      $('#jackpotBallsContainer').css('opacity', 0);
+      $('#jackpotRolling').css('opacity', 0);
+    })
+    socket.on('resetJackpotGpx', () => {
+      $('.anim').css('opacity', 0);
+      $('.anim').css('animation', '');
+      $('#jackpotBallsContainer').css('opacity', 0);
+      $('#jackpotRolling').css('opacity', 0);
+      $('#jackpotBallsContainer div').find('video').prop('src','')
+      $('#jackpotBall1Container').find('img').remove();
+      $('#jackpotBall2Container').find('img').remove();
+      $('#jackpotBall3Container').find('img').remove();
+      $('#jackpotBall4Container').find('img').remove();
+      $('#jackpotBall5Container').find('img').remove();
+    })*/
   </script>
 </body>
 

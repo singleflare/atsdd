@@ -221,6 +221,13 @@
     .flex-container.two button {
       width: 100%;
     }
+    
+    .disabledArea{
+      opacity:0.5
+    }
+    .disabledArea>*{
+      
+    }
   </style>
   <div id='wholePage'>
     <div id='musicControl' class='controlContainer'>
@@ -249,7 +256,7 @@
       <div id='qnaMenu'></div>
     </div>
     <div id='webView'>
-      <iframe src='http://localhost:3000/host' id='hostIframe'></iframe>
+      <iframe src='https://atsdd-2.glitch.me/host' id='hostIframe'></iframe>
       <!-- <iframe src='http://localhost:3000/gpx' id='gpxIframe' style='opacity:0;'></iframe>
       <iframe src='http://localhost:3000/ballBoard' id='ballBoardIframe' style='opacity:0'></iframe>
       <iframe src='http://localhost:3000/overlay' id='overlayIframe' style='opacity:0'></iframe> -->
@@ -329,12 +336,13 @@
       <span>60s</span>
       <button id='start60s'>Bắt đầu</button>
       <button id='reset60s'>Reset</button>
-      <input id='ballToAddWhenCorrect' style='width:25%' placeholder='Bóng sẽ được thêm'>
+      <button id='pause60s'>Dừng</button>
+      <br><span>Đúng/Sai</span>
       <button id='addBallWhenCorrect'>Đúng</button>
       <button id='wrongAns'>Sai</button>
       <button id='pass'>Bỏ qua</button>
       <button id='addBallWhenCorrectThenHideQuestion'>Đúng & Ẩn câu hỏi</button>
-      <button id='addBallR2'>Thêm bóng</button>
+      <button id='wrongThenHideQuestion'>Sai & Ẩn câu hỏi</button>
     </div>
     <div id='gpxWebControl'>
       <button class='controlLabel' id='swapToGpx'>Web gpx</button>
@@ -390,16 +398,6 @@
       <button id='showR2Gpx'>Hiện V2 trống</button>
       <button id='hideQGpx'>Ẩn</button>
       <br>
-      <span>Gpx quay bóng</span>
-      <button id='playJackpotGpx'>Phát</button>
-      <button id='showJackpotGpx'>Hiện</button>
-      <button id='hideJackpotGpx'>Ẩn</button>
-      <button id='resetJackpotGpx'>Reset</button>
-      <br>
-      <span>Chỉnh animation</span>
-      <button id='setWaitAnimToOrbit'>Orbit</button>
-      <button id='setWaitAnimToWipe'>Wipe</button>
-      <br>
       <span>Animation luật vòng quay bóng</span>
       <button id='anim_3BallsJackpotted'>3 quả</button>
       <button id='anim_3BallsPrize'>Giải thưởng</button>
@@ -407,34 +405,48 @@
       <button id='anim_5BallsPrize'>Giải thưởng</button>
       <button id='anim_qbv'>QBV</button>
       <button id='anim_fadeOut'>Fade out</button>
-      <div class='flex-container'>
-        <span>Bóng đ.đắc 1</span>
-        <span>Bóng đ.đắc 2</span>
-        <span>Bóng đ.đắc 3</span>
-        <span>Bóng đ.đắc 4</span>
-        <span>Bóng đ.đắc 5</span>
+      
+      <div class='disabledArea'>
+        <span>Gpx quay bóng</span>
+        <button id='playJackpotGpx'>Phát</button>
+        <button id='showJackpotGpx'>Hiện</button>
+        <button id='hideJackpotGpx'>Ẩn</button>
+        <button id='resetJackpotGpx'>Reset</button>
+        <br>
+        <span>Chỉnh animation</span>
+        <button id='setWaitAnimToOrbit'>Orbit</button>
+        <button id='setWaitAnimToWipe'>Wipe</button>
+        <br>
+        <div class='flex-container'>
+          <span>Bóng đ.đắc 1</span>
+          <span>Bóng đ.đắc 2</span>
+          <span>Bóng đ.đắc 3</span>
+          <span>Bóng đ.đắc 4</span>
+          <span>Bóng đ.đắc 5</span>
+        </div>
+        <div class='flex-container'>
+          <button id='showAnim1' style='width:100%'>Hiện animation</button>
+          <button id='showAnim2' style='width:100%'>Hiện animation</button>
+          <button id='showAnim3' style='width:100%'>Hiện animation</button>
+          <button id='showAnim4' style='width:100%'>Hiện animation</button>
+          <button id='showAnim5' style='width:100%'>Hiện animation</button>
+        </div>
+        <div class='flex-container'>
+          <input id='jackpotInput1' type='text' style='width:100%;text-align: center;'>
+          <input id='jackpotInput2' type='text' style='width:100%;text-align: center;'>
+          <input id='jackpotInput3' type='text' style='width:100%;text-align: center;'>
+          <input id='jackpotInput4' type='text' style='width:100%;text-align: center;'>
+          <input id='jackpotInput5' type='text' style='width:100%;text-align: center;'>
+        </div>
+        <div class='flex-container'>
+          <button id='showJackpotBall1' style='width:100%'>Set</button>
+          <button id='showJackpotBall2' style='width:100%'>Set</button>
+          <button id='showJackpotBall3' style='width:100%'>Set</button>
+          <button id='showJackpotBall4' style='width:100%'>Set</button>
+          <button id='showJackpotBall5' style='width:100%'>Set</button>
+        </div>
       </div>
-      <div class='flex-container'>
-        <button id='showAnim1' style='width:100%'>Hiện animation</button>
-        <button id='showAnim2' style='width:100%'>Hiện animation</button>
-        <button id='showAnim3' style='width:100%'>Hiện animation</button>
-        <button id='showAnim4' style='width:100%'>Hiện animation</button>
-        <button id='showAnim5' style='width:100%'>Hiện animation</button>
-      </div>
-      <div class='flex-container'>
-        <input id='jackpotInput1' type='text' style='width:100%;text-align: center;'>
-        <input id='jackpotInput2' type='text' style='width:100%;text-align: center;'>
-        <input id='jackpotInput3' type='text' style='width:100%;text-align: center;'>
-        <input id='jackpotInput4' type='text' style='width:100%;text-align: center;'>
-        <input id='jackpotInput5' type='text' style='width:100%;text-align: center;'>
-      </div>
-      <div class='flex-container'>
-        <button id='showJackpotBall1' style='width:100%'>Set</button>
-        <button id='showJackpotBall2' style='width:100%'>Set</button>
-        <button id='showJackpotBall3' style='width:100%'>Set</button>
-        <button id='showJackpotBall4' style='width:100%'>Set</button>
-        <button id='showJackpotBall5' style='width:100%'>Set</button>
-      </div>
+      
     </div>
   </div>
 
@@ -450,12 +462,12 @@
     for (let i = 1; i <= 60; i++) qnas.push({ q: '', a: '', exp: '' })
     let qno = -1
 
-    let customSounds = ['5s 3 thí sinh', 'Endcap VTV', '60s O10', 'QC VTV 2021', 'O Sai', 'O Đúng', 'ID V3 2023']
+    let customSounds = ['5s 3 thí sinh', 'Endcap VTV', '60s O10', 'O Sai', 'O Đúng', 'QC VTV 2021' ,'ID V3 2023']
     $(() => {
       for (let i = 0; i < 60; i++) {
         $('#qnaMenu').append(`<button id='q${i + 1}'> ${i + 1}. </button>`)
       }
-      fetch('http://localhost:3000/customSounds').then(res => res.json()).then(data => {
+      fetch('https://atsdd-2.glitch.me/customSounds').then(res => res.json()).then(data => {
         data.forEach((data, i) => {
           $('#musicControl').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
           $(`#musicControl #sfx${i + 1}`).on('click', () => {
@@ -579,7 +591,7 @@
         ballCol = qno - 40 + 1
         $('.addBall').on('click', () => emitFlyDownBalls(ballCol))
         let sysBalls = []
-        fetch('http://localhost:3000/systemBalls').then(res => res.json()).then(data => {
+        fetch('https://atsdd-2.glitch.me/systemBalls').then(res => res.json()).then(data => {
           sysBalls = data
           console.log(sysBalls)
           for (let i = 0; i < sysBalls.length; i++) {
@@ -692,18 +704,21 @@
       const balls = $('#ballForP1').val().split(',')
       $('#ballForP1').val('')
       socket.emit('updateBalls', 'add', 1, balls);
+      socket.emit('changePlayerPodium', 1, 'normal')
       socket.emit('playMusic', '../media/chọn bóng.mp3')
     })
     $('#p2BallsControl .addBall').on('click', () => {
       const balls = $('#ballForP2').val().split(',')
       $('#ballForP2').val('')
       socket.emit('updateBalls', 'add', 2, balls);
+      socket.emit('changePlayerPodium', 2, 'normal')
       socket.emit('playMusic', '../media/chọn bóng.mp3')
     })
     $('#p3BallsControl .addBall').on('click', () => {
       const balls = $('#ballForP3').val().split(',')
       $('#ballForP3').val('')
       socket.emit('updateBalls', 'add', 3, balls);
+      socket.emit('changePlayerPodium', 3, 'normal')
       socket.emit('playMusic', '../media/chọn bóng.mp3')
     })
 
@@ -851,15 +866,16 @@
       buzzed.push($('#nameForP1').val())
       updateBuzzPosition()
       if (buzzed.length == 1) {
-        socket.emit('p1BuzzEarly')
+        console.log(buzzed)
+        socket.emit('p1BuzzEarly',buzzed)
         $('#p1BallsControl .controlLabel').css('background-color', 'green')
         if (qno >= 40 && qno <= 49) {
           let ballsString = ballsInColToAdd.join(',')
           console.log(ballsString)
           $('#ballForP1').val(ballsString)
         }
-        else socket.emit('p1BuzzLate')
       }
+      else socket.emit('p1BuzzLate')
     })
     socket.on('p2Buzzed', () => {
       buzzed.push($('#nameForP2').val())
@@ -990,14 +1006,11 @@
     let questionsInThisPack = []
     let thisPackIndex = 0
     let passed = []
-    let playerToAddBall = 0
     let ansStatus = []
-    let ballsToAdd = []
 
     let sixtySecInterval;
     let time = 60;
     $('#start60s').on('click', () => {
-      ballsToAdd = []
       console.log(thisPackIndex)
       chooseQ(questionsInThisPack[thisPackIndex])
       socket.emit('showQ')
@@ -1017,11 +1030,13 @@
       time = 60
       socket.emit('updateTime', time)
     })
+    $('#pause60s').on('click', () => {
+      socket.emit('stopMusic')
+      clearInterval(sixtySecInterval)
+      socket.emit('updateTime', time)
+    })
     $('#addBallWhenCorrect').on('click', () => {
-      socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10, $('#ballToAddWhenCorrect').val())
-      ballsToAdd.push($('#ballToAddWhenCorrect').val())
-      $('#ballToAddWhenCorrect').val('')
-      console.log(ballsToAdd)
+      socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10)
       if (thisPackIndex >= questionsInThisPack.length - 1) { //if all questions are used
         if (passed.length == 0) { //if no question is passed
           console.log('no more questions')
@@ -1046,11 +1061,10 @@
       }
     })
     $('#addBallWhenCorrectThenHideQuestion').on('click', () => {
-      socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10, $('#ballToAddWhenCorrect').val())
-      ballsToAdd.push($('#ballToAddWhenCorrect').val())
-      $('#ballToAddWhenCorrect').val('')
+      socket.emit('updateAnsStatus', 'correct', questionsInThisPack[thisPackIndex] % 10)
       socket.emit('hideQ')
       socket.emit('hideR2Question')
+      socket.emit('stopMusic')
       return
     })
     $('#wrongAns').on('click', () => {
@@ -1081,6 +1095,13 @@
       }
       socket.emit('wrongAns')
     })
+    $('#wrongAnsThenHideQuestion').on('click', () => {
+      socket.emit('updateAnsStatus', 'wrong', questionsInThisPack[thisPackIndex] % 10)
+      socket.emit('hideQ')
+      socket.emit('hideR2Question')
+      socket.emit('stopMusic')
+      return
+    })
     $('#pass').on('click', () => {
       socket.emit('updateAnsStatus', 'pass', questionsInThisPack[thisPackIndex] % 10)
       passed.push(questionsInThisPack[thisPackIndex])
@@ -1098,11 +1119,6 @@
         chooseQ(questionsInThisPack[thisPackIndex])
       }
     })
-    $('#addBallR2').on('click', () => {
-      if (ballsToAdd.length == 0) return
-      socket.emit('updateBalls', 'add', playerToAddBall, ballsToAdd)
-      socket.emit('playMusic', '../media/chọn bóng.mp3')
-    })
     $('#loadPack1').on('click', () => {
       questionsInThisPack = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
       thisPackIndex = 0
@@ -1110,6 +1126,7 @@
       socket.emit('hideQ')
       socket.emit('showR2Gpx')
       time = 60
+      socket.emit('updateTime', time)
     })
     $('#loadPack2').on('click', () => {
       questionsInThisPack = [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
@@ -1118,6 +1135,7 @@
       socket.emit('hideQ')
       socket.emit('showR2Gpx')
       time = 60
+      socket.emit('updateTime', time)
     })
     $('#loadPack3').on('click', () => {
       questionsInThisPack = [30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
@@ -1126,6 +1144,7 @@
       socket.emit('hideQ')
       socket.emit('showR2Gpx')
       time = 60
+      socket.emit('updateTime', time)
     })
 
     $('#showQGpx').on('click', () => {
@@ -1213,21 +1232,18 @@
       $('#showP2Info').css({ 'background-color': 'black', 'color': 'white' })
       $('#showP3Info').css({ 'background-color': 'black', 'color': 'white' })
       socket.emit('showPInfo', 1)
-      playerToAddBall = 1
     })
     $('#showP2Info').on('click', () => {
       $('#showP2Info').css({ 'background-color': 'white', 'color': 'black' })
       $('#showP1Info').css({ 'background-color': 'black', 'color': 'white' })
       $('#showP3Info').css({ 'background-color': 'black', 'color': 'white' })
       socket.emit('showPInfo', 2)
-      playerToAddBall = 2
     })
     $('#showP3Info').on('click', () => {
       $('#showP3Info').css({ 'background-color': 'white', 'color': 'black' })
       $('#showP2Info').css({ 'background-color': 'black', 'color': 'white' })
       $('#showP1Info').css({ 'background-color': 'black', 'color': 'white' })
       socket.emit('showPInfo', 3)
-      playerToAddBall = 3
     })
 
     $('#resetServerData').on('click', () => {

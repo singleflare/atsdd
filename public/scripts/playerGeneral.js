@@ -106,7 +106,8 @@ function armBuzzer() {
 function buzzEarly() {
   $('button').removeClass()
   $('button').addClass('buzzed')
-  playSound('../media/chuông.mp3')
+  let sound = new Howl({src: ['../media/chuông.mp3']})
+  sound.play()
 }
 function buzzLate() {
   $('button').removeClass()

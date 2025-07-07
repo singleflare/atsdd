@@ -1,3 +1,19 @@
+@font-face {
+  font-family: utm_impact;
+  src: url('../UTM-Impact.ttf');
+}
+
+@font-face {
+  font-family: lexend;
+  src: url('../Lexend-Regular.ttf');
+}
+
+*{
+  font-family: utm_impact;
+  user-select:none;
+  pointer-events:none;
+}
+
 body {
   position: relative;
   aspect-ratio: 16/9;
@@ -5,6 +21,7 @@ body {
   background: black;
   overflow: hidden;
 }
+
 
 #systemBallGridImg {
   position: absolute;
@@ -37,20 +54,6 @@ body {
   height: 41%;
   top: 0;
   left: 40%;
-}
-
-* {
-  font-family: utm_impact;
-}
-
-@font-face {
-  font-family: utm_impact;
-  src: url('../UTM-Impact.ttf');
-}
-
-@font-face {
-  font-family: lexend;
-  src: url('../Lexend-Regular.ttf');
 }
 
 button,

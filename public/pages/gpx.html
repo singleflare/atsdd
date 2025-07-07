@@ -31,20 +31,7 @@
 
     .ball {
       transition: all 0.25s linear;
-    }
-
-    @keyframes zoomin {
-      0% {
-        transform: scale(0);
-      }
-
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .ball.zoomin {
-      animation: zoomin 0.15s forwards linear;
+      filter: drop-shadow(2px 2px 2px);
     }
 
     #podium1InnerNoWhite,
@@ -52,9 +39,9 @@
     #podium1InnerWhite,
     #podium1InnerStop,
     #podium1InnerCg {
-      top: 369px;
-      left: 203px;
-      width: 351px;
+      top: 368px;
+      left: 200px;
+      width: 353px;
     }
 
     #podium2InnerNoWhite,
@@ -62,9 +49,9 @@
     #podium2InnerWhite,
     #podium2InnerStop,
     #podium2InnerCg {
-      top: 369px;
-      left: 781px;
-      width: 358px;
+      top: 368px;
+      left: 780px;
+      width: 360px;
     }
 
     #podium3InnerNoWhite,
@@ -72,9 +59,9 @@
     #podium3InnerWhite,
     #podium3InnerStop,
     #podium3InnerCg {
-      top: 369px;
+      top: 368px;
       left: 1366px;
-      width: 351px;
+      width: 354px;
     }
 
     .podiumInnerWhite,
@@ -173,18 +160,9 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     const socket = io('/gpx')
-
-    function digitGroup(dInput) {
-      var output = "";
-      var totalSize = dInput.length;
-      for (var i = totalSize - 1; i > -1; i--) {
-        output = dInput.charAt(i) + output;
-        var cnt = totalSize - i;
-        if (cnt % 3 === 0 && i !== 0) {
-          output = "." + output;
-        }
-      }
-      return output;
+    for(let i=1;i<=50;i++){
+      $('body').append(`<img src='../media/${i}.png' class='ball' id='ball${i}'`)
+      console.log(i)
     }
 
     //PODIUMS
@@ -431,7 +409,6 @@
           if (!p2Balls.includes(ball) && !p3Balls.includes(ball)) {
             p1Balls.push(ball)
             p1Balls.sort((a, b) => a - b)
-            updateCoordinates(1)
             $('body').append(
               `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
                 style='
@@ -442,21 +419,24 @@
                 scale:0';>
                 `)
             setTimeout(() => {
-              $(`#ball${ball}`).css('scale', '1')
+              updateCoordinates(1)
+              setTimeout(()=>{
+                $(`#ball${ball}`).css('scale', '1')  
+              },100)
             }, 1000)
           }
           else if (p2Balls.includes(ball)) {
             p2Balls = p2Balls.filter(b => b != ball)
-            updateCoordinates(2)
             p1Balls.push(ball)
             p1Balls.sort((a, b) => a - b)
+            updateCoordinates(2)
             updateCoordinates(1)
           }
           else if (p3Balls.includes(ball)) {
             p3Balls = p3Balls.filter(b => b != ball)
-            updateCoordinates(3)
             p1Balls.push(ball)
             p1Balls.sort((a, b) => a - b)
+            updateCoordinates(3)
             updateCoordinates(1)
           }
         }
@@ -464,7 +444,6 @@
           if (!p1Balls.includes(ball) && !p3Balls.includes(ball)) {
             p2Balls.push(ball)
             p2Balls.sort((a, b) => a - b)
-            updateCoordinates(2)
             $('body').append(
               `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
               style='
@@ -475,29 +454,29 @@
               scale:0';>
               `)
             setTimeout(() => {
+              updateCoordinates(2)
               $(`#ball${ball}`).css('scale', '1')
             }, 1000)
           }
           else if (p1Balls.includes(ball)) {
             p1Balls = p1Balls.filter(b => b != ball)
-            updateCoordinates(1)
             p2Balls.push(ball)
             p2Balls.sort((a, b) => a - b)
+            updateCoordinates(1)
             updateCoordinates(2)
           }
           else if (p3Balls.includes(ball)) {
             p3Balls = p3Balls.filter(b => b != ball)
-            updateCoordinates(3)
             p2Balls.push(ball)
             p2Balls.sort((a, b) => a - b)
             updateCoordinates(2)
+            updateCoordinates(3)
           }
         }
         else if (player == 3) {
           if (!p1Balls.includes(ball) && !p2Balls.includes(ball)) {
             p3Balls.push(ball)
             p3Balls.sort((a, b) => a - b)
-            updateCoordinates(3)
             $('body').append(
               `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
                 style='
@@ -508,22 +487,23 @@
                 scale:0';>
                 `)
             setTimeout(() => {
+              updateCoordinates(3)
               $(`#ball${ball}`).css('scale', '1')
             }, 1000)
           }
           else if (p1Balls.includes(ball)) {
             p1Balls = p1Balls.filter(b => b != ball)
-            updateCoordinates(1)
             p3Balls.push(ball)
             p3Balls.sort((a, b) => a - b)
             updateCoordinates(3)
+            updateCoordinates(1)
           }
           else if (p2Balls.includes(ball)) {
             p2Balls = p2Balls.filter(b => b != ball)
-            updateCoordinates(2)
             p3Balls.push(ball)
             p3Balls.sort((a, b) => a - b)
             updateCoordinates(3)
+            updateCoordinates(2)
           }
         }
         console.log(p1Balls, p2Balls, p3Balls)
@@ -568,6 +548,9 @@
           //updateCoordinates(3)
           updateJackpotCoordinates(3)
         }
+        document.querySelectorAll('.ball').forEach(ball => {
+          ball.style.filter = 'grayscale(0)'
+        })
       }
       else if (status == 'jackpotDel') {
         if (player == 1) {
