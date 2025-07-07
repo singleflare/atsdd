@@ -1,11 +1,11 @@
 @font-face {
   font-family: utm_impact;
-  src: url('../UTM-Impact.ttf');
+  src: url('./media/UTM-Impact.ttf');
 }
 
 @font-face {
   font-family: lexend;
-  src: url('../Lexend-Regular.ttf');
+  src: url('./media/Lexend-Regular.ttf');
 }
 
 *{
