@@ -25,8 +25,8 @@ app.get(`${config.p3Route}`, (req, res) => {
 app.get(`${config.controllerRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/control.html'))
 })
-app.get(`${config.gpxRoute}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/gpx.html'))
+app.get(`${config.podiumsRoute}`, (req, res) => {
+	res.sendFile(join(__dirname, '/public/pages/podiums.html'))
 })
 app.get(`${config.hostRoute}`, (req, res) => {
 	res.sendFile(join(__dirname, '/public/pages/host.html'))
@@ -54,7 +54,7 @@ const p1ns = ioServer.of(`${config.p1Route}`)
 const p2ns = ioServer.of(`${config.p2Route}`)
 const p3ns = ioServer.of(`${config.p3Route}`)
 const cns = ioServer.of(`${config.controllerRoute}`)
-const gns = ioServer.of(`${config.gpxRoute}`)
+const pns = ioServer.of(`${config.podiumsRoute}`)
 const hns = ioServer.of(`${config.hostRoute}`)
 const bbns = ioServer.of(`${config.ballBoardRoute}`)
 const ovlns = ioServer.of(`${config.overlayRoute}`)
@@ -63,7 +63,7 @@ console.log(`http://localhost:3000${config.p1Route}`)
 console.log(`http://localhost:3000${config.p2Route}`)
 console.log(`http://localhost:3000${config.p3Route}`)
 console.log(`http://localhost:3000${config.controllerRoute}`)
-console.log(`http://localhost:3000${config.gpxRoute}`)
+console.log(`http://localhost:3000${config.podiumsRoute}`)
 console.log(`http://localhost:3000${config.hostRoute}`)
 console.log(`http://localhost:3000${config.ballBoardRoute}`)
 console.log(`http://localhost:3000${config.overlayRoute}`)
@@ -212,7 +212,7 @@ cns.on('connection', socket => {
 		else if (qno >= 40 && qno <= 49) {
 			bbns.emit('ballCol', qno % 10 + 1)
 			ovlns.emit('qna', qnas, qno)
-			gns.emit('playMusic', '../media/Hiện câu hỏi.mp3')
+			pns.emit('playMusic', '../media/Hiện câu hỏi.mp3')
 			hns.emit('playMusic', '../media/Hiện câu hỏi.mp3')
 			broadcastToAllPlayers('playMusic', '../media/Hiện câu hỏi.mp3')
 		}
@@ -272,13 +272,13 @@ cns.on('connection', socket => {
 	})
 
 	socket.on('playMusic', url => {
-		gns.emit('playMusic', url)
+		pns.emit('playMusic', url)
 		hns.emit('playMusic', url)
 		ovlns.emit('playMusic', url)
 		broadcastToAllPlayers('playMusic', url)
 	})
 	socket.on('stopMusic', () => {
-		gns.emit('stopMusic')
+		pns.emit('stopMusic')
 		hns.emit('stopMusic')
 		ovlns.emit('stopMusic')
 		broadcastToAllPlayers('stopMusic')
@@ -286,7 +286,7 @@ cns.on('connection', socket => {
 
 	socket.on('changePlayerPodium', (p, state) => {
 		console.log(p, state)
-		gns.emit('changePlayerPodium', p, state)
+		pns.emit('changePlayerPodium', p, state)
 	})
 
 	socket.on('updateBalls', (mode, player, balls) => {
@@ -317,7 +317,7 @@ cns.on('connection', socket => {
 					systemBalls = systemBalls.filter(b => b != ball)
 					hns.emit('updateBall', 'add', 1, ball)
 					hns.emit('updateBall', 'del', 'system', ball)
-					gns.emit('updateBall', 'add', 1, ball)
+					pns.emit('updateBall', 'add', 1, ball)
 					broadcastToAllPlayers('updateBall', 'add', 1, ball)
 					broadcastToAllPlayers('updateBall', 'del', 'system', ball)
 				})
@@ -350,7 +350,7 @@ cns.on('connection', socket => {
 					systemBalls = systemBalls.filter(b => b != ball)
 					hns.emit('updateBall', 'add', 2, ball)
 					hns.emit('updateBall', 'del', 'system', ball)
-					gns.emit('updateBall', 'add', 2, ball)
+					pns.emit('updateBall', 'add', 2, ball)
 					broadcastToAllPlayers('updateBall', 'add', 2, ball)
 					broadcastToAllPlayers('updateBall', 'del', 'system', ball)
 				})
@@ -380,7 +380,7 @@ cns.on('connection', socket => {
 					systemBalls = systemBalls.filter(b => b != ball)
 					hns.emit('updateBall', 'add', 3, ball)
 					hns.emit('updateBall', 'del', 'system', ball)
-					gns.emit('updateBall', 'add', 3, ball)
+					pns.emit('updateBall', 'add', 3, ball)
 					broadcastToAllPlayers('updateBall', 'add', 3, ball)
 					broadcastToAllPlayers('updateBall', 'del', 'system', ball)
 				})
@@ -399,7 +399,7 @@ cns.on('connection', socket => {
 						p1Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 1, ball)
 						hns.emit('updateBall', 'add', 'system', ball)
-						gns.emit('updateBall', 'del', 1, ball)
+						pns.emit('updateBall', 'del', 1, ball)
 						broadcastToAllPlayers('updateBall', 'del', 1, ball)
 						broadcastToAllPlayers('updateBall', 'add', 'system', ball)
 					}
@@ -415,7 +415,7 @@ cns.on('connection', socket => {
 						p2Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 2, ball)
 						hns.emit('updateBall', 'add', 'system', ball)
-						gns.emit('updateBall', 'del', 2, ball)
+						pns.emit('updateBall', 'del', 2, ball)
 						broadcastToAllPlayers('updateBall', 'del', 2, ball)
 						broadcastToAllPlayers('updateBall', 'add', 'system', ball)
 					}
@@ -431,7 +431,7 @@ cns.on('connection', socket => {
 						p3Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 3, ball)
 						hns.emit('updateBall', 'add', 'system', ball)
-						gns.emit('updateBall', 'del', 3, ball)
+						pns.emit('updateBall', 'del', 3, ball)
 						broadcastToAllPlayers('updateBall', 'del', 3, ball)
 						broadcastToAllPlayers('updateBall', 'add', 'system', ball)
 					}
@@ -445,7 +445,7 @@ cns.on('connection', socket => {
 					if (p1Balls.includes(ball)) {
 						p1Jackpots.push(ball)
 						hns.emit('updateJackpot', 'add', 1, ball)
-						gns.emit('updateBall', 'jackpotAdd', 1, ball)
+						pns.emit('updateBall', 'jackpotAdd', 1, ball)
 						broadcastToAllPlayers('updateJackpot', 'add', 1, ball)
 					}
 				})
@@ -456,7 +456,7 @@ cns.on('connection', socket => {
 					if (p2Balls.includes(ball)) {
 						p2Jackpots.push(ball)
 						hns.emit('updateJackpot', 'add', 2, ball)
-						gns.emit('updateBall', 'jackpotAdd', 2, ball)
+						pns.emit('updateBall', 'jackpotAdd', 2, ball)
 						broadcastToAllPlayers('updateJackpot', 'add', 2, ball)
 					}
 				})
@@ -467,7 +467,7 @@ cns.on('connection', socket => {
 					if (p3Balls.includes(ball)) {
 						p3Jackpots.push(ball)
 						hns.emit('updateJackpot', 'add', 3, ball)
-						gns.emit('updateBall', 'jackpotAdd', 3, ball)
+						pns.emit('updateBall', 'jackpotAdd', 3, ball)
 						broadcastToAllPlayers('updateJackpot', 'add', 3, ball)
 					}
 				})
@@ -481,7 +481,7 @@ cns.on('connection', socket => {
 					if (p1Balls.includes(ball)) {
 						p1Jackpots = p1Jackpots.filter(b => b != ball)
 						hns.emit('updateJackpot', 'del', 1, ball)
-						gns.emit('updateBall', 'jackpotDel', 1, ball)
+						pns.emit('updateBall', 'jackpotDel', 1, ball)
 						broadcastToAllPlayers('updateJackpot', 'del', 1, ball)
 					}
 				})
@@ -492,7 +492,7 @@ cns.on('connection', socket => {
 					if (p2Balls.includes(ball)) {
 						p2Jackpots = p2Jackpots.filter(b => b != ball)
 						hns.emit('updateJackpot', 'del', 2, ball)
-						gns.emit('updateBall', 'jackpotDel', 2, ball)
+						pns.emit('updateBall', 'jackpotDel', 2, ball)
 						broadcastToAllPlayers('updateJackpot', 'del', 2, ball)
 					}
 				})
@@ -503,7 +503,7 @@ cns.on('connection', socket => {
 					if (p3Balls.includes(ball)) {
 						p3Jackpots = p3Jackpots.filter(b => b != ball)
 						hns.emit('updateJackpot', 'del', 3, ball)
-						gns.emit('updateBall', 'jackpotDel', 3, ball)
+						pns.emit('updateBall', 'jackpotDel', 3, ball)
 						broadcastToAllPlayers('updateJackpot', 'add', 3, ball)
 					}
 				})
@@ -511,13 +511,13 @@ cns.on('connection', socket => {
 		}
     console.log(p1Balls,p2Balls,p3Balls,p1Jackpots,p2Jackpots,p3Jackpots)
 		hns.emit('updateScore', 1, p1Score)
-		gns.emit('updateScore', 1, p1Score)
+		pns.emit('updateScore', 1, p1Score)
 		broadcastToAllPlayers('updateScore', 1, p1Score)
 		hns.emit('updateScore', 2, p2Score)
-		gns.emit('updateScore', 2, p2Score)
+		pns.emit('updateScore', 2, p2Score)
 		broadcastToAllPlayers('updateScore', 2, p2Score)
 		hns.emit('updateScore', 3, p3Score)
-		gns.emit('updateScore', 3, p3Score)
+		pns.emit('updateScore', 3, p3Score)
 		broadcastToAllPlayers('updateScore', 3, p3Score)
 		fs.writeFile('data.txt', `${p1Name}\n${p2Name}\n${p3Name}\n${p1Balls.join(',')}\n${p2Balls.join(',')}\n${p3Balls.join(',')}`, (err) => {
 			if (err) {
@@ -576,16 +576,16 @@ cns.on('connection', socket => {
 		p2ns.emit('buzzer', mode)
 		p3ns.emit('buzzer', mode)
 		if (mode == 'reset') {
-			gns.emit('changePlayerPodium', 1, 'normal')
-			gns.emit('changePlayerPodium', 2, 'normal')
-			gns.emit('changePlayerPodium', 3, 'normal')
+			pns.emit('changePlayerPodium', 1, 'normal')
+			pns.emit('changePlayerPodium', 2, 'normal')
+			pns.emit('changePlayerPodium', 3, 'normal')
 			hns.emit('updateBuzzPositionToHost', 0)
 			broadcastToAllPlayers('buzzerBtnText')
 		}
 	})
 	socket.on('p1BuzzEarly', () => {
 		p1ns.emit('buzzEarly')
-		gns.emit('p1BuzzEarly')
+		pns.emit('p1BuzzEarly')
 		ovlns.emit('playMusic', '../media/chuông.mp3')
 		hns.emit('playMusic', '../media/chuông.mp3')
 	})
@@ -594,7 +594,7 @@ cns.on('connection', socket => {
 	})
 	socket.on('p2BuzzEarly', () => {
 		p2ns.emit('buzzEarly')
-		gns.emit('p2BuzzEarly')
+		pns.emit('p2BuzzEarly')
 		ovlns.emit('playMusic', '../media/chuông.mp3')
 		hns.emit('playMusic', '../media/chuông.mp3')
 	})
@@ -603,7 +603,7 @@ cns.on('connection', socket => {
 	})
 	socket.on('p3BuzzEarly', () => {
 		p3ns.emit('buzzEarly')
-		gns.emit('p3BuzzEarly')
+		pns.emit('p3BuzzEarly')
 		ovlns.emit('playMusic', '../media/chuông.mp3')
 		hns.emit('playMusic', '../media/chuông.mp3')
 	})
@@ -646,7 +646,7 @@ cns.on('connection', socket => {
 		bbns.emit('color', color)
 		hns.emit('color', color)
 		broadcastToAllPlayers('color', color)
-		gns.emit('color', color)
+		pns.emit('color', color)
 	})
 
 	socket.on('showPInfo', (player) => {
@@ -725,8 +725,8 @@ cns.on('connection', socket => {
 	})
 })
 
-gns.on('connection', socket => {
-	console.log('gpx connected')
+pns.on('connection', socket => {
+	console.log('podiums connected')
 	//init
 	p1Balls.forEach(ball => socket.emit('updateBall', 'add', 1, ball))
 	p1Jackpots.forEach(ball => socket.emit('updateBall', 'jackpotAdd', 1, ball))

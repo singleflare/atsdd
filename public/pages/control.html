@@ -521,32 +521,32 @@
 
     //music control
     $('#playIntro').on('click', () => {
-      socket.emit('playMusic', '../media/intro.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/intro.mp3')
     })
     $('#playHostEntrance').on('click', () => {
-      socket.emit('playMusic', '../media/host entrance.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/host entrance.mp3')
     })
     $('#playRules').on('click', () => {
-      socket.emit('playMusic', '../media/GT luật chơi.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/GT luật chơi.mp3')
     })
     $('#playShowQuestion').on('click', () => {
-      socket.emit('playMusic', '../media/Hiện câu hỏi.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/Hiện câu hỏi.mp3')
     })
     $('#playTimeUp').on('click', () => {
-      socket.emit('playMusic', '../media/hết giờ.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/hết giờ.mp3')
     })
     $('#playChooseBall').on('click', () => {
-      socket.emit('playMusic', '../media/chọn bóng.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/chọn bóng.mp3')
     })
     $('#playR2Bed').on('click', () => {
-      socket.emit('playMusic', '../media/nhạc giao lưu trong vòng 2.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/nhạc giao lưu trong vòng 2.mp3')
     })
     $('#playRollingBed').on('click', () => {
-      socket.emit('playMusic', '../media/nhạc nền quay bóng.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/nhạc nền quay bóng.mp3')
     })
     $('#play60s').on('click', () => {
       socket.emit('stopMusic')
-      socket.emit('playMusic', '../media/60s vòng 2.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/60s vòng 2.mp3')
     })
     $('#stopMusic').on('click', () => {
       socket.emit('stopMusic')
@@ -705,21 +705,21 @@
       $('#ballForP1').val('')
       socket.emit('updateBalls', 'add', 1, balls);
       socket.emit('changePlayerPodium', 1, 'normal')
-      socket.emit('playMusic', '../media/chọn bóng.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/chọn bóng.mp3')
     })
     $('#p2BallsControl .addBall').on('click', () => {
       const balls = $('#ballForP2').val().split(',')
       $('#ballForP2').val('')
       socket.emit('updateBalls', 'add', 2, balls);
       socket.emit('changePlayerPodium', 2, 'normal')
-      socket.emit('playMusic', '../media/chọn bóng.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/chọn bóng.mp3')
     })
     $('#p3BallsControl .addBall').on('click', () => {
       const balls = $('#ballForP3').val().split(',')
       $('#ballForP3').val('')
       socket.emit('updateBalls', 'add', 3, balls);
       socket.emit('changePlayerPodium', 3, 'normal')
-      socket.emit('playMusic', '../media/chọn bóng.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/chọn bóng.mp3')
     })
 
     $('#p1BallsControl .delBall').on('click', () => {
@@ -1014,7 +1014,7 @@
       console.log(thisPackIndex)
       chooseQ(questionsInThisPack[thisPackIndex])
       socket.emit('showQ')
-      socket.emit('playMusic', '../media/60s vòng 2.mp3')
+      socket.emit('playMusic', '../media/atsddSounds/60s vòng 2.mp3')
       socket.emit('updateTime', time)
       console.log(time)
       sixtySecInterval = setInterval(() => {

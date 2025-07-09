@@ -4,7 +4,7 @@ const config = {
   p3Route: '/p3',
   hostRoute: '/host',
   controllerRoute: '/controller',
-  gpxRoute: '/gpx',
+  podiumsRoute: '/podiums',
   overlayRoute: '/overlay',
   ballBoardRoute: '/ballBoard'
 };

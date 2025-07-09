@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OBS Graphics</title>
+  <title>Podiums</title>
 </head>
 
 <body>
@@ -15,7 +15,7 @@
 
     @font-face {
       font-family: utm_impact;
-      src: url('../UTM-Impact.ttf');
+      src: url('./media/UTM-Impact.ttf');
     }
 
     img,
@@ -159,8 +159,8 @@
     integrity="sha512-d00Brs/+XQUUaO0Y9Uo8Vw63o7kS6ZcLM2P++17kALrI8oihAfL4pl1jQObeRBgv06j7xG0GHOhudAW0BdrycA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
-    const socket = io('/gpx')
-    for(let i=1;i<=50;i++){
+    const socket = io('/podiums')
+    for (let i = 1; i <= 50; i++) {
       $('body').append(`<img src='../media/${i}.png' class='ball' id='ball${i}'`)
       console.log(i)
     }
@@ -420,9 +420,9 @@
                 `)
             setTimeout(() => {
               updateCoordinates(1)
-              setTimeout(()=>{
-                $(`#ball${ball}`).css('scale', '1')  
-              },100)
+              setTimeout(() => {
+                $(`#ball${ball}`).css('scale', '1')
+              }, 100)
             }, 1000)
           }
           else if (p2Balls.includes(ball)) {

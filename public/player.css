@@ -8,10 +8,10 @@
   src: url('./media/Lexend-Regular.ttf');
 }
 
-*{
+* {
   font-family: utm_impact;
-  user-select:none;
-  pointer-events:none;
+  user-select: none;
+  pointer-events: none;
 }
 
 body {
@@ -121,7 +121,7 @@ button.slowBuzzed {
 
 .name {
   position: absolute;
-  font-size: 1.6vw;
+  font-size: 2vw;
   left: 4%;
   top: 6%;
   width: 100%;
@@ -147,7 +147,7 @@ button.slowBuzzed {
 
 .score {
   position: absolute;
-  font-size: 1.6vw;
+  font-size: 2.2vw;
   right: 4%;
   top: 6%;
   width: 25%;
