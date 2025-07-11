@@ -576,11 +576,8 @@
     for (let i = 1; i <= 60; i++) qnas.push({ q: '', a: '', exp: '' })
     let qno = -1
 
-    let customSounds = ['5s 3 thí sinh', 'Endcap VTV', 'ID HN1', '60s O10', 'QC HN1', 'O Sai', 'O Đúng', 'QC VTV 2021', 'ID V3 2023']
+    let customSounds = ['5s 3 thí sinh', 'Endcap VTV', '60s O10', 'O Sai', 'O Đúng', 'QC VTV 2021', 'ID V3 2023', 'ID HN1', 'QC HN1']
     $(() => {
-      for (let i = 0; i < 60; i++) {
-        $('#customSounds').append(`<button id='q${i + 1}'> ${i + 1}. </button>`)
-      }
       fetch('https://atsdd.onrender.com/customSounds').then(res => res.json()).then(data => {
         data.forEach((data, i) => {
           $('#customSounds').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
