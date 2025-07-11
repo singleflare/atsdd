@@ -581,7 +581,7 @@
       for (let i = 0; i < 60; i++) {
         $('#customSounds').append(`<button id='q${i + 1}'> ${i + 1}. </button>`)
       }
-      fetch('http://atsdd.onrenderer.com/customSounds').then(res => res.json()).then(data => {
+      fetch('http://atsdd.onrender.com/customSounds').then(res => res.json()).then(data => {
         data.forEach((data, i) => {
           $('#musicControl').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
           $(`#musicControl #sfx${i + 1}`).on('click', () => {
