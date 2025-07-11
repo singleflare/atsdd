@@ -240,9 +240,9 @@ cns.on('connection', socket => {
 		p1Score = 0
 		p2Score = 0
 		p3Score = 0
-    p1Name=''
-    p2Name=''
-    p3Name=''
+		p1Name = ''
+		p2Name = ''
+		p3Name = ''
 	})
 
 	socket.on('getSystemBalls', () => {
@@ -272,6 +272,7 @@ cns.on('connection', socket => {
 	})
 
 	socket.on('playMusic', url => {
+		console.log(url)
 		pns.emit('playMusic', url)
 		hns.emit('playMusic', url)
 		ovlns.emit('playMusic', url)
@@ -293,8 +294,8 @@ cns.on('connection', socket => {
 		if (mode == 'add') {
 			if (player == 1) {
 				balls.forEach(ball => {
-          ball=Number(ball)
-          console.log(ball,typeof ball)
+					ball = Number(ball)
+					console.log(ball, typeof ball)
 					if (ball == '' || isNaN(ball) || ball < 1 || ball > 50 || p1Balls.includes(ball)) return
 					else if (p2Balls.includes(ball)) {
 						p2Balls = p2Balls.filter(b => b != ball)
@@ -327,7 +328,7 @@ cns.on('connection', socket => {
 			}
 			else if (player == 2) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (ball == '' || isNaN(ball) || ball < 1 || ball > 50 || p2Balls.includes(ball)) return
 					else if (p1Balls.includes(ball)) {
 						p1Balls = p1Balls.filter(b => b != ball)
@@ -357,7 +358,7 @@ cns.on('connection', socket => {
 			}
 			else if (player == 3) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (ball == '' || isNaN(ball) || ball < 1 || ball > 50 || p3Balls.includes(ball)) return
 					else if (p2Balls.includes(ball)) {
 						p2Balls = p2Balls.filter(b => b != ball)
@@ -391,10 +392,10 @@ cns.on('connection', socket => {
 		else if (mode == 'del') {
 			if (player == '1') {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (!p1Balls.includes(ball)) return
 					else {
-						p1Balls = p1Balls.filter(b => b!==ball)
+						p1Balls = p1Balls.filter(b => b !== ball)
 						systemBalls.push(parseInt(ball))
 						p1Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 1, ball)
@@ -407,10 +408,10 @@ cns.on('connection', socket => {
 			}
 			else if (player == '2') {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (!p2Balls.includes(ball)) return
 					else {
-						p2Balls = p2Balls.filter(b => b!==ball)
+						p2Balls = p2Balls.filter(b => b !== ball)
 						systemBalls.push(parseInt(ball))
 						p2Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 2, ball)
@@ -423,10 +424,10 @@ cns.on('connection', socket => {
 			}
 			else if (player == '3') {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (!p3Balls.includes(ball)) return
 					else {
-						p3Balls = p3Balls.filter(b => b!==ball)
+						p3Balls = p3Balls.filter(b => b !== ball)
 						systemBalls.push(parseInt(ball))
 						p3Score -= BALLSCORE
 						hns.emit('updateBall', 'del', 3, ball)
@@ -441,7 +442,7 @@ cns.on('connection', socket => {
 		else if (mode == 'jackpotAdd') {
 			if (player == 1) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (p1Balls.includes(ball)) {
 						p1Jackpots.push(ball)
 						hns.emit('updateJackpot', 'add', 1, ball)
@@ -452,7 +453,7 @@ cns.on('connection', socket => {
 			}
 			else if (player == 2) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (p2Balls.includes(ball)) {
 						p2Jackpots.push(ball)
 						hns.emit('updateJackpot', 'add', 2, ball)
@@ -463,7 +464,7 @@ cns.on('connection', socket => {
 			}
 			else if (player == 3) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (p3Balls.includes(ball)) {
 						p3Jackpots.push(ball)
 						hns.emit('updateJackpot', 'add', 3, ball)
@@ -477,7 +478,7 @@ cns.on('connection', socket => {
 		else if (mode == 'jackpotDel') {
 			if (player == 1) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (p1Balls.includes(ball)) {
 						p1Jackpots = p1Jackpots.filter(b => b != ball)
 						hns.emit('updateJackpot', 'del', 1, ball)
@@ -488,7 +489,7 @@ cns.on('connection', socket => {
 			}
 			else if (player == 2) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (p2Balls.includes(ball)) {
 						p2Jackpots = p2Jackpots.filter(b => b != ball)
 						hns.emit('updateJackpot', 'del', 2, ball)
@@ -499,7 +500,7 @@ cns.on('connection', socket => {
 			}
 			else if (player == 3) {
 				balls.forEach(ball => {
-          ball=Number(ball)
+					ball = Number(ball)
 					if (p3Balls.includes(ball)) {
 						p3Jackpots = p3Jackpots.filter(b => b != ball)
 						hns.emit('updateJackpot', 'del', 3, ball)
@@ -509,7 +510,7 @@ cns.on('connection', socket => {
 				})
 			}
 		}
-    console.log(p1Balls,p2Balls,p3Balls,p1Jackpots,p2Jackpots,p3Jackpots)
+		console.log(p1Balls, p2Balls, p3Balls, p1Jackpots, p2Jackpots, p3Jackpots)
 		hns.emit('updateScore', 1, p1Score)
 		pns.emit('updateScore', 1, p1Score)
 		broadcastToAllPlayers('updateScore', 1, p1Score)
@@ -589,7 +590,7 @@ cns.on('connection', socket => {
 		ovlns.emit('playMusic', '../media/chuông.mp3')
 		hns.emit('playMusic', '../media/chuông.mp3')
 	})
-  socket.on('p1BuzzLate', () => {
+	socket.on('p1BuzzLate', () => {
 		p1ns.emit('buzzLate')
 	})
 	socket.on('p2BuzzEarly', () => {
@@ -598,7 +599,7 @@ cns.on('connection', socket => {
 		ovlns.emit('playMusic', '../media/chuông.mp3')
 		hns.emit('playMusic', '../media/chuông.mp3')
 	})
-  socket.on('p2BuzzLate', () => {
+	socket.on('p2BuzzLate', () => {
 		p2ns.emit('buzzLate')
 	})
 	socket.on('p3BuzzEarly', () => {
@@ -659,7 +660,7 @@ cns.on('connection', socket => {
 		else if (player == 3) {
 			hns.emit('showPInfo', player, p3Name)
 		}
-    for(let i=0;i<10;i++) hns.emit('updateAnsStatus','normal',i)
+		for (let i = 0; i < 10; i++) hns.emit('updateAnsStatus', 'normal', i)
 	})
 
 	socket.on('updateAnsStatus', (stat, i) => {
@@ -756,7 +757,7 @@ hns.on('connection', socket => {
 	socket.emit('updateName', 1, p1Name)
 	socket.emit('updateName', 2, p2Name)
 	socket.emit('updateName', 3, p3Name)
-  console.log(p1Balls,p2Balls,p3Balls,p1Jackpots,p2Jackpots,p3Jackpots)
+	console.log(p1Balls, p2Balls, p3Balls, p1Jackpots, p2Jackpots, p3Jackpots)
 })
 
 bbns.on('connection', socket => {

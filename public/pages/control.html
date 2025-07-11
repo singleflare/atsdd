@@ -11,6 +11,7 @@
   <style>
     * {
       font-family: lexend;
+      box-sizing: border-box;
     }
 
     @font-face {
@@ -28,7 +29,7 @@
       background-color: black;
       color: white;
       border: 1px solid white;
-      padding: 2px;
+      padding: 3px;
     }
 
     button:hover {
@@ -59,10 +60,7 @@
       overflow-x: hidden;
     }
 
-    span {
-      color: white;
-      font-size: 20px;
-    }
+    span {}
 
     input {
       font-size: 20px;
@@ -129,14 +127,10 @@
     .controlContainer div {}
 
     .controlLabel {
-      display: block;
       color: black;
       font-size: 20px;
-      position: relative;
       text-align: center;
-      top: 0;
       background-color: white;
-      width: 100%;
     }
 
     button.controlLabel {
@@ -176,14 +170,23 @@
 
     #questionControl {
       position: absolute;
-      height: 370px;
-      top: 680px;
+      height: 540px;
+      top: 540px;
       width: 960px;
       left: 960px;
       box-sizing: border-box;
     }
 
-    #p1BallsControl,
+    table {
+      border: 1px solid white;
+      width: 960px;
+    }
+
+    table>* {
+      padding: 0;
+    }
+
+    /*#p1BallsControl,
     #p2BallsControl,
     #p3BallsControl,
     #webPreview,
@@ -194,7 +197,7 @@
     #overlayWebControl {
       width: 960px;
       position: relative;
-    }
+    }*/
 
     #hostIframe {
       position: absolute;
@@ -221,29 +224,34 @@
     .flex-container.two button {
       width: 100%;
     }
-    
-    .disabledArea{
-      opacity:0.5
+
+    .disabledArea {
+      opacity: 0.5
     }
-    .disabledArea>*{
-      
+
+    .disabledArea>* {}
+
+    .controlArea {
+      display: table;
+    }
+
+    .controlSublabelArea {
+      display: table;
+    }
+
+    .controlSublabel {
+      background-color: white;
+      color: black;
+      font-size: 20px;
+      border: 1px solid black;
+    }
+
+    .controlButtonsArea {
+      display: flex;
+      flex-direction: column;
     }
   </style>
   <div id='wholePage'>
-    <div id='musicControl' class='controlContainer'>
-      <div class='controlLabel'>SFX</div>
-      <button id='playIntro'>Intro CT</button>
-      <button id='playHostEntrance'>Host entrance</button>
-      <button id='playRules'>GT luật</button>
-      <button id='playShowQuestion'>Hiện câu hỏi</button>
-      <button id='playTimeUp'>Hết giờ</button>
-      <button id='playChooseBall'>Chọn bóng</button>
-      <button id='playR2Bed'>Giao lưu vòng 2</button>
-      <button id='playRollingBed'>Nền quay bóng</button>
-      <button id='play60s'>60s/Nền công bố bóng</button>
-      <button id='stopMusic'>Dừng tất cả âm thanh</button>
-      <br>
-    </div>
     <div id='questionControl' class='controlContainer'>
       <div class='controlLabel'>Câu hỏi</div>
       <input type='file' accept='.xlsx' id='fileInput' style='width:300px'>
@@ -261,193 +269,299 @@
       <iframe src='http://localhost:3000/ballBoard' id='ballBoardIframe' style='opacity:0'></iframe>
       <iframe src='http://localhost:3000/overlay' id='overlayIframe' style='opacity:0'></iframe> -->
     </div>
-    <div id='systemBallsControl'>
-      <div class='controlLabel'>Hệ thống</div>
-      <span>Bật màu bóng</span>
-      <button id='coloredAll'>All</button>
-      <button id='coloredNone'>None</button>
-      <button id='coloredRed'>Đ</button>
-      <button id='coloredBlue'>XD</button>
-      <button id='coloredGreen'>XL</button>
-      <button id='coloredPink'>H</button>
-      <button id='coloredYellow'>V</button>
-      <br>
-      <span>Chuông</span>
-      <button id='openBuzzer'>Mở</button>
-      <button id='resetBuzzer'>Reset</button>
-      <button id='resetThenOpenBuzzer'>Reset & mở</button>
-      <br>
-      <span>Glow</span>
-      <input type='text' id='ballForGlow' placeholder='Bóng'>
-      <button id='glowBallBtn'>Glow</button>
-      <button id='delGlowBallBtn'>Xóa glow</button>
-      <button id='delAllGlowBallBtn'>Xóa tất cả glow</button>
-      <br>
-      <button id='resetServerData'>Reset server data</button>
+    <table>
+      <tbody>
+        <tr>
+          <td class='controlLabel' rowspan="4">Hệ thống</td>
+          <td class='controlLabel'>Bật màu bóng</td>
+          <td>
+            <button id='coloredAll'>All</button>
+            <button id='coloredNone'>None</button>
+            <button id='coloredRed'>Đ</button>
+            <button id='coloredBlue'>XD</button>
+            <button id='coloredGreen'>XL</button>
+            <button id='coloredPink'>H</button>
+            <button id='coloredYellow'>V</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Chuông</td>
+          <td>
+            <button id='openBuzzer'>Mở</button>
+            <button id='resetBuzzer'>Reset</button>
+            <button id='resetThenOpenBuzzer'>Reset & mở</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Phát sáng</td>
+          <td>
+            <input type='text' id='ballForGlow' placeholder='Bóng'>
+            <button id='glowBallBtn'>Glow</button>
+            <button id='delGlowBallBtn'>Xóa glow</button>
+            <button id='delAllGlowBallBtn'>Xóa tất cả glow</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Dữ liệu</td>
+          <td>
+            <button id='resetServerData'>Đặt lại dữ liệu (Bóng, tên)</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <tr>
+          <td class='controlLabel' rowspan="3">Bóng</td>
+          <td class='controlLabel'>NC1</td>
+          <td id='p1BallsControl'>
+            <input type="text" id="ballForP1" style='width: 15%;' placeholder='Bóng'>
+            <button class='addBall'>Thêm</button>
+            <button class='delBall'>Xóa</button>
+            <input type="text" id="jackpotForP1" disabled style='width: 15%;' placeholder='Đ.đắc'>
+            <button class='addJackpotBall' disabled>Thêm</button>
+            <button class='delJackpotBall' disabled>Xóa</button>
+            <input type="text" id="nameForP1" style='width: 15%;' placeholder='Tên'>
+            <button class='setNameAndScore'>Set</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>NC2</td>
+          <td id='p2BallsControl'>
+            <input type="text" id="ballForP2" style='width: 15%;' placeholder='Bóng'>
+            <button class='addBall'>Thêm</button>
+            <button class='delBall'>Xóa</button>
+            <input type="text" id="jackpotForP2" disabled style='width: 15%;' placeholder='Đ.đắc'>
+            <button class='addJackpotBall' disabled>Thêm</button>
+            <button class='delJackpotBall' disabled>Xóa</button>
+            <input type="text" id="nameForP2" style='width: 15%;' placeholder='Tên'>
+            <button class='setNameAndScore'>Set</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>NC3</td>
+          <td id='p3BallsControl'>
+            <input type="text" id="ballForP3" style='width: 15%;' placeholder='Bóng'>
+            <button class='addBall'>Thêm</button>
+            <button class='delBall'>Xóa</button>
+            <input type="text" id="jackpotForP3" disabled style='width: 15%;' placeholder='Đ.đắc'>
+            <button class='addJackpotBall' disabled>Thêm</button>
+            <button class='delJackpotBall' disabled>Xóa</button>
+            <input type="text" id="nameForP3" style='width: 15%;' placeholder='Tên'>
+            <button class='setNameAndScore'>Set</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <tr>
+          <td class='controlLabel' rowspan="4">Vòng 2</td>
+          <td class='controlLabel'>H.thị t.tin NC</td>
+          <td>
+            <button id='showP1Info'>NC1</button>
+            <button id='showP2Info'>NC2</button>
+            <button id='showP3Info'>NC3</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Tải bộ CH & hiện gpx V2</td>
+          <td>
+            <button id='loadPack1'>1 (11-20)</button>
+            <button id='loadPack2'>2 (21-30)</button>
+            <button id='loadPack3'>3 (31-40)</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>60s</td>
+          <td>
+            <button id='start60s'>Bắt đầu</button>
+            <button id='reset60s'>Reset</button>
+            <button id='pause60s'>Dừng</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Đúng/Sai</td>
+          <td>
+            <button id='addBallWhenCorrect'>Đúng</button>
+            <button id='wrongAns'>Sai</button>
+            <button id='pass'>Bỏ qua</button>
+            <button id='addBallWhenCorrectThenHideQuestion'>Đúng & Ẩn CH</button>
+            <button id='wrongThenHideQuestion'>Sai & Ẩn CH</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <tr>
+          <td rowspan="4" class='controlLabel'>Bục NC</td>
+          <td class='controlLabel'>Chung</td>
+          <td>
+            <button id='podiumsToNormal'>Thường</button>
+            <button id='podiumsToBuzzed'>Chuông</button>
+            <button id='podiumsToJackpotRnd'>Quay bóng</button>
+            <button id='podiumsToStop'>Dừng</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>NC1</td>
+          <td>
+            <button id='podium1ToNormal'>Thường</button>
+            <button id='podium1ToBuzzed'>Chuông</button>
+            <button id='podium1ToCg'>CG</button>
+            <button id='podium1ToStop'>Dừng</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>NC2</td>
+          <td>
+            <button id='podium2ToNormal'>Thường</button>
+            <button id='podium2ToBuzzed'>Chuông</button>
+            <button id='podium2ToCg'>CG</button>
+            <button id='podium2ToStop'>Dừng</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>NC3</td>
+          <td>
+            <button id='podium3ToNormal'>Thường</button>
+            <button id='podium3ToBuzzed'>Chuông</button>
+            <button id='podium3ToCg'>CG</button>
+            <button id='podium3ToStop'>Dừng</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <tr>
+          <td class='controlLabel' rowspan="3">Bảng bóng</td>
+          <td class='controlLabel'>Logo</td>
+          <td>
+            <button id='introduceBalls'>Giới thiệu</button>
+            <button id='showLogo'>Hiện</button>
+            <button id='hideLogo'>Ẩn</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Sáng cột</td>
+          <td>
+            <button id='hideColGpx'>Ẩn</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Lấy cột</td>
+          <td>
+            <button id='flyDownCol1'>1</button>
+            <button id='flyDownCol2'>2</button>
+            <button id='flyDownCol3'>3</button>
+            <button id='flyDownCol4'>4</button>
+            <button id='flyDownCol5'>5</button>
+            <button id='flyDownCol6'>6</button>
+            <button id='flyDownCol7'>7</button>
+            <button id='flyDownCol8'>8</button>
+            <button id='flyDownCol9'>9</button>
+            <button id='flyDownCol10'>10</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <tbody>
+        <tr>
+          <td class='controlLabel' rowspan="4">Overlay</td>
+          <td class='controlLabel'>Gpx câu hỏi</td>
+          <td>
+            <button id='showQGpx'>Hiện V1,3,4 và câu hỏi</button>
+            <button id='showR2Gpx'>Hiện V2 trống</button>
+            <button id='hideQGpx'>Ẩn</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Animation luật</td>
+          <td>
+            <button id='anim_3BallsJackpotted'>3 quả</button>
+            <button id='anim_3BallsPrize'>Giải thưởng</button>
+            <button id='anim_5BallsJackpotted'>5 quả</button>
+            <button id='anim_5BallsPrize'>Giải thưởng</button>
+            <button id='anim_qbv'>QBV</button>
+            <button id='anim_fadeOut'>Fade out</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Gpx quay bóng</td>
+          <td>
+            <button id='playJackpotGpx'>Phát</button>
+            <button id='showJackpotGpx'>Hiện</button>
+            <button id='hideJackpotGpx'>Ẩn</button>
+            <button id='resetJackpotGpx'>Reset</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Chỉnh anim</td>
+          <td>
+            <button id='setWaitAnimToOrbit'>Orbit</button>
+            <button id='setWaitAnimToWipe'>Wipe</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table style='width: 50%;'>
+      <tbody>
+        <tr>
+          <td class='controlLabel' rowspan="2">Nhạc</td>
+          <td class='controlLabel'>ATSĐĐ</td>
+          <td>
+            <button id='playIntro'>Intro CT</button>
+            <button id='playHostEntrance'>Host entrance</button>
+            <button id='playRules'>GT luật</button>
+            <button id='playShowQuestion'>Hiện câu hỏi</button>
+            <button id='playTimeUp'>Hết giờ</button>
+            <button id='playChooseBall'>Chọn bóng</button>
+            <button id='playR2Bed'>Giao lưu vòng 2</button>
+            <button id='playRollingBed'>Nền quay bóng</button>
+            <button id='play60s'>60s/Nền công bố bóng</button>
+            <button id='playEndRound'>Kết thúc vòng</button>
+            <button id='playCommInOut'>Hình cắt</button>
+            <button id='playCredit'>Credit</button>
+            <button id='stopMusic'>Dừng tất cả âm thanh</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Khác</td>
+          <td id='customSounds'></td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- <div class='flex-container'>
+      <span>Bóng đ.đắc 1</span>
+      <span>Bóng đ.đắc 2</span>
+      <span>Bóng đ.đắc 3</span>
+      <span>Bóng đ.đắc 4</span>
+      <span>Bóng đ.đắc 5</span>
     </div>
-    <div id='p1BallsControl'>
-      <div class='controlLabel'>NC1</div>
-      <input type="text" id="ballForP1" style='width: 10%;' placeholder='Bóng'>
-      <button class='addBall'>Thêm</button>
-      <button class='delBall'>Xóa</button>
-      <input type="text" id="jackpotForP1" disabled style='width: 10%;' placeholder='Đ.đắc'>
-      <button class='addJackpotBall' disabled>Thêm</button>
-      <button class='delJackpotBall' disabled>Xóa</button>
-      <input type="text" id="nameForP1" style='width: 20%;' placeholder='Tên'>
-      <input type="text" id="scoreForP1" style='width: 10%;' placeholder='Điểm'>
-      <button class='setNameAndScore'>Set</button>
+    <div class='flex-container'>
+      <button id='showAnim1' style='width:100%'>Hiện animation</button>
+      <button id='showAnim2' style='width:100%'>Hiện animation</button>
+      <button id='showAnim3' style='width:100%'>Hiện animation</button>
+      <button id='showAnim4' style='width:100%'>Hiện animation</button>
+      <button id='showAnim5' style='width:100%'>Hiện animation</button>
     </div>
-    <div id='p2BallsControl'>
-      <div class='controlLabel'>NC2</div>
-      <input type="text" id="ballForP2" style='width: 10%;' placeholder='Bóng'>
-      <button class='addBall'>Thêm</button>
-      <button class='delBall'>Xóa</button>
-      <input type="text" id="jackpotForP2" disabled style='width: 10%;' placeholder='Đ.đắc'>
-      <button class='addJackpotBall' disabled>Thêm</button>
-      <button class='delJackpotBall' disabled>Xóa</button>
-      <input type="text" id="nameForP2" style='width: 20%;' placeholder='Tên'>
-      <input type="text" id="scoreForP2" style='width: 10%;' placeholder='Điểm'>
-      <button class='setNameAndScore'>Set</button>
+    <div class='flex-container'>
+      <input id='jackpotInput1' type='text' style='width:100%;text-align: center;'>
+      <input id='jackpotInput2' type='text' style='width:100%;text-align: center;'>
+      <input id='jackpotInput3' type='text' style='width:100%;text-align: center;'>
+      <input id='jackpotInput4' type='text' style='width:100%;text-align: center;'>
+      <input id='jackpotInput5' type='text' style='width:100%;text-align: center;'>
     </div>
-    <div id='p3BallsControl'>
-      <div class='controlLabel'>NC3</div>
-      <input type="text" id="ballForP3" style='width: 10%;' placeholder='Bóng'>
-      <button class='addBall'>Thêm</button>
-      <button class='delBall'>Xóa</button>
-      <input type="text" id="jackpotForP3" disabled style='width: 10%;' placeholder='Đ.đắc'>
-      <button class='addJackpotBall' disabled>Thêm</button>
-      <button class='delJackpotBall' disabled>Xóa</button>
-      <input type="text" id="nameForP3" style='width: 20%;' placeholder='Tên'>
-      <input type="text" id="scoreForP3" style='width: 10%;' placeholder='Điểm'>
-      <button class='setNameAndScore'>Set</button>
-    </div>
-    <div id='round2Control'>
-      <div class='controlLabel'>Vòng 2</div>
-      <span>H.thị t.tin NC</span>
-      <button id='showP1Info'>NC1</button>
-      <button id='showP2Info'>NC2</button>
-      <button id='showP3Info'>NC3</button>
-      <br>
-      <span>Tải bộ CH & hiện đồ họa V2</span>
-      <button id='loadPack1'>Bộ 1 (11-20)</button>
-      <button id='loadPack2'>Bộ 2 (21-30)</button>
-      <button id='loadPack3'>Bộ 3 (31-40)</button>
-      <br>
-      <span>60s</span>
-      <button id='start60s'>Bắt đầu</button>
-      <button id='reset60s'>Reset</button>
-      <button id='pause60s'>Dừng</button>
-      <br><span>Đúng/Sai</span>
-      <button id='addBallWhenCorrect'>Đúng</button>
-      <button id='wrongAns'>Sai</button>
-      <button id='pass'>Bỏ qua</button>
-      <button id='addBallWhenCorrectThenHideQuestion'>Đúng & Ẩn câu hỏi</button>
-      <button id='wrongThenHideQuestion'>Sai & Ẩn câu hỏi</button>
-    </div>
-    <div id='gpxWebControl'>
-      <button class='controlLabel' id='swapToGpx'>Web gpx</button>
-      <span>Bục (chung)</span>
-      <button id='podiumsToNormal'>Thường</button>
-      <button id='podiumsToBuzzed'>Chuông</button>
-      <button id='podiumsToJackpotRnd'>Quay bóng</button>
-      <button id='podiumsToStop'>Dừng</button>
-      <div class='flex-container' id='podiumList'>
-        <span>Bục NC1</span>
-        <span>Bục NC2</span>
-        <span>Bục NC3</span>
-      </div>
-      <div class='flex-container two'>
-        <button id='podium1ToNormal'>Thường</button>
-        <button id='podium1ToBuzzed'>Chuông</button>
-        <button id='podium1ToCg'>CG</button>
-        <button id='podium1ToStop'>Dừng</button>
-        <button id='podium2ToNormal'>Thường</button>
-        <button id='podium2ToBuzzed'>Chuông</button>
-        <button id='podium2ToCg'>CG</button>
-        <button id='podium2ToStop'>Dừng</button>
-        <button id='podium3ToNormal'>Thường</button>
-        <button id='podium3ToBuzzed'>Chuông</button>
-        <button id='podium3ToCg'>CG</button>
-        <button id='podium3ToStop'>Dừng</button>
-      </div>
-    </div>
-    <div id='hostWebControl'>
-      <button class='controlLabel' id='swapToHost'>Web host</button>
-    </div>
-    <div id='ballBoardWebControl'>
-      <button class='controlLabel' id='swapToBallBoard'>Web bảng bóng</button>
-      <button id='showLogo'>Hiện logo</button>
-      <button id='hideLogo'>Ẩn logo</button>
-      <button id='introduceBalls'>Giới thiệu bóng</button>
-      <button id='hideColGpx'>Ẩn gpx cột</button>
-      <button id='flyDownCol1'>Cột 1</button>
-      <button id='flyDownCol2'>Cột 2</button>
-      <button id='flyDownCol3'>Cột 3</button>
-      <button id='flyDownCol4'>Cột 4</button>
-      <button id='flyDownCol5'>Cột 5</button>
-      <button id='flyDownCol6'>Cột 6</button>
-      <button id='flyDownCol7'>Cột 7</button>
-      <button id='flyDownCol8'>Cột 8</button>
-      <button id='flyDownCol9'>Cột 9</button>
-      <button id='flyDownCol10'>Cột 10</button>
-    </div>
-    <div id='overlayWebControl'>
-      <button class='controlLabel' id='swapToOverlay'>Web overlay</button>
-      <span>Gpx câu hỏi</span>
-      <button id='showQGpx'>Hiện V1,3,4 và câu hỏi</button>
-      <button id='showR2Gpx'>Hiện V2 trống</button>
-      <button id='hideQGpx'>Ẩn</button>
-      <br>
-      <span>Animation luật vòng quay bóng</span>
-      <button id='anim_3BallsJackpotted'>3 quả</button>
-      <button id='anim_3BallsPrize'>Giải thưởng</button>
-      <button id='anim_5BallsJackpotted'>5 quả</button>
-      <button id='anim_5BallsPrize'>Giải thưởng</button>
-      <button id='anim_qbv'>QBV</button>
-      <button id='anim_fadeOut'>Fade out</button>
-      
-      <div class='disabledArea'>
-        <span>Gpx quay bóng</span>
-        <button id='playJackpotGpx'>Phát</button>
-        <button id='showJackpotGpx'>Hiện</button>
-        <button id='hideJackpotGpx'>Ẩn</button>
-        <button id='resetJackpotGpx'>Reset</button>
-        <br>
-        <span>Chỉnh animation</span>
-        <button id='setWaitAnimToOrbit'>Orbit</button>
-        <button id='setWaitAnimToWipe'>Wipe</button>
-        <br>
-        <div class='flex-container'>
-          <span>Bóng đ.đắc 1</span>
-          <span>Bóng đ.đắc 2</span>
-          <span>Bóng đ.đắc 3</span>
-          <span>Bóng đ.đắc 4</span>
-          <span>Bóng đ.đắc 5</span>
-        </div>
-        <div class='flex-container'>
-          <button id='showAnim1' style='width:100%'>Hiện animation</button>
-          <button id='showAnim2' style='width:100%'>Hiện animation</button>
-          <button id='showAnim3' style='width:100%'>Hiện animation</button>
-          <button id='showAnim4' style='width:100%'>Hiện animation</button>
-          <button id='showAnim5' style='width:100%'>Hiện animation</button>
-        </div>
-        <div class='flex-container'>
-          <input id='jackpotInput1' type='text' style='width:100%;text-align: center;'>
-          <input id='jackpotInput2' type='text' style='width:100%;text-align: center;'>
-          <input id='jackpotInput3' type='text' style='width:100%;text-align: center;'>
-          <input id='jackpotInput4' type='text' style='width:100%;text-align: center;'>
-          <input id='jackpotInput5' type='text' style='width:100%;text-align: center;'>
-        </div>
-        <div class='flex-container'>
-          <button id='showJackpotBall1' style='width:100%'>Set</button>
-          <button id='showJackpotBall2' style='width:100%'>Set</button>
-          <button id='showJackpotBall3' style='width:100%'>Set</button>
-          <button id='showJackpotBall4' style='width:100%'>Set</button>
-          <button id='showJackpotBall5' style='width:100%'>Set</button>
-        </div>
-      </div>
-      
-    </div>
+    <div class='flex-container'>
+      <button id='showJackpotBall1' style='width:100%'>Set</button>
+      <button id='showJackpotBall2' style='width:100%'>Set</button>
+      <button id='showJackpotBall3' style='width:100%'>Set</button>
+      <button id='showJackpotBall4' style='width:100%'>Set</button>
+      <button id='showJackpotBall5' style='width:100%'>Set</button>
+    </div> -->
   </div>
 
   <script src='../scripts/jquery-3.7.1.min.js'></script>
@@ -462,12 +576,12 @@
     for (let i = 1; i <= 60; i++) qnas.push({ q: '', a: '', exp: '' })
     let qno = -1
 
-    let customSounds = ['5s 3 thí sinh', 'Endcap VTV', '60s O10', 'O Sai', 'O Đúng', 'QC VTV 2021' ,'ID V3 2023']
+    let customSounds = ['5s 3 thí sinh', 'Endcap VTV', 'ID HN1', '60s O10', 'QC HN1', 'O Sai', 'O Đúng', 'QC VTV 2021', 'ID V3 2023']
     $(() => {
       for (let i = 0; i < 60; i++) {
-        $('#qnaMenu').append(`<button id='q${i + 1}'> ${i + 1}. </button>`)
+        $('#customSounds').append(`<button id='q${i + 1}'> ${i + 1}. </button>`)
       }
-      fetch('https://atsdd.onrender.com/customSounds').then(res => res.json()).then(data => {
+      fetch('http://atsdd.onrenderer.com/customSounds').then(res => res.json()).then(data => {
         data.forEach((data, i) => {
           $('#musicControl').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
           $(`#musicControl #sfx${i + 1}`).on('click', () => {
@@ -547,6 +661,15 @@
     $('#play60s').on('click', () => {
       socket.emit('stopMusic')
       socket.emit('playMusic', '../media/atsddSounds/60s vòng 2.mp3')
+    })
+    $('#playCommInOut').on('click', () => {
+      socket.emit('playMusic', '../media/atsddSounds/nhac hinh cat.mp3')
+    })
+    $('#playEndRound').on('click', () => {
+      socket.emit('playMusic', '../media/atsddSounds/end round.mp3')
+    })
+    $('#playCredit').on('click', () => {
+      socket.emit('playMusic', '../media/atsddSounds/nhạc credit.mp3')
     })
     $('#stopMusic').on('click', () => {
       socket.emit('stopMusic')
@@ -823,7 +946,6 @@
       $('#podiumList span:nth-child(1)').text('Bục NC1 (' + p1 + ')')
       $('#podiumList span:nth-child(2)').text('Bục NC2 (' + p2 + ')')
       $('#podiumList span:nth-child(3)').text('Bục NC3 (' + p3 + ')')
-
     })
 
     //swap web preview
@@ -867,7 +989,7 @@
       updateBuzzPosition()
       if (buzzed.length == 1) {
         console.log(buzzed)
-        socket.emit('p1BuzzEarly',buzzed)
+        socket.emit('p1BuzzEarly', buzzed)
         $('#p1BallsControl .controlLabel').css('background-color', 'green')
         if (qno >= 40 && qno <= 49) {
           let ballsString = ballsInColToAdd.join(',')
