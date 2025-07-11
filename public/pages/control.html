@@ -470,7 +470,7 @@
     <table>
       <tbody>
         <tr>
-          <td class='controlLabel' rowspan="4">Overlay</td>
+          <td class='controlLabel' rowspan="2">Overlay</td>
           <td class='controlLabel'>Gpx câu hỏi</td>
           <td>
             <button id='showQGpx'>Hiện V1,3,4 và câu hỏi</button>
@@ -489,7 +489,7 @@
             <button id='anim_fadeOut'>Fade out</button>
           </td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td class='controlLabel'>Gpx quay bóng</td>
           <td>
             <button id='playJackpotGpx'>Phát</button>
@@ -504,7 +504,7 @@
             <button id='setWaitAnimToOrbit'>Orbit</button>
             <button id='setWaitAnimToWipe'>Wipe</button>
           </td>
-        </tr>
+        </tr> -->
       </tbody>
     </table>
     <table style='width: 50%;'>
@@ -583,8 +583,8 @@
       }
       fetch('https://atsdd.onrender.com/customSounds').then(res => res.json()).then(data => {
         data.forEach((data, i) => {
-          $('#musicControl').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
-          $(`#musicControl #sfx${i + 1}`).on('click', () => {
+          $('#customSounds').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
+          $(`#customSounds #sfx${i + 1}`).on('click', () => {
             socket.emit('playMusic', `../media/customSounds/${data}`)
           })
         })
