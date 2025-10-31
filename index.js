@@ -6,6 +6,8 @@ console.log(config)
 // const { initializeApp } = require('firebase/app')
 // const { getFirestore, getDoc, doc, updateDoc } = require('firebase/firestore')
 
+//TD: category name, fix routes
+
 const app = express();
 
 const server = app.listen(process.env.PORT || 3000)
@@ -13,30 +15,6 @@ app.use(express.static('public'));
 
 const ioServer = require('socket.io')(server)
 
-app.get(`${config.p1Route}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/p1.html'))
-})
-app.get(`${config.p2Route}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/p2.html'))
-})
-app.get(`${config.p3Route}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/p3.html'))
-})
-app.get(`${config.controllerRoute}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/control.html'))
-})
-app.get(`${config.podiumsRoute}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/podiums.html'))
-})
-app.get(`${config.hostRoute}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/host.html'))
-})
-app.get(`${config.ballBoardRoute}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/ballBoard.html'))
-})
-app.get(`${config.overlayRoute}`, (req, res) => {
-	res.sendFile(join(__dirname, '/public/pages/overlay.html'))
-})
 app.get('/systemBalls', (req, res) => {
 	res.send(systemBalls)
 })
@@ -85,7 +63,7 @@ let p3Name = ''
 let p1Score = 0
 let p2Score = 0
 let p3Score = 0
-const BALLSCORE = 500;
+const BALLSCORE = 300;
 function broadcastToAllPlayers(event, ...data) {
 	p1ns.emit(event, ...data)
 	p2ns.emit(event, ...data)
@@ -144,10 +122,7 @@ p1ns.on('connection', socket => {
 	socket.emit('updateName', 1, p1Name)
 	socket.emit('updateName', 2, p2Name)
 	socket.emit('updateName', 3, p3Name)
-
-	socket.on('p1Buzzed', () => {
-		cns.emit('p1Buzzed')
-	})
+	socket.on('p1Buzzed', () => {cns.emit('p1Buzzed')})
 })
 
 p2ns.on('connection', socket => {
@@ -167,10 +142,7 @@ p2ns.on('connection', socket => {
 	socket.emit('updateName', 1, p1Name)
 	socket.emit('updateName', 2, p2Name)
 	socket.emit('updateName', 3, p3Name)
-
-	socket.on('p2Buzzed', () => {
-		cns.emit('p2Buzzed')
-	})
+	socket.on('p2Buzzed', () => {cns.emit('p2Buzzed')})
 })
 
 p3ns.on('connection', socket => {
@@ -190,10 +162,7 @@ p3ns.on('connection', socket => {
 	socket.emit('updateName', 1, p1Name)
 	socket.emit('updateName', 2, p2Name)
 	socket.emit('updateName', 3, p3Name)
-
-	socket.on('p3Buzzed', () => {
-		cns.emit('p3Buzzed')
-	})
+	socket.on('p3Buzzed', () => {cns.emit('p3Buzzed')})
 })
 
 let qnom = -1
@@ -206,26 +175,21 @@ cns.on('connection', socket => {
 		console.log(qnas, qno)
 		hns.emit('qna', qnas, qno)
 		broadcastToAllPlayers('qna', qnas, qno)
-		if (qno >= 10 && qno <= 39) {
-			ovlns.emit('showR2Question', qnas)
-		}
+		if (qno >= 10 && qno <= 39) ovlns.emit('showR2Question', qnas)
 		else if (qno >= 40 && qno <= 49) {
 			bbns.emit('ballCol', qno % 10 + 1)
 			ovlns.emit('qna', qnas, qno)
-			pns.emit('playMusic', '../media/Hiện câu hỏi.mp3')
-			hns.emit('playMusic', '../media/Hiện câu hỏi.mp3')
-			broadcastToAllPlayers('playMusic', '../media/Hiện câu hỏi.mp3')
+			pns.emit('playMusic', '../media/atsddSounds/Hiện câu hỏi.mp3')
+			hns.emit('playMusic', '../media/atsddSounds/Hiện câu hỏi.mp3')
+			broadcastToAllPlayers('playMusic', '../media/atsddSounds/Hiện câu hỏi.mp3')
 		}
 		else ovlns.emit('qna', qnas, qno)
 	})
 
 	socket.on('resetData', () => {
 		fs.writeFile('data.txt', `\n\n\n\n\n`, (err) => {
-			if (err) {
-				console.error('Error writing to file:', err);
-			} else {
-				console.log('Data written to file successfully!');
-			}
+			if (err) console.error('Error writing to file:', err); 
+			else console.log('Data written to file successfully!');
 		})
 		p1Balls = []
 		p2Balls = []
@@ -234,9 +198,7 @@ cns.on('connection', socket => {
 		p2Jackpots = []
 		p3Jackpots = []
 		systemBalls = []
-		for (let i = 1; i <= 50; i++) {
-			systemBalls.push(i);
-		}
+		for (let i = 1; i <= 50; i++)systemBalls.push(i)
 		p1Score = 0
 		p2Score = 0
 		p3Score = 0
@@ -245,16 +207,9 @@ cns.on('connection', socket => {
 		p3Name = ''
 	})
 
-	socket.on('getSystemBalls', () => {
-		cns.emit('getSystemBalls', systemBalls)
-	})
-
-	socket.on('flyDownBalls', col => {
-		bbns.emit('flyDownBalls', col)
-	})
-	socket.on('hideColGpx', () => {
-		bbns.emit('hideColGpx')
-	})
+	socket.on('getSystemBalls', () => cns.emit('getSystemBalls', systemBalls))
+	socket.on('flyDownBalls', col => bbns.emit('flyDownBalls', col))
+	socket.on('hideColGpx', () => bbns.emit('hideColGpx'))
 
 	socket.on('updateTime', (time) => {
 		hns.emit('updateTime', time)
@@ -546,6 +501,10 @@ cns.on('connection', socket => {
 		}
 	})
 
+	socket.on('category',category=>{
+		ovlns.emit('category',category)
+	})
+
 	socket.on('updateName', (p, name) => {
 		if (p == 1) {
 			p1Name = name
@@ -587,8 +546,8 @@ cns.on('connection', socket => {
 	socket.on('p1BuzzEarly', () => {
 		p1ns.emit('buzzEarly')
 		pns.emit('p1BuzzEarly')
-		ovlns.emit('playMusic', '../media/chuông.mp3')
-		hns.emit('playMusic', '../media/chuông.mp3')
+		ovlns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
+		hns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
 	})
 	socket.on('p1BuzzLate', () => {
 		p1ns.emit('buzzLate')
@@ -596,8 +555,8 @@ cns.on('connection', socket => {
 	socket.on('p2BuzzEarly', () => {
 		p2ns.emit('buzzEarly')
 		pns.emit('p2BuzzEarly')
-		ovlns.emit('playMusic', '../media/chuông.mp3')
-		hns.emit('playMusic', '../media/chuông.mp3')
+		ovlns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
+		hns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
 	})
 	socket.on('p2BuzzLate', () => {
 		p2ns.emit('buzzLate')
@@ -605,8 +564,8 @@ cns.on('connection', socket => {
 	socket.on('p3BuzzEarly', () => {
 		p3ns.emit('buzzEarly')
 		pns.emit('p3BuzzEarly')
-		ovlns.emit('playMusic', '../media/chuông.mp3')
-		hns.emit('playMusic', '../media/chuông.mp3')
+		ovlns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
+		hns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
 	})
 	socket.on('p3BuzzLate', () => {
 		p3ns.emit('buzzLate')

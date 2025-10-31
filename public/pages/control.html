@@ -60,7 +60,9 @@
       overflow-x: hidden;
     }
 
-    span {}
+    span {
+      color: white;
+    }
 
     input {
       font-size: 20px;
@@ -257,14 +259,16 @@
       <input type='file' accept='.xlsx' id='fileInput' style='width:300px'>
       <button id='prevQBtn'>Trước</button>
       <button id='nextQBtn'>Sau</button>
-      <button id='showQBtn'>Hiện</button>
-      <button id='hideQBtn'>Ẩn</button>
-      <span id='currentQCounter'>Câu h.tại: </span>
+      <button id='showQBtn'>Hiện CH</button>
+      <button id='hideQBtn'>Ẩn CH</button>
+      <button id='hideQGpxBtn'>Ẩn gpx câu hỏi</button>
+      <span id='currentQCounter' style='color:white;'>Câu h.tại: </span>
       <br>
       <div id='qnaMenu'></div>
     </div>
     <div id='webView'>
-      <iframe src='https://atsdd.onrender.com/host' id='hostIframe'></iframe>
+      <!-- <iframe src='https://atsdd.onrender.com/host' id='hostIframe'></iframe> -->
+      <iframe src='http://localhost:3000/pages/host.html' id='hostIframe'></iframe>
       <!-- <iframe src='http://localhost:3000/gpx' id='gpxIframe' style='opacity:0;'></iframe>
       <iframe src='http://localhost:3000/ballBoard' id='ballBoardIframe' style='opacity:0'></iframe>
       <iframe src='http://localhost:3000/overlay' id='overlayIframe' style='opacity:0'></iframe> -->
@@ -313,7 +317,7 @@
       <tbody>
         <tr>
           <td class='controlLabel' rowspan="3">Bóng</td>
-          <td class='controlLabel'>NC1</td>
+          <td class='controlLabel' id='p1ControlLabel'>NC1</td>
           <td id='p1BallsControl'>
             <input type="text" id="ballForP1" style='width: 15%;' placeholder='Bóng'>
             <button class='addBall'>Thêm</button>
@@ -326,7 +330,7 @@
           </td>
         </tr>
         <tr>
-          <td class='controlLabel'>NC2</td>
+          <td class='controlLabel' id='p2ControlLabel'>NC2</td>
           <td id='p2BallsControl'>
             <input type="text" id="ballForP2" style='width: 15%;' placeholder='Bóng'>
             <button class='addBall'>Thêm</button>
@@ -339,7 +343,7 @@
           </td>
         </tr>
         <tr>
-          <td class='controlLabel'>NC3</td>
+          <td class='controlLabel' id='p3ControlLabel'>NC3</td>
           <td id='p3BallsControl'>
             <input type="text" id="ballForP3" style='width: 15%;' placeholder='Bóng'>
             <button class='addBall'>Thêm</button>
@@ -575,6 +579,7 @@
     let qnas = []
     for (let i = 1; i <= 60; i++) qnas.push({ q: '', a: '', exp: '' })
     let qno = -1
+    let category
 
     let customSounds = ['5s 3 thí sinh', 'Endcap VTV', '60s O10', 'O Sai', 'O Đúng', 'QC VTV 2021', 'ID V3 2023', 'ID HN1', 'QC HN1']
     $(() => {
@@ -600,6 +605,7 @@
       const r2p3Range = XLSX.utils.decode_range('B37:D46');
       const r3Range = XLSX.utils.decode_range('B48:D57');
       const r4Range = XLSX.utils.decode_range('B59:D68');
+      socket.emit('category', sheet[XLSX.utils.encode_cell({ c: 3, r: 57 })].v)
 
       let ranges = [r1Range, r2p1Range, r2p2Range, r2p3Range, r3Range, r4Range]
       let index = 0;
@@ -694,12 +700,9 @@
 
     let ballCol = 0
     let ballsInColToAdd = []
-    function emitFlyDownBalls(col) {
-      socket.emit('flyDownBalls', col)
-    }
     function chooseQ(n) {
       qno = n
-      $('.addBall').off('click', () => emitFlyDownBalls(ballCol))
+      $('.addBall').off('click', () => socket.emit('flyDownBalls', ballCol))
       $('#currentQCounter').text('Câu h.tại: ' + (qno + 1))
       console.log(qnas[qno])
       socket.emit('qna', qnas[qno], qno)
@@ -709,7 +712,7 @@
         $('#ballForP3').val('')
         ballsInColToAdd = []
         ballCol = qno - 40 + 1
-        $('.addBall').on('click', () => emitFlyDownBalls(ballCol))
+        $('.addBall').on('click', () => socket.emit('flyDownBalls', ballCol))
         let sysBalls = []
         fetch('https://atsdd.onrender.com/systemBalls').then(res => res.json()).then(data => {
           sysBalls = data
@@ -987,7 +990,7 @@
       if (buzzed.length == 1) {
         console.log(buzzed)
         socket.emit('p1BuzzEarly', buzzed)
-        $('#p1BallsControl .controlLabel').css('background-color', 'green')
+        $('#p1ControlLabel').css('background-color', 'green')
         if (qno >= 40 && qno <= 49) {
           let ballsString = ballsInColToAdd.join(',')
           console.log(ballsString)
@@ -1001,7 +1004,7 @@
       updateBuzzPosition()
       if (buzzed.length == 1) {
         socket.emit('p2BuzzEarly')
-        $('#p2BallsControl .controlLabel').css('background-color', 'green')
+        $('#p2ControlLabel').css('background-color', 'green')
         if (qno >= 40 && qno <= 49) {
           let ballsString = ballsInColToAdd.join(',')
           console.log(ballsString)
@@ -1015,7 +1018,7 @@
       updateBuzzPosition()
       if (buzzed.length == 1) {
         socket.emit('p3BuzzEarly')
-        $('#p3BallsControl .controlLabel').css('background-color', 'green')
+        $('#p3ControlLabel').css('background-color', 'green')
         if (qno >= 40 && qno <= 49) {
           let ballsString = ballsInColToAdd.join(',')
           console.log(ballsString)
@@ -1031,17 +1034,17 @@
     $('#resetBuzzer').on('click', () => {
       socket.emit('buzzer', 'reset')
       buzzed = []
-      $('#p1BallsControl .controlLabel').css('background-color', 'white')
-      $('#p2BallsControl .controlLabel').css('background-color', 'white')
-      $('#p3BallsControl .controlLabel').css('background-color', 'white')
+      $('#p1ControlLabel').css('background-color', 'white')
+      $('#p2ControlLabel').css('background-color', 'white')
+      $('#p3ControlLabel').css('background-color', 'white')
     })
     $('#resetThenOpenBuzzer').on('click', () => {
       socket.emit('buzzer', 'reset')
       socket.emit('buzzer', 'open')
       buzzed = []
-      $('#p1BallsControl .controlLabel').css('background-color', 'white')
-      $('#p2BallsControl .controlLabel').css('background-color', 'white')
-      $('#p3BallsControl .controlLabel').css('background-color', 'white')
+      $('#p1ControlLabel').css('background-color', 'white')
+      $('#p2ControlLabel').css('background-color', 'white')
+      $('#p3ControlLabel').css('background-color', 'white')
     })
 
     //webs control
@@ -1053,37 +1056,13 @@
     })
     $('#introduceBalls').on('click', () => {
       socket.emit('introduceBalls')
+      socket.emit('playMusic', '../media/atsddSounds/GT luật chơi.mp3')
     })
-    $('#flyDownCol1').on('click', () => {
-      socket.emit('flyDownBalls', 1)
-    })
-    $('#flyDownCol2').on('click', () => {
-      socket.emit('flyDownBalls', 2)
-    })
-    $('#flyDownCol3').on('click', () => {
-      socket.emit('flyDownBalls', 3)
-    })
-    $('#flyDownCol4').on('click', () => {
-      socket.emit('flyDownBalls', 4)
-    })
-    $('#flyDownCol5').on('click', () => {
-      socket.emit('flyDownBalls', 5)
-    })
-    $('#flyDownCol6').on('click', () => {
-      socket.emit('flyDownBalls', 6)
-    })
-    $('#flyDownCol7').on('click', () => {
-      socket.emit('flyDownBalls', 7)
-    })
-    $('#flyDownCol8').on('click', () => {
-      socket.emit('flyDownBalls', 8)
-    })
-    $('#flyDownCol9').on('click', () => {
-      socket.emit('flyDownBalls', 9)
-    })
-    $('#flyDownCol10').on('click', () => {
-      socket.emit('flyDownBalls', 10)
-    })
+    for (let i = 1; i <= 10; i++) {
+      $(`#flyDownCol${i}`).on('click', () => {
+        socket.emit('flyDownBalls', i)
+      })
+    }
     $('#hideColGpx').on('click', () => {
       socket.emit('hideColGpx')
     })
@@ -1269,7 +1248,7 @@
     $('#showQGpx').on('click', () => {
       socket.emit('showQGpx', qnas[qno], qno)
     })
-    $('#hideQGpx').on('click', () => {
+    $('#hideQGpx,#hideQGpxBtn').on('click', () => {
       socket.emit('hideQGpx')
     })
     $('#showR2Gpx').on('click', () => {

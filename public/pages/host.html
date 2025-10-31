@@ -494,6 +494,10 @@
       sounds = []
     })
 
+    socket.on('showCategory', category => {
+      $('#qno').text('Chủ đề: ' + category)
+    })
+
     socket.on('glowBall', (ball) => {
       $(`#glow` + ball).css('opacity', '1')
     })
@@ -581,13 +585,10 @@
     socket.on('showPInfo', (playerName) => {
       $('#first').text(`Đang trả lời: ${playerName}`)
       $('#second').text('Thời gian: ')
-      $('#third').html(`<span style='color:green'>Đúng</span>/<span style='color:red'>Sai</span>/<span style='color:yellow'>Bỏ qua</span>:<br>
-                      1 2 3 4 5 6 7 8 9 10`)
+      $('#third').html(`<span style='color:green'>Đúng</span>/<span style='color:red'>Sai</span>/<span style='color:yellow'>Bỏ qua</span>:<br>1 2 3 4 5 6 7 8 9 10`)
     })
 
-    socket.on('updateTime', (time) => {
-      $('#second').text(`Thời gian: ${time}`)
-    })
+    socket.on('updateTime', (time) => $('#second').text(`Thời gian: ${time}`))
 
     let ans1Color = '<span style="color:white">1 <span> </span></span>'
     let ans2Color = '<span style="color:white">2 <span> </span></span>'

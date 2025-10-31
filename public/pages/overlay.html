@@ -44,7 +44,7 @@
 
     .question {
       font-family: 'MyriadPro-SemiCondBold';
-      font-size: 36px;
+      font-size: 33px;
       color: white;
       text-shadow: 4px 4px 2px #000000
     }
@@ -314,6 +314,12 @@
       font-family: 'Geomanist-Black';
       font-size: 80px;
     }
+
+    #lightTop,
+    #lightBot {
+      position: absolute;
+      opacity: 0;
+    }
   </style>
   <video id='hiddenPreload' preload='auto' src='../media/waitAnim_orbit.webm' style='display:none;'></video>
   <div id='round13'>
@@ -343,7 +349,10 @@
     <span id='qbvPrizeText'>QUẢ BÓNG VÀNG</span>
     <span id='qbvPrizeNum'>5.000 CG / QUẢ</span>
   </div>
-  
+
+  <img src='../media/light.png' id='lightTop'>
+  <img src='../media/light.png' id='lightBot'>
+
   <!--<video src='../media/jackpot_5_balls.webm' id='jackpotRolling'></video>
   <div id='jackpotBallsContainer'>
     <div id='jackpotBall1Container'>
@@ -375,25 +384,29 @@
     let r2GpxVideo = document.querySelector('#round2 video')
     let r4GpxVideo = document.querySelector('#round4 video')
     let jackpotRulesVideo = document.querySelector('#jackpotRulesContainer video')
-    
-    let cat = 'Viễn thông'
-    
+
+    let cat
+    socket.on('category', category => cat = category)
+
     socket.on('qna', (qnas, qno) => {
       qno++
       console.log(qnas, qno);
       if (qno >= 1 && qno <= 10) {
         r13GpxVideo.play();
         $('#round13 video').css('opacity', 1);
+        setTimeout(() => { animateLightR134() }, 700)
         setTimeout(() => {
           $('#round13 .qInfo').css('opacity', 1);
           $('#round13 .question').css('opacity', 1);
           $('#round13 .qInfo').text(`VÒNG 1 - CÂU ${qno}`);
           $('#round13 .question').text(qnas.q);
+
         }, 850)
       }
       else if (qno >= 41 && qno <= 50) {
         r13GpxVideo.play();
         $('#round13 video').css('opacity', 1);
+        setTimeout(() => { animateLightR134() }, 700)
         setTimeout(() => {
           $('#round13 .qInfo').css('opacity', 1);
           $('#round13 .question').css('opacity', 1);
@@ -404,6 +417,7 @@
       else if (qno >= 51 && qno <= 60) {
         r4GpxVideo.play();
         $('#round4 video').css('opacity', 1);
+        setTimeout(() => animateLightR134(), 700)
         setTimeout(() => {
           $('#round4 .qInfo').css('opacity', 1);
           $('#round4 .category').css('opacity', 1);
@@ -427,11 +441,16 @@
       $('#round4 .category').css('opacity', 0);
       $('#round4 .question').css('opacity', 0);
       $('.ballsSequence img').css('opacity', 0);
-      setTimeout(()=>{
-        r2GpxVideo.currentTime=0
-        r13GpxVideo.currentTime=0
-        r4GpxVideo.currentTime=0
-      },250)
+      //stop current light animation
+      $('#lightTop').stop(true)
+      $('#lightBot').stop(true)
+      $('#lightTop').animate({ opacity: 0 }, 200);
+      $('#lightBot').animate({ opacity: 0 }, 200);
+      setTimeout(() => {
+        r2GpxVideo.currentTime = 0
+        r13GpxVideo.currentTime = 0
+        r4GpxVideo.currentTime = 0
+      }, 250)
     })
     socket.on('showR2Gpx', () => {
       $('.ballsSequence').html(`
@@ -449,34 +468,40 @@
       r2GpxVideo.play();
       $('#round2 video').css('opacity', 1);
       $('.ballsSequence').css('opacity', 1);
+      setTimeout(() => animateLightR2(), 700)
       setTimeout(() => {
         $('.time').css('opacity', 1);
-        $('.ballsSequence img').each((i, el) => {
-          setTimeout(() => {
-            $(el).css('opacity', 1);
-          }, i * 50);
-        })
+        $('.ballsSequence img').each((i, el) => setTimeout(() => $(el).css('opacity', 1), i * 50))
       }, 900)
     })
     socket.on('showR2Question', (question) => {
       $('#round2 .question').text(question.q);
       $('#round2 .question').css('opacity', 1);
     })
-    socket.on('hideR2Question', () => {
-      $('#round2 .question').css('opacity', 0);
-    })
+    socket.on('hideR2Question', () => $('#round2 .question').css('opacity', 0))
     socket.on('updateAnsStatus', (stat, i) => {
       i++
-      if (stat == 'correct') {
-        $(`.slot${i}`).prop('src', `../media/correctBall r2.png`)
-      }
-      else if (stat == 'wrong') {
-        $(`.slot${i}`).prop('src', `../media/wrongBall r2.png`)
-      }
-      else if (stat == 'pass') {
-        $(`.slot${i}`).prop('src', `../media/passed.png`)
-      }
+      if (stat == 'correct') $(`.slot${i}`).prop('src', `../media/correctBall r2.png`)
+      else if (stat == 'wrong') $(`.slot${i}`).prop('src', `../media/wrongBall r2.png`)
+      else if (stat == 'pass') $(`.slot${i}`).prop('src', `../media/passed.png`)
     })
+
+    function animateLightR134() {
+      $('#lightTop').css({ width: '1390px', top: '766px', left: '60px', })
+      $('#lightBot').css({ width: '1390px', top: '907px', left: '520px', })
+      $('#lightTop').animate({ opacity: 1, }, 200);
+      $('#lightBot').animate({ opacity: 1, }, 200);
+      $('#lightTop').animate({ left: "520px", }, 20000);
+      $('#lightBot').animate({ left: "60px", }, 20000);
+    }
+    function animateLightR2() {
+      $('#lightTop').css({ width: '1390px', top: '734px', left: '60px', })
+      $('#lightBot').css({ width: '1390px', top: '872px', left: '520px', })
+      $('#lightTop').animate({ opacity: 1, }, 200);
+      $('#lightBot').animate({ opacity: 1, }, 200);
+      $('#lightTop').animate({ left: "520px", }, 70000);
+      $('#lightBot').animate({ left: "60px", }, 70000);
+    }
 
     function playFromTo(from, to) {
       jackpotRulesVid.currentTime = from;
@@ -490,61 +515,61 @@
       };
       jackpotRulesVid.addEventListener('timeupdate', stopVideo);
     }
-    function show3BallsPrizeText(){
+    function show3BallsPrizeText() {
       console.log('event add')
       setTimeout(() => {
         $('#threeBallsPrizeText').css('opacity', 1);
         $('#threeBallsPrizeNum').css('opacity', 1);
       }, 600)
     }
-    function show5BallsPrizeText(){
+    function show5BallsPrizeText() {
       setTimeout(() => {
         $('#fiveBallsPrizeText').css('opacity', 1);
         $('#fiveBallsPrizeNum').css('opacity', 1);
       }, 900)
     }
-    function showQbvPrizeText(){
+    function showQbvPrizeText() {
       setTimeout(() => {
         $('#qbvPrizeText').css('opacity', 1);
         $('#qbvPrizeNum').css('opacity', 1);
       }, 1200)
     }
-    
+
     socket.on('anim_3BallsJackpotted', () => {
       jackpotRulesVid.style.opacity = 1;
       playFromTo(0, 0.7);
     })
     socket.on('anim_3BallsPrize', () => {
       playFromTo(1.1, 1.7);
-      jackpotRulesVid.addEventListener('play',show3BallsPrizeText)
-      
+      jackpotRulesVid.addEventListener('play', show3BallsPrizeText)
+
     })
     socket.on('anim_5BallsJackpotted', () => {
-      jackpotRulesVid.removeEventListener('play',show3BallsPrizeText)
+      jackpotRulesVid.removeEventListener('play', show3BallsPrizeText)
       $('#threeBallsPrizeText').css('opacity', 0);
       $('#threeBallsPrizeNum').css('opacity', 0);
       playFromTo(2.1, 2.7);
     })
     socket.on('anim_5BallsPrize', () => {
       playFromTo(3.1, 3.6);
-      jackpotRulesVid.addEventListener('play',show5BallsPrizeText)
+      jackpotRulesVid.addEventListener('play', show5BallsPrizeText)
     })
     socket.on('anim_QbvPrize', () => {
-      jackpotRulesVid.removeEventListener('play',show5BallsPrizeText)
+      jackpotRulesVid.removeEventListener('play', show5BallsPrizeText)
       $('#fiveBallsPrizeText').css('opacity', 0);
       $('#fiveBallsPrizeNum').css('opacity', 0);
       playFromTo(3.8, 5);
-      jackpotRulesVid.addEventListener('play',showQbvPrizeText)
+      jackpotRulesVid.addEventListener('play', showQbvPrizeText)
     })
     socket.on('anim_fadeOutJackpotRules', () => {
-      jackpotRulesVid.removeEventListener('play',showQbvPrizeText)
+      jackpotRulesVid.removeEventListener('play', showQbvPrizeText)
       jackpotRulesVid.style.opacity = 0;
       $('#qbvPrizeText').css('opacity', 0);
       $('#qbvPrizeNum').css('opacity', 0);
     })
 
     let sounds = [];
-    let blockedSounds = ['../media/60s vòng 2.mp3', '../media/nhạc giao lưu trong vòng 2.mp3', '../media/nhạc nền quay bóng.mp3']
+    let blockedSounds = ['../media/atsddSounds/60s vòng 2.mp3', '../media/atsddSounds/nhạc giao lưu trong vòng 2.mp3', '../media/atsddSounds/nhạc nền quay bóng.mp3']
     socket.on('playMusic', (url) => {
       if (blockedSounds.includes(url)) return
       sound = new Howl({
@@ -557,20 +582,16 @@
     socket.on('stopMusic', () => {
       sounds.forEach(sound => {
         sound.fade(1, 0, 1000)
-        setTimeout(() => {
-          sound.stop()
-        }, 1000)
+        setTimeout(() => sound.stop(), 1000)
       })
       sounds = []
     })
 
-    socket.on('updateTime', (time) => {
-      $('.time').text(time);
+    socket.on('updateTime', (time) => $('.time').text(time))
+    socket.on('stopTime', () => {
+
     })
-    socket.on('stopTime',()=>{
-      
-    })
-    
+
     /*jackpot round
     let jackpotRollingVideo = document.querySelector('#jackpotRolling')
     let animation = 'orbit';
