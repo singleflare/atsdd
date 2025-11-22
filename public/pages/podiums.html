@@ -30,11 +30,12 @@
     }
 
     .ball {
-      transition: all 0.25s linear;
+      transition: all 0.5s linear;
       filter: drop-shadow(2px 2px 2px);
     }
 
     #podium1InnerNoWhite,
+    #podium1InnerLighterNoWhite,
     #podium1InnerBuzzedNoWhite,
     #podium1InnerWhite,
     #podium1InnerStop,
@@ -45,6 +46,7 @@
     }
 
     #podium2InnerNoWhite,
+    #podium2InnerLighterNoWhite,
     #podium2InnerBuzzedNoWhite,
     #podium2InnerWhite,
     #podium2InnerStop,
@@ -55,6 +57,7 @@
     }
 
     #podium3InnerNoWhite,
+    #podium3InnerLighterNoWhite,
     #podium3InnerBuzzedNoWhite,
     #podium3InnerWhite,
     #podium3InnerStop,
@@ -65,6 +68,7 @@
     }
 
     .podiumInnerWhite,
+    .podiumInnerLighterNoWhite,
     .podiumInnerBuzzedNoWhite,
     .podiumInnerStop,
     .podiumInnerCg {
@@ -132,6 +136,8 @@
   <img src='../media/playerPodiumInnerNoWhite.png' id='podium1InnerNoWhite' class='podiumInnerNoWhite'>
   <img src='../media/playerPodiumInnerNoWhiteBuzzed.png' id='podium1InnerBuzzedNoWhite'
     class='podiumInnerBuzzedNoWhite'>
+  <img src='../media/playerPodiumInnerNoWhiteLighter.png' id='podium1InnerLighterNoWhite'
+    class='podiumInnerLighterNoWhite'>
   <img src='../media/playerPodiumInnerStop.png' id='podium1InnerStop' class='podiumInnerStop'>
   <img src='../media/playerPodiumInnerCg.png' id='podium1InnerCg' class='podiumInnerCg'>
 
@@ -139,6 +145,8 @@
   <img src='../media/playerPodiumInnerNoWhite.png' id='podium2InnerNoWhite' class='podiumInnerNoWhite'>
   <img src='../media/playerPodiumInnerNoWhiteBuzzed.png' id='podium2InnerBuzzedNoWhite'
     class='podiumInnerBuzzedNoWhite'>
+  <img src='../media/playerPodiumInnerNoWhiteLighter.png' id='podium2InnerLighterNoWhite'
+    class='podiumInnerLighterNoWhite'>
   <img src='../media/playerPodiumInnerStop.png' id='podium2InnerStop' class='podiumInnerStop'>
   <img src='../media/playerPodiumInnerCg.png' id='podium2InnerCg' class='podiumInnerCg'>
 
@@ -146,6 +154,8 @@
   <img src='../media/playerPodiumInnerNoWhite.png' id='podium3InnerNoWhite' class='podiumInnerNoWhite'>
   <img src='../media/playerPodiumInnerNoWhiteBuzzed.png' id='podium3InnerBuzzedNoWhite'
     class='podiumInnerBuzzedNoWhite'>
+  <img src='../media/playerPodiumInnerNoWhiteLighter.png' id='podium3InnerLighterNoWhite'
+    class='podiumInnerLighterNoWhite'>
   <img src='../media/playerPodiumInnerStop.png' id='podium3InnerStop' class='podiumInnerStop'>
   <img src='../media/playerPodiumInnerCg.png' id='podium3InnerCg' class='podiumInnerCg'>
 
@@ -179,6 +189,8 @@
         else if (state == 'buzzed') {
           $('#podium1InnerWhite').css('opacity', '0')
           $('#podium1InnerNoWhite').css('opacity', '0')
+          $('#podium1InnerLighterNoWhite').css('opacity', '1')
+          $('#podium1InnerLighterNoWhite').animate({ opacity: 0 }, 1000)
           $('#podium1InnerBuzzedNoWhite').css('opacity', '1')
           $('#podium1InnerStop').css('opacity', '0')
           $('#podium1InnerCg').css('opacity', '0')
@@ -216,6 +228,8 @@
         else if (state == 'buzzed') {
           $('#podium2InnerWhite').css('opacity', '0')
           $('#podium2InnerNoWhite').css('opacity', '0')
+          $('#podium2InnerLighterNoWhite').css('opacity', '1')
+          $('#podium2InnerLighterNoWhite').animate({ opacity: 0 }, 1000)
           $('#podium2InnerBuzzedNoWhite').css('opacity', '1')
           $('#podium2InnerStop').css('opacity', '0')
           $('#podium2InnerCg').css('opacity', '0')
@@ -253,6 +267,8 @@
         else if (state == 'buzzed') {
           $('#podium3InnerWhite').css('opacity', '0')
           $('#podium3InnerNoWhite').css('opacity', '0')
+          $('#podium3InnerLighterNoWhite').css('opacity', '1')
+          $('#podium3InnerLighterNoWhite').animate({ opacity: 0 }, 1000)
           $('#podium3InnerBuzzedNoWhite').css('opacity', '1')
           $('#podium3InnerStop').css('opacity', '0')
           $('#podium3InnerCg').css('opacity', '0')
@@ -301,8 +317,8 @@
     let podium1StartingJackpotXY = { x: 215, y: 445 }
     let podium2StartingJackpotXY = { x: 793, y: 445 }
     let podium3StartingJackpotXY = { x: 1378, y: 445 }
-    let ballSize = 61
-    let ballGap = 7
+    let ballSize = 58
+    let ballGap = 8
     let p1Balls = []
     let p2Balls = []
     let p3Balls = []
@@ -317,7 +333,7 @@
     let p3JackpotCoords = []
 
     //generate coords
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 50; i++) {
       p1Coords.push({ x: (podium1StartingBallXY.x + i % 5 * (ballSize + ballGap)), y: (podium1StartingBallXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
       p2Coords.push({ x: (podium2StartingBallXY.x + i % 5 * (ballSize + ballGap)), y: (podium2StartingBallXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
       p3Coords.push({ x: (podium3StartingBallXY.x + i % 5 * (ballSize + ballGap)), y: (podium3StartingBallXY.y + Math.floor(i / 5) * (ballSize + ballGap)) })
@@ -411,19 +427,17 @@
             p1Balls.sort((a, b) => a - b)
             $('body').append(
               `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
-                style='
-                position:absolute;
-                left:${podium1StartingBallXY.x + (p1Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
-                top:${podium1StartingBallXY.y + Math.floor((p1Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
-                width:${ballSize}px;
-                scale:0';>
-                `)
+              style='
+              position:absolute;
+              left:${podium1StartingBallXY.x + (p1Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+              top:${podium1StartingBallXY.y + Math.floor((p1Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+              width:${ballSize}px;
+              scale:0';>
+              `)
             setTimeout(() => {
               updateCoordinates(1)
-              setTimeout(() => {
-                $(`#ball${ball}`).css('scale', '1')
-              }, 100)
-            }, 1000)
+              $(`#ball${ball}`).css('scale', '1')
+            }, 1200)
           }
           else if (p2Balls.includes(ball)) {
             p2Balls = p2Balls.filter(b => b != ball)
@@ -446,17 +460,17 @@
             p2Balls.sort((a, b) => a - b)
             $('body').append(
               `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
-              style='
-              position:absolute;
-              left:${podium2StartingBallXY.x + (p2Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
-              top:${podium2StartingBallXY.y + Math.floor((p2Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
-              width:${ballSize}px;
-              scale:0';>
-              `)
+            style='
+            position:absolute;
+            left:${podium2StartingBallXY.x + (p2Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+            top:${podium2StartingBallXY.y + Math.floor((p2Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+            width:${ballSize}px;
+            scale:0';>
+            `)
             setTimeout(() => {
               updateCoordinates(2)
               $(`#ball${ball}`).css('scale', '1')
-            }, 1000)
+            }, 1200)
           }
           else if (p1Balls.includes(ball)) {
             p1Balls = p1Balls.filter(b => b != ball)
@@ -479,17 +493,17 @@
             p3Balls.sort((a, b) => a - b)
             $('body').append(
               `<img src='../media/${ball}.png' class='ball' id='ball${ball}'
-                style='
-                position:absolute;
-                left:${podium3StartingBallXY.x + (p3Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
-                top:${podium3StartingBallXY.y + Math.floor((p3Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
-                width:${ballSize}px;
-                scale:0';>
-                `)
+              style='
+              position:absolute;
+              left:${podium3StartingBallXY.x + (p3Balls.indexOf(ball)) % 5 * (ballSize + ballGap)}px;
+              top:${podium3StartingBallXY.y + Math.floor((p3Balls.indexOf(ball)) / 5) * (ballSize + ballGap)}px;
+              width:${ballSize}px;
+              scale:0';>
+              `)
             setTimeout(() => {
               updateCoordinates(3)
               $(`#ball${ball}`).css('scale', '1')
-            }, 1000)
+            }, 1200)
           }
           else if (p1Balls.includes(ball)) {
             p1Balls = p1Balls.filter(b => b != ball)

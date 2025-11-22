@@ -194,8 +194,9 @@
       }
     }
   </style>
-  <img id='logo' src='../media/logoBgWithBg.png' style='position:absolute;z-index: 2'>
-  <img src='../media/ballBoard.png' style='width:1920px;'>
+  <img id='logo' src='../media/logoBgWithBg.png' style='position:absolute;z-index: 3'>
+  <img src='../media/ballBoard.png' id='ballBoardImg' style='width:1920px;position: absolute;z-index: 2;'>
+  <img src='../media/ballBoard.png' style='width:1920px;z-index: 1;'>
   <div id='balls'>
     <img src='../media/1.png' id='ball1'>
     <img src='../media/2.png' id='ball2'>
@@ -315,28 +316,36 @@
       sound.play()
     }
     socket.on('showLogo', () => {
-      $('#logo').removeClass('fadeOut')
-      $('#logo').addClass('fadeIn')
-      $('#logo').css('opacity', 1)
+      // $('#logo').removeClass('fadeOut')
+      // $('#logo').addClass('fadeIn')
+      // $('#logo').css('opacity', 1)
+      $('#logo').animate({ opacity: 1 }, 500)
+      $('#ballBoardImg').animate({ opacity: 1 }, 500)
     })
     socket.on('hideLogo', () => {
-      $('#logo').removeClass('fadeIn')
-      $('#logo').addClass('fadeOut')
-      $('#logo').css('opacity', 0)
+      // $('#logo').removeClass('fadeIn')
+      // $('#logo').addClass('fadeOut')
+      // $('#logo').css('opacity', 0)
+      $('#logo').animate({ opacity: 0 }, 500)
+      setTimeout(() => {
+        $('#ballBoardImg').animate({ opacity: 0 }, 500)
+      }, 2000)
     })
     socket.on('introduceBalls', () => {
-      $('#logo').addClass('fadeOut')
+      $('#ballBoardImg').animate({ opacity: 0 }, 500)
+      //$('#logo').addClass('fadeOut')
+      $('#logo').animate({ opacity: 0 }, 500)
       let i = 1;
       setTimeout(() => {
         setInterval(() => {
           $('#ball' + i).addClass('appear');
           i++;
         }, 60)
-      }, 1000)
+      }, 2000)
       setTimeout(() => {
         $('#balls img').removeClass('appear')
         $('#balls img').css('opacity', 1)
-      }, 1000 + 60 * 50)
+      }, 2000 + 60 * 50)
     })
     socket.on('removeBall', (ball) => {
       console.log(ball)

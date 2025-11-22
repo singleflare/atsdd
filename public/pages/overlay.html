@@ -394,7 +394,7 @@
       if (qno >= 1 && qno <= 10) {
         r13GpxVideo.play();
         $('#round13 video').css('opacity', 1);
-        setTimeout(() => { animateLightR134() }, 700)
+        //setTimeout(() => { animateLightR134() }, 700)
         setTimeout(() => {
           $('#round13 .qInfo').css('opacity', 1);
           $('#round13 .question').css('opacity', 1);
@@ -406,7 +406,7 @@
       else if (qno >= 41 && qno <= 50) {
         r13GpxVideo.play();
         $('#round13 video').css('opacity', 1);
-        setTimeout(() => { animateLightR134() }, 700)
+        //setTimeout(() => { animateLightR134() }, 700)
         setTimeout(() => {
           $('#round13 .qInfo').css('opacity', 1);
           $('#round13 .question').css('opacity', 1);
@@ -417,7 +417,7 @@
       else if (qno >= 51 && qno <= 60) {
         r4GpxVideo.play();
         $('#round4 video').css('opacity', 1);
-        setTimeout(() => animateLightR134(), 700)
+        //setTimeout(() => animateLightR134(), 700)
         setTimeout(() => {
           $('#round4 .qInfo').css('opacity', 1);
           $('#round4 .category').css('opacity', 1);
@@ -468,7 +468,7 @@
       r2GpxVideo.play();
       $('#round2 video').css('opacity', 1);
       $('.ballsSequence').css('opacity', 1);
-      setTimeout(() => animateLightR2(), 700)
+      //setTimeout(() => animateLightR2(), 700)
       setTimeout(() => {
         $('.time').css('opacity', 1);
         $('.ballsSequence img').each((i, el) => setTimeout(() => $(el).css('opacity', 1), i * 50))
@@ -569,7 +569,7 @@
     })
 
     let sounds = [];
-    let blockedSounds = ['../media/atsddSounds/60s vòng 2.mp3', '../media/atsddSounds/nhạc giao lưu trong vòng 2.mp3', '../media/atsddSounds/nhạc nền quay bóng.mp3']
+    let blockedSounds = ['../media/atsddSounds/60s vòng 2.mp3', '../media/atsddSounds/nhạc giao lưu trong vòng 2.mp3', '../media/atsddSounds/nhạc nền quay bóng.mp3', '../media/atsddSounds/end round.mp3', '../media/atsddSounds/GT luật chơi.mp3', '../media/atsddSounds/hết giờ.mp3', '../media/atsddSounds/host entrance.mp3', '../media/atsddSounds/nhạc credit.mp3', '../media/atsddSounds/end round.mp3']
     socket.on('playMusic', (url) => {
       if (blockedSounds.includes(url)) return
       sound = new Howl({

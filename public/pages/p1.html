@@ -114,7 +114,7 @@
     <img src='../media/glow2.png' id='glow49'>
     <img src='../media/glow2.png' id='glow50'>
   </div>
-  <button class='idle' disabled style='pointer-events:initial;'>Buzzer</button>
+  <button class='idle' disabled style='pointer-events:initial;'>Chuông</button>
   <img src='../media/qPanePlayer.png' id='qPane'>
   <div id='qno'></div>
   <div id='question'></div>
@@ -236,6 +236,9 @@
     })
     socket.on('buzzerBtnText', (text) => {
       $('button').text('Buzzer')
+    })
+    socket.on('resetGame', () => {
+      resetData()
     })
   </script>
 </body>

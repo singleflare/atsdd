@@ -37,14 +37,14 @@ const hns = ioServer.of(`${config.hostRoute}`)
 const bbns = ioServer.of(`${config.ballBoardRoute}`)
 const ovlns = ioServer.of(`${config.overlayRoute}`)
 
-console.log(`http://localhost:3000${config.p1Route}`)
-console.log(`http://localhost:3000${config.p2Route}`)
-console.log(`http://localhost:3000${config.p3Route}`)
-console.log(`http://localhost:3000${config.controllerRoute}`)
-console.log(`http://localhost:3000${config.podiumsRoute}`)
-console.log(`http://localhost:3000${config.hostRoute}`)
-console.log(`http://localhost:3000${config.ballBoardRoute}`)
-console.log(`http://localhost:3000${config.overlayRoute}`)
+console.log(`http://localhost:3000/pages/p1.html`)
+console.log(`http://localhost:3000/pages/p2.html`)
+console.log(`http://localhost:3000/pages/p3.html`)
+console.log(`http://localhost:3000/pages/ballBoard.html`)
+console.log(`http://localhost:3000/pages/control.html`)
+console.log(`http://localhost:3000/pages/overlay.html`)
+console.log(`http://localhost:3000/pages/host.html`)
+console.log(`http://localhost:3000/pages/podiums.html`)
 
 //logics
 let systemBalls = [];
@@ -205,6 +205,7 @@ cns.on('connection', socket => {
 		p1Name = ''
 		p2Name = ''
 		p3Name = ''
+		broadcastToAllPlayers('resetGame')
 	})
 
 	socket.on('getSystemBalls', () => cns.emit('getSystemBalls', systemBalls))

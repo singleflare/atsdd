@@ -34,7 +34,10 @@ function resetBalls() {
   $('#p3Balls').empty()
 }
 function resetData() {
-  
+  $('#p1Balls .ball').remove()
+  $('#p2Balls .ball').remove()
+  $('#p3Balls .ball').remove()
+  $('#systemBallGrid .ball').css('opacity', 1)
 }
 
 function updateBall(mode, p, ball) {
