@@ -261,7 +261,7 @@
       <button id='nextQBtn'>Sau</button>
       <button id='showQBtn'>Hiện CH</button>
       <button id='hideQBtn'>Ẩn CH</button>
-      <button id='hideQGpxBtn'>Ẩn gpx câu hỏi</button>
+      <button id='hideQGpxAndQBtn'>Ẩn gpx câu hỏi & Câu hỏi</button>
       <span id='currentQCounter' style='color:white;'>Câu h.tại: </span>
       <br>
       <div id='qnaMenu'></div>
@@ -632,6 +632,7 @@
         $('#qnaMenu').append(`<button id='q${i + 1}'> ${i + 1}. ${qnas[i].q} (${qnas[i].a}) </button>`)
         $(`#q${i + 1}`).on('click', () => {
           chooseQ(i)
+          socket.emit('showQ')
         })
       }
     })
@@ -1248,8 +1249,12 @@
     $('#showQGpx').on('click', () => {
       socket.emit('showQGpx', qnas[qno], qno)
     })
-    $('#hideQGpx,#hideQGpxBtn').on('click', () => {
+    $('#hideQGpx').on('click', () => {
       socket.emit('hideQGpx')
+    })
+    $('#hideQGpxAndQBtn').on('click', () => {
+      socket.emit('hideQGpx')
+      socket.emit('hideQ')
     })
     $('#showR2Gpx').on('click', () => {
       socket.emit('showR2Gpx')
