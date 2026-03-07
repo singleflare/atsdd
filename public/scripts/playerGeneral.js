@@ -101,7 +101,7 @@ function updateName(p, name) {
 
 function armBuzzer() {
   console.log('armBuzzer')
-  $('button').text('Buzzer')
+  $('button').text('Chuông')
   $('button').removeClass()
   $('button').addClass('ready')
   $('button').prop('disabled', false)

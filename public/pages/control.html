@@ -9,11 +9,6 @@
 
 <body>
   <style>
-    * {
-      font-family: lexend;
-      box-sizing: border-box;
-    }
-
     @font-face {
       font-family: utm_impact;
       src: url('./media/UTM-Impact.ttf');
@@ -23,6 +18,12 @@
       font-family: lexend;
       src: url('./media/Lexend-Regular.ttf');
     }
+
+    * {
+      font-family: lexend;
+      box-sizing: border-box;
+    }
+
 
     button {
       font-size: 20px;
@@ -252,6 +253,14 @@
       display: flex;
       flex-direction: column;
     }
+
+    #coloredRed,
+    #coloredBlue,
+    #coloredGreen,
+    #coloredPink,
+    #coloredYellow {
+      width: 40px;
+    }
   </style>
   <div id='wholePage'>
     <div id='questionControl' class='controlContainer'>
@@ -267,7 +276,7 @@
       <div id='qnaMenu'></div>
     </div>
     <div id='webView'>
-      <iframe src='https://atsdd.onrender.com/pages/host.html' id='hostIframe'></iframe>
+      <iframe src='./host.html' id='hostIframe'></iframe>
       <!-- <iframe src='http://localhost:3000/pages/host.html' id='hostIframe'></iframe> -->
       <!-- <iframe src='http://localhost:3000/gpx' id='gpxIframe' style='opacity:0;'></iframe>
       <iframe src='http://localhost:3000/ballBoard' id='ballBoardIframe' style='opacity:0'></iframe>
@@ -281,11 +290,11 @@
           <td>
             <button id='coloredAll'>All</button>
             <button id='coloredNone'>None</button>
-            <button id='coloredRed'>Đ</button>
-            <button id='coloredBlue'>XD</button>
-            <button id='coloredGreen'>XL</button>
-            <button id='coloredPink'>H</button>
-            <button id='coloredYellow'>V</button>
+            <img src='../media/redBall.png' id='coloredRed'>
+            <img src='../media/blueBall.png' id='coloredBlue'>
+            <img src='../media/greenBall.png' id='coloredGreen'>
+            <img src='../media/pinkBall.png' id='coloredPink'>
+            <img src='../media/yellowBall.png' id='coloredYellow'>
           </td>
         </tr>
         <tr>
@@ -583,7 +592,7 @@
 
     let customSounds = ['5s 3 thí sinh', 'Endcap VTV', '60s O10', 'O Sai', 'O Đúng', 'QC VTV 2021', 'ID V3 2023', 'ID HN1', 'QC HN1']
     $(() => {
-      fetch('https://atsdd.onrender.com/customSounds').then(res => res.json()).then(data => {
+      fetch('/customSounds').then(res => res.json()).then(data => {
         data.forEach((data, i) => {
           $('#customSounds').append(`<button id='sfx${i + 1}'> ${customSounds[i] == undefined ? data : customSounds[i]}</button>`)
           $(`#customSounds #sfx${i + 1}`).on('click', () => {
@@ -715,7 +724,7 @@
         ballCol = qno - 40 + 1
         $('.addBall').on('click', () => socket.emit('flyDownBalls', ballCol))
         let sysBalls = []
-        fetch('https://atsdd.onrender.com/systemBalls').then(res => res.json()).then(data => {
+        fetch('/systemBalls').then(res => res.json()).then(data => {
           sysBalls = data
           console.log(sysBalls)
           for (let i = 0; i < sysBalls.length; i++) {

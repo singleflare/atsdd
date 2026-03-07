@@ -189,7 +189,7 @@
     let sounds = [];
     socket.on('playMusic', (url) => {
       sound = new Howl({
-        src: [url]
+        src: [url], volume: 0.25
       })
       sound.play()
       sounds.push(sound)
@@ -235,7 +235,7 @@
       $('button').text(time)
     })
     socket.on('buzzerBtnText', (text) => {
-      $('button').text('Buzzer')
+      $('button').text('Chuông')
     })
     socket.on('resetGame', () => {
       resetData()

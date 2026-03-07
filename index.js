@@ -17,6 +17,7 @@ const ioServer = require('socket.io')(server)
 
 app.get('/systemBalls', (req, res) => {
 	res.send(systemBalls)
+	console.log(systemBalls)
 })
 app.get('/customSounds', (req, res) => {
 	fs.readdir('./public/media/customSounds', (err, files) => {
@@ -187,6 +188,7 @@ cns.on('connection', socket => {
 	})
 
 	socket.on('resetData', () => {
+		//reset real time (reset score on player/host, all on podium,ball board)
 		fs.writeFile('data.txt', `\n\n\n\n\n`, (err) => {
 			if (err) console.error('Error writing to file:', err); 
 			else console.log('Data written to file successfully!');
@@ -198,7 +200,7 @@ cns.on('connection', socket => {
 		p2Jackpots = []
 		p3Jackpots = []
 		systemBalls = []
-		for (let i = 1; i <= 50; i++)systemBalls.push(i)
+		for (let i = 1; i <= 50; i++) systemBalls.push(i)
 		p1Score = 0
 		p2Score = 0
 		p3Score = 0
@@ -206,6 +208,7 @@ cns.on('connection', socket => {
 		p2Name = ''
 		p3Name = ''
 		broadcastToAllPlayers('resetGame')
+		hns.emit('resetGame')
 	})
 
 	socket.on('getSystemBalls', () => cns.emit('getSystemBalls', systemBalls))
@@ -592,6 +595,10 @@ cns.on('connection', socket => {
 		bbns.emit('glowBall', ball)
 		hns.emit('glowBall', ball)
 		broadcastToAllPlayers('glowBall', ball)
+		bbns.emit('color', 'all')
+		hns.emit('color', 'all')
+		broadcastToAllPlayers('color', 'all')
+		pns.emit('color', 'all')
 	})
 	socket.on('delGlowBall', ball => {
 		bbns.emit('delGlowBall', ball)
