@@ -28,7 +28,8 @@
 
     #balls img {
       width: 160px;
-      opacity: 0;
+      scale: 0;
+      position: relative;
     }
 
     #glows {
@@ -332,29 +333,22 @@
       }, 2000)
     })
     socket.on('introduceBalls', () => {
-      $('#ballBoardImg').animate({ opacity: 0 }, 500)
-      //$('#logo').addClass('fadeOut')
-      $('#logo').animate({ opacity: 0 }, 500)
-      let i = 1;
-      setTimeout(() => {
-        setInterval(() => {
-          $('#ball' + i).addClass('appear');
-          i++;
-        }, 60)
-      }, 2000)
-      setTimeout(() => {
-        $('#balls img').removeClass('appear')
-        $('#balls img').css('opacity', 1)
-      }, 2000 + 60 * 50)
+      fetch('/systemBalls').then(res => res.json()).then(data => {
+        sysBalls = data
+        $('#ballBoardImg').animate({ opacity: 0 }, 500)
+        $('#logo').animate({ opacity: 0 }, 500)
+        let i = 0;
+        setTimeout(() => {
+          setInterval(() => {
+            $('#ball' + sysBalls[i]).animate({ scale: 1 }, 250)
+            i++;
+          }, 60)
+        }, 3000)
+      })
     })
     socket.on('removeBall', (ball) => {
       console.log(ball)
-      $('#ball' + ball).removeClass('appear')
-      $('#ball' + ball).addClass('disappear')
-      setTimeout(() => {
-        $('#ball' + ball).removeClass('disappear')
-        $('#ball' + ball).css('opacity', 0)
-      }, 1000)
+      $('#ball' + ball).animate({ scale: 1.2 }, 250).animate({ scale: 0 }, 1000)
     })
     socket.on('glowBall', ball => {
       $('#ball' + ball).addClass('bobbing')
@@ -428,20 +422,21 @@
       $('#ballCol').css('opacity', 0)
     })
     socket.on('flyDownBalls', col => {
-      setInterval(() => {
-        $(`#ball4${col}`).css('animation', 'row5FlyDown 0.25s forwards linear')
+      console.log(col)
+      setTimeout(() => {
+        $(`#ball${40 + col}`).animate({ top: '+=300px' }, 250)
       }, 0)
-      setInterval(() => {
-        $(`#ball3${col}`).css('animation', 'row4FlyDown 0.25s forwards linear')
+      setTimeout(() => {
+        $(`#ball${30 + col}`).animate({ top: '+=500px' }, 250)
       }, 200)
-      setInterval(() => {
-        $(`#ball2${col}`).css('animation', 'row3FlyDown 0.25s forwards linear')
+      setTimeout(() => {
+        $(`#ball${20 + col}`).animate({ top: '+=700px' }, 250)
       }, 400)
-      setInterval(() => {
-        $(`#ball1${col}`).css('animation', 'row2FlyDown 0.25s forwards linear')
+      setTimeout(() => {
+        $(`#ball${10 + col}`).animate({ top: '+=900px' }, 250)
       }, 600)
-      setInterval(() => {
-        $(`#ball${col}`).css('animation', 'row1FlyDown  0.25s forwards linear')
+      setTimeout(() => {
+        $(`#ball${col}`).animate({ top: '+=1100px' }, 250)
       }, 800)
     })
   </script>

@@ -586,10 +586,6 @@ cns.on('connection', socket => {
 	})
 	socket.on('introduceBalls', () => {
 		bbns.emit('introduceBalls')
-		setTimeout(() => {
-			let balls = p1Balls.concat(p2Balls, p3Balls)
-			balls.forEach(ball => bbns.emit('removeBall', ball))
-		}, 1000 + 60 * 50)
 	})
 	socket.on('glowBall', ball => {
 		bbns.emit('glowBall', ball)

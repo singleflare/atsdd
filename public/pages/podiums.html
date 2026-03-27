@@ -30,7 +30,9 @@
     }
 
     .ball {
-      transition: all 0.5s linear;
+      transition-property: top, left, scale;
+      transition-duration: 0.5s;
+      transition-timing-function: linear;
       filter: drop-shadow(2px 2px 2px);
     }
 
@@ -563,7 +565,7 @@
           updateJackpotCoordinates(3)
         }
         document.querySelectorAll('.ball').forEach(ball => {
-          ball.style.filter = 'grayscale(0)'
+          ball.style.filter = 'grayscale(0) drop-shadow(2px 2px 2px)'
         })
       }
       else if (status == 'jackpotDel') {
@@ -609,61 +611,61 @@
     socket.on('color', (color) => {
       if (color == 'all') {
         document.querySelectorAll('.ball').forEach(ball => {
-          ball.style.filter = 'grayscale(0)'
+          ball.style.filter = 'grayscale(0) drop-shadow(2px 2px 2px)'
         })
       }
       else if (color == 'none') {
         document.querySelectorAll('.ball').forEach(ball => {
-          ball.style.filter = 'grayscale(1)'
+          ball.style.filter = 'grayscale(1) drop-shadow(2px 2px 2px)'
         })
       }
       else if (color == 'red') {
         for (let i = 1; i <= 50; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
         for (let i = 1; i <= 10; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
       }
       else if (color == 'blue') {
         for (let i = 1; i <= 50; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
         for (let i = 11; i <= 20; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
       }
       else if (color == 'green') {
         for (let i = 1; i <= 50; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
         for (let i = 21; i <= 30; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
       }
       else if (color == 'pink') {
         for (let i = 1; i <= 50; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
         for (let i = 31; i <= 40; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
       }
       else if (color == 'yellow') {
         for (let i = 1; i <= 50; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(1) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
         for (let i = 41; i <= 50; i++) {
-          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px);' }
+          try { document.querySelector(`#ball${i}`).style.filter = 'grayscale(0) drop-shadow(2px 2px 2px)' }
           catch (e) { }
         }
       }
