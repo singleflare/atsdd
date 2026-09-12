@@ -195,7 +195,7 @@
       }
     }
   </style>
-  <img id='logo' src='../media/logoBgWithBg.png' style='position:absolute;z-index: 3'>
+  <img id='logo' src='../media/logoBgWithBg.png' style='position:absolute;z-index: 3;display:none'>
   <img src='../media/ballBoard.png' id='ballBoardImg' style='width:1920px;position: absolute;z-index: 2;'>
   <img src='../media/ballBoard.png' style='width:1920px;z-index: 1;'>
   <div id='balls'>
@@ -303,6 +303,14 @@
     <img src='../media/glow2.png' id='glow50'>
   </div>
   <img src='../media/ballCol.png' id='ballCol'>
+  <img src='../media/random dd.png' id='randomDd'
+    style='left: 0; top: 0; width: 1920px; position: absolute; z-index: 2;display:none;'>
+  <img src='../media/random qbv.png' id='randomQbv'
+    style='left: 0; top: 0; width: 1920px; position: absolute; z-index: 2;display:none;'>
+  <img src='../media/random ts.png' id='randomTs'
+    style='left: 0; top: 0; width: 1920px; position: absolute; z-index: 2;display:none;'>
+  <img src='../media/random square.png' id='randomSquare'
+    style='left: 0; top: 0; width: 390px; position: absolute; z-index: 3;display:none'>
   <script src='../scripts/jquery-3.7.1.min.js'></script>
   <script src='/socket.io/socket.io.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
@@ -330,7 +338,7 @@
       $('#logo').animate({ opacity: 0 }, 500)
       setTimeout(() => {
         $('#ballBoardImg').animate({ opacity: 0 }, 500)
-      }, 2000)
+      }, 1000)
     })
     socket.on('introduceBalls', () => {
       fetch('/systemBalls').then(res => res.json()).then(data => {
@@ -438,6 +446,51 @@
       setTimeout(() => {
         $(`#ball${col}`).animate({ top: '+=1100px' }, 250)
       }, 800)
+    })
+    let randomInterval;
+    socket.on('showRandomBoard', (type) => {
+      $('#randomSquare').css('display', 'none')
+      if (type == 'dd') {
+        $('#randomDd').css('display', 'initial')
+        $('#randomQbv').css('display', 'none')
+        $('#randomTs').css('display', 'none')
+      }
+      else if (type == 'qbv') {
+        $('#randomDd').css('display', 'none')
+        $('#randomQbv').css('display', 'initial')
+        $('#randomTs').css('display', 'none')
+      }
+      else if (type == 'ts') {
+        $('#randomDd').css('display', 'none')
+        $('#randomQbv').css('display', 'none')
+        $('#randomTs').css('display', 'initial')
+      }
+      else if (type == 'hide') {
+        $('#randomDd').css('display', 'none')
+        $('#randomQbv').css('display', 'none')
+        $('#randomTs').css('display', 'none')
+        clearInterval(randomInterval)
+      }
+    })
+    socket.on('stopRandomBoard', () => {
+      clearInterval(randomInterval)
+    })
+    socket.on('runRandomBoard', () => {
+      clearInterval(randomInterval)
+      let rows = [61, 344, 627]
+      let cols = [198, 481, 764, 1047, 1330]
+      let row = rows[Math.floor(Math.random() * 3)]
+      let col = cols[Math.floor(Math.random() * 6)]
+      $('#randomSquare').css('top', row + 'px')
+      $('#randomSquare').css('left', col + 'px')
+      $('#randomSquare').css('display', 'initial')
+      //r1:61,r2:344,r3:627,c1:198,c2:481,c3:764,c4:1047,c5:1330,c6:1613
+      randomInterval = setInterval(() => {
+        let row = rows[Math.floor(Math.random() * 3)]
+        let col = cols[Math.floor(Math.random() * 6)]
+        $('#randomSquare').css('top', row + 'px')
+        $('#randomSquare').css('left', col + 'px')
+      }, 100)
     })
   </script>
 </body>

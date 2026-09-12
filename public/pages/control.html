@@ -449,7 +449,7 @@
     <table>
       <tbody>
         <tr>
-          <td class='controlLabel' rowspan="3">Bảng bóng</td>
+          <td class='controlLabel' rowspan="4">Bảng bóng</td>
           <td class='controlLabel'>Logo</td>
           <td>
             <button id='introduceBalls'>Giới thiệu</button>
@@ -476,6 +476,16 @@
             <button id='flyDownCol8'>8</button>
             <button id='flyDownCol9'>9</button>
             <button id='flyDownCol10'>10</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Bảng chọn giải thưởng</td>
+          <td>
+            <button onclick='socket.emit("showRandomBoard","dd")'>Độc đắc</button>
+            <button onclick='socket.emit("showRandomBoard","ts")'>Trúng số</button>
+            <button onclick='socket.emit("showRandomBoard","qbv")'>QBV</button>
+            <button onclick='socket.emit("runRandomBoard")'>Chạy ngẫu nhiên</button>
+            <button onclick='socket.emit("showRandomBoard","hide")'>Ẩn</button>
           </td>
         </tr>
       </tbody>

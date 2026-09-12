@@ -197,7 +197,7 @@
     })
     socket.on('stopMusic', () => {
       sounds.forEach(sound => {
-        sound.fade(1, 0, 1000)
+        sound.fade(0.25, 0, 1000)
         setTimeout(() => {
           sound.stop()
         }, 1000)

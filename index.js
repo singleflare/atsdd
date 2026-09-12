@@ -552,6 +552,7 @@ cns.on('connection', socket => {
 		pns.emit('p1BuzzEarly')
 		ovlns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
 		hns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
+		bbns.emit('stopRandomBoard')
 	})
 	socket.on('p1BuzzLate', () => {
 		p1ns.emit('buzzLate')
@@ -561,6 +562,7 @@ cns.on('connection', socket => {
 		pns.emit('p2BuzzEarly')
 		ovlns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
 		hns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
+		bbns.emit('stopRandomBoard')
 	})
 	socket.on('p2BuzzLate', () => {
 		p2ns.emit('buzzLate')
@@ -570,6 +572,7 @@ cns.on('connection', socket => {
 		pns.emit('p3BuzzEarly')
 		ovlns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
 		hns.emit('playMusic', '../media/atsddSounds/chuông.mp3')
+		bbns.emit('stopRandomBoard')
 	})
 	socket.on('p3BuzzLate', () => {
 		p3ns.emit('buzzLate')
@@ -611,6 +614,15 @@ cns.on('connection', socket => {
 		hns.emit('color', color)
 		broadcastToAllPlayers('color', color)
 		pns.emit('color', color)
+	})
+	socket.on('showRandomBoard',(board)=>{
+		bbns.emit('showRandomBoard', board)
+	})
+	socket.on('runRandomBoard',()=>{
+		bbns.emit('runRandomBoard')
+	})
+	socket.on('stopRandomBoard',()=>{
+		bbns.emit('stopRandomBoard')
 	})
 
 	socket.on('showPInfo', (player) => {
