@@ -449,7 +449,7 @@
     <table>
       <tbody>
         <tr>
-          <td class='controlLabel' rowspan="4">Bảng bóng</td>
+          <td class='controlLabel' rowspan="5">Bảng bóng</td>
           <td class='controlLabel'>Logo</td>
           <td>
             <button id='introduceBalls'>Giới thiệu</button>
@@ -486,6 +486,13 @@
             <button onclick='socket.emit("showRandomBoard","qbv")'>QBV</button>
             <button onclick='socket.emit("runRandomBoard")'>Chạy ngẫu nhiên</button>
             <button onclick='socket.emit("showRandomBoard","hide")'>Ẩn</button>
+          </td>
+        </tr>
+        <tr>
+          <td class='controlLabel'>Bảng chọn số (NTĐ)</td>
+          <td>
+            <button onclick='randomNumberHandle()'>Chạy ngẫu nhiên</button>
+            <button onclick='stopRandomNumberHandle()'>Dừng</button>
           </td>
         </tr>
       </tbody>
@@ -1371,6 +1378,16 @@
     $('#resetServerData').on('click', () => {
       socket.emit('resetData')
     })
+
+    function randomNumberHandle() {
+      socket.emit("runRandomNumberBoard");
+      socket.emit("playMusic", "../media/atsddSounds/random.mp3")
+    }
+    function stopRandomNumberHandle() {
+      socket.emit("stopRandomBoard");
+      socket.emit("stopMusic");
+      socket.emit("playMusic", "../media/atsddSounds/chuông.mp3")
+    }
   </script>
 </body>
 

@@ -310,7 +310,7 @@
   <img src='../media/random ts.png' id='randomTs'
     style='left: 0; top: 0; width: 1920px; position: absolute; z-index: 2;display:none;'>
   <img src='../media/random square.png' id='randomSquare'
-    style='left: 0; top: 0; width: 390px; position: absolute; z-index: 3;display:none'>
+    style='left: 0; top: 0; width: 390px; position: absolute; z-index: 3;display:none;'>
   <script src='../scripts/jquery-3.7.1.min.js'></script>
   <script src='/socket.io/socket.io.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.core.min.js"
@@ -474,6 +474,9 @@
     })
     socket.on('stopRandomBoard', () => {
       clearInterval(randomInterval)
+      setTimeout(() => {
+        $('#randomSquare').css('display', 'none')
+      }, 10000)
     })
     socket.on('runRandomBoard', () => {
       clearInterval(randomInterval)
@@ -488,6 +491,23 @@
       randomInterval = setInterval(() => {
         let row = rows[Math.floor(Math.random() * 3)]
         let col = cols[Math.floor(Math.random() * 6)]
+        $('#randomSquare').css('top', row + 'px')
+        $('#randomSquare').css('left', col + 'px')
+      }, 100)
+    })
+    socket.on('runRandomNumberBoard', () => {
+      $('#randomSquare').css({ 'width': '240px' })
+      clearInterval(randomInterval)
+      let rows = [48, 233, 418, 603, 788]
+      let cols = [7, 192, 377, 556, 741, 926, 1111, 1296, 1481, 1666]
+      let row = rows[Math.floor(Math.random() * 5)]
+      let col = cols[Math.floor(Math.random() * 10)]
+      $('#randomSquare').css('top', row + 'px')
+      $('#randomSquare').css('left', col + 'px')
+      $('#randomSquare').css('display', 'initial')
+      randomInterval = setInterval(() => {
+        let row = rows[Math.floor(Math.random() * 5)]
+        let col = cols[Math.floor(Math.random() * 10)]
         $('#randomSquare').css('top', row + 'px')
         $('#randomSquare').css('left', col + 'px')
       }, 100)

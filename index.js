@@ -621,6 +621,9 @@ cns.on('connection', socket => {
 	socket.on('runRandomBoard',()=>{
 		bbns.emit('runRandomBoard')
 	})
+	socket.on('runRandomNumberBoard',()=>{
+		bbns.emit('runRandomNumberBoard')
+	})
 	socket.on('stopRandomBoard',()=>{
 		bbns.emit('stopRandomBoard')
 	})
